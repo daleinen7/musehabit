@@ -9,9 +9,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  getRedirectResult,
 } from 'firebase/auth';
 import { auth, firestore } from '@/app/lib/firebase';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
+import slugify from '../lib/slugify';
+import { useRouter } from 'next/navigation';
 
 type User = {
   uid: string;
@@ -33,7 +36,6 @@ type AuthContextType = {
   emailSignUp: (email: string, password: string, username: string) => void;
   emailSignIn: (email: string, password: string) => void;
   updateProfile: (displayName: string, photoURL: string) => void;
-  googleSignIn: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -45,7 +47,6 @@ const AuthContext = createContext<AuthContextType>({
   createUser: () => {},
   emailSignUp: () => {},
   emailSignIn: () => {},
-  googleSignIn: () => {},
   updateProfile: () => {},
 });
 
@@ -61,9 +62,67 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const googleSignIn = () => {
-    signInWithRedirect(auth, new GoogleAuthProvider());
+  const router = useRouter();
+
+  const isUsernameAvailable = async (username: string): Promise<boolean> => {
+    const usernameSnapshot = await getDoc(doc(firestore, 'users', username));
+    return !usernameSnapshot.exists();
   };
+
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithRedirect(auth, new GoogleAuthProvider());
+    } catch (error) {
+      console.error('Error signing in with Google: ', error);
+    }
+  };
+
+  useEffect(() => {
+    const handleRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          const user = result.user;
+          const userDoc = await getDoc(doc(firestore, 'users', user.uid));
+          if (!userDoc.exists()) {
+            // User is signing up
+            let username = slugify(user.displayName ?? '');
+            let usernameAvailable = await isUsernameAvailable(username);
+            let counter = 1;
+            while (!usernameAvailable) {
+              username = `${slugify(user.displayName ?? '')}-${counter}`;
+              usernameAvailable = await isUsernameAvailable(username);
+              counter++;
+            }
+            await setDoc(doc(firestore, 'users', user.uid), {
+              username,
+              email: user.email,
+              uid: user.uid,
+              photoURL: user.photoURL,
+            });
+            const profileData = { username }; // Use username for profile data
+            setUser({
+              uid: user.uid,
+              email: user.email || '',
+              displayName: user.displayName || '',
+              photoURL: user.photoURL || '',
+              profile: {
+                username: profileData.username || '',
+              },
+            });
+            router.push(`/artist/${profileData.username}/profile/edit`);
+          } else {
+            // User is signing in
+            // Redirect to the homepage
+            router.push('/');
+          }
+        }
+      } catch (error) {
+        console.error('Error handling Google redirect: ', error);
+      }
+    };
+    handleRedirect();
+  }, []);
 
   const resetPassword = (email: string) => {
     sendPasswordResetEmail(auth, email);
@@ -78,52 +137,106 @@ export const AuthContextProvider = ({
     password: string,
     username: string
   ) => {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    try {
+      let newUsername = username;
+      let usernameAvailable = await isUsernameAvailable(newUsername);
 
-    const user = userCredential.user;
+      // If the username is not available, increment it by appending a number until finding an available username
+      let counter = 1;
+      while (!usernameAvailable) {
+        newUsername = `${username}${counter}`;
+        usernameAvailable = await isUsernameAvailable(newUsername);
+        counter++;
+      }
 
-    console.log('USER: ', user);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-    await setDoc(doc(firestore, 'users', user.uid), {
-      username,
-      email: user.email,
-      uid: user.uid,
-      photoURL: user.photoURL,
-    });
+      const user = userCredential.user;
+
+      await setDoc(doc(firestore, 'users', user.uid), {
+        username: slugify(username),
+        email: user.email,
+        uid: user.uid,
+        photoURL: user.photoURL,
+      });
+
+      await setDoc(doc(firestore, 'users', user.uid), {
+        username,
+        email: user.email,
+        uid: user.uid,
+        photoURL: user.photoURL,
+      });
+
+      const profileData = { username }; // Use username for profile data
+      setUser({
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || '',
+        photoURL: user.photoURL || '',
+        profile: {
+          username: profileData.username || '',
+        },
+      });
+
+      // Redirect to the profile edit page after successful sign-up
+      router.push(`/artist/${profileData.username}/profile/edit`);
+    } catch (error) {
+      console.error('Error signing up with email: ', error);
+    }
   };
 
   const signIn = (email: string, password: string) => {
     signInWithEmailAndPassword(auth, email, password);
   };
 
-  // const updateProfile = (displayName: string, photoURL: string) => {
-  //   if (auth.currentUser) {
-  //     updateProfile(auth.currentUser.uid, displayName, photoURL);
-  //   }
-  // };
+  const updateProfile = async (userId: string, profileData: any) => {
+    try {
+      await setDoc(doc(firestore, 'users', userId), profileData, {
+        merge: true,
+      });
+    } catch (error) {
+      console.error('Error updating profile: ', error);
+    }
+  };
 
   const value = {
     user,
     loading,
-    googleSignIn,
     signOut: () => signOut(auth),
     resetPassword,
     createUser,
     signIn,
-    updateProfile,
-    signInWithGoogle: googleSignIn,
+    signInWithGoogle,
     emailSignUp,
     emailSignIn: () => {},
+    updateProfile: (displayName: string, photoURL: string) => {
+      if (user) {
+        const profileData = {
+          displayName,
+          photoURL,
+        };
+        updateProfile(user.uid, profileData);
+      }
+    },
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userDoc = await getDoc(doc(firestore, 'users', user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(firestore, 'users', user.uid), {
+            username: user.displayName ? slugify(user.displayName) : '',
+            email: user.email || '',
+            uid: user.uid,
+            photoURL: user.photoURL || '',
+          });
+        }
+
         const profileData = userDoc.data();
         setUser({
           uid: user.uid,

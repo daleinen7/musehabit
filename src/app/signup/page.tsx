@@ -36,7 +36,7 @@ const SignUp = () => {
     password: '',
   });
 
-  const { user, emailSignUp, googleSignIn } = useAuth();
+  const { user, emailSignUp, signInWithGoogle } = useAuth();
 
   const router = useRouter();
 
@@ -48,8 +48,8 @@ const SignUp = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await googleSignIn();
-      router.push('/');
+      await signInWithGoogle();
+      // router.push('/');
     } catch (error) {
       console.log('ERROR: ', error);
     }
@@ -60,7 +60,9 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    if (user) router.push(`/artist/${user.displayName}/profile/edit`);
+    if (user) {
+      router.push(`/`);
+    }
   }, [user, router]);
 
   return (
