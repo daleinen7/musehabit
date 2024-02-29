@@ -55,13 +55,13 @@ const writeForm = [
 const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
 
 const Share = () => {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const { user, userProfile } = UserAuth();
+  const { user } = useAuth();
 
   const handleFileChange = (event, inputName) => {
     if (inputName === 'image' && event.target.files.length) {
