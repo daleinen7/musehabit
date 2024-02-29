@@ -1,9 +1,15 @@
 'use client';
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import FormInput from '../components/FormInput';
+
+interface FormState {
+  email: string;
+  password: string;
+}
 
 const formData = [
   {
@@ -23,7 +29,7 @@ const formData = [
 ];
 
 const Login = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     email: '',
     password: '',
   });
@@ -32,32 +38,34 @@ const Login = () => {
 
   const { signIn, signInWithGoogle } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await emailSignIn(form.email, form.password);
+    await signIn(form.email, form.password);
     router.push('/');
   };
 
   const handleGoogleSignIn = async () => {
     try {
-      await googleSignIn();
+      await signInWithGoogle();
       router.push('/');
     } catch (error) {
       console.log('ERROR: ', error);
     }
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
   };
 
   return (
     <div className="flex w-full">
       <div className="w-1/2 object-cover h-[calc(100vh-3rem)] ">
-        <img
+        <Image
           src="https://fakeimg.pl/756x900/c1c1c1/909090"
           alt="login page"
           className="w-full h-full object-cover"
+          height={900}
+          width={756}
         />
       </div>
       <div className="w-1/2 flex items-center justify-center">
@@ -81,10 +89,9 @@ const Login = () => {
                 label={item.label}
                 type={item.type}
                 id={item.id}
-                value={form[item.id]}
+                value={form[item.id as keyof FormState]}
                 handleFormChange={handleFormChange}
                 required={item.required}
-                className="text-black p-[0.625rem] border border-black rounded-md w-full"
               />
             ))}
             <Link href="forgot-password" className="underline">

@@ -34,7 +34,7 @@ type AuthContextType = {
   resetPassword: (email: string) => void;
   createUser: (email: string, password: string) => void;
   emailSignUp: (email: string, password: string, username: string) => void;
-  emailSignIn: (email: string, password: string) => void;
+  signIn: (email: string, password: string) => void;
   updateProfile: (displayName: string, photoURL: string) => void;
 };
 
@@ -46,7 +46,7 @@ const AuthContext = createContext<AuthContextType>({
   resetPassword: () => {},
   createUser: () => {},
   emailSignUp: () => {},
-  emailSignIn: () => {},
+  signIn: () => {},
   updateProfile: () => {},
 });
 
@@ -212,7 +212,6 @@ export const AuthContextProvider = ({
     signIn,
     signInWithGoogle,
     emailSignUp,
-    emailSignIn: () => {},
     updateProfile: (displayName: string, photoURL: string) => {
       if (user) {
         const profileData = {
