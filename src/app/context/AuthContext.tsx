@@ -23,6 +23,19 @@ type User = {
   photoURL: string;
   profile: {
     username: string;
+    url: string;
+    bio?: string;
+    medium?: string;
+    location?: string;
+    photoURL?: string;
+    joined?: number;
+    latestPost?: number | false;
+    settings: {
+      dayBeforeNotification?: boolean;
+      weekBeforeNotification?: boolean;
+      tenDaysBefore?: boolean;
+      accountabilityNotice?: boolean;
+    };
   };
 };
 
@@ -49,6 +62,17 @@ const AuthContext = createContext<AuthContextType>({
   signIn: () => {},
   updateProfile: () => {},
 });
+
+interface ProfileData {
+  username: string;
+  url: string;
+  bio: string;
+  medium: string;
+  location: string;
+  photoURL: string;
+  joined: number;
+  latestPost: Date | false;
+}
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -99,15 +123,38 @@ export const AuthContextProvider = ({
               email: user.email,
               uid: user.uid,
               photoURL: user.photoURL,
+              joined: Date.now(),
             });
-            const profileData = { username }; // Use username for profile data
+            const profileData: ProfileData = {
+              username,
+              url: username,
+              bio: '',
+              medium: '',
+              location: '',
+              photoURL: user.photoURL || '',
+              joined: Date.now(),
+              latestPost: false,
+            };
             setUser({
               uid: user.uid,
               email: user.email || '',
               displayName: user.displayName || '',
               photoURL: user.photoURL || '',
               profile: {
-                username: profileData.username || '',
+                username: profileData?.username || '',
+                url: profileData?.url || '',
+                bio: profileData?.bio || '',
+                medium: profileData?.medium || '',
+                location: profileData?.location || '',
+                photoURL: profileData?.photoURL || '',
+                joined: profileData?.joined,
+                latestPost: false,
+                settings: {
+                  dayBeforeNotification: false,
+                  weekBeforeNotification: false,
+                  tenDaysBefore: false,
+                  accountabilityNotice: false,
+                },
               },
             });
             router.push(`/artist/${profileData.username}/profile/edit`);
@@ -122,7 +169,7 @@ export const AuthContextProvider = ({
       }
     };
     handleRedirect();
-  }, []);
+  }, [router]);
 
   const resetPassword = (email: string) => {
     sendPasswordResetEmail(auth, email);
@@ -171,14 +218,36 @@ export const AuthContextProvider = ({
         photoURL: user.photoURL,
       });
 
-      const profileData = { username }; // Use username for profile data
+      const profileData: ProfileData = {
+        username,
+        url: username,
+        bio: '',
+        medium: '',
+        location: '',
+        photoURL: user.photoURL || '',
+        joined: Date.now(),
+        latestPost: false,
+      };
       setUser({
         uid: user.uid,
         email: user.email || '',
         displayName: user.displayName || '',
         photoURL: user.photoURL || '',
         profile: {
-          username: profileData.username || '',
+          username: profileData?.username || '',
+          url: profileData?.url || '',
+          bio: profileData?.bio || '',
+          medium: profileData?.medium || '',
+          location: profileData?.location || '',
+          photoURL: profileData?.photoURL || '',
+          joined: profileData?.joined,
+          latestPost: false,
+          settings: {
+            dayBeforeNotification: false,
+            weekBeforeNotification: false,
+            tenDaysBefore: false,
+            accountabilityNotice: false,
+          },
         },
       });
 
@@ -244,6 +313,19 @@ export const AuthContextProvider = ({
           photoURL: user.photoURL || '',
           profile: {
             username: profileData?.username || '',
+            url: profileData?.url || '',
+            bio: profileData?.bio || '',
+            medium: profileData?.medium || '',
+            location: profileData?.location || '',
+            photoURL: profileData?.photoURL || '',
+            joined: profileData?.joined || '',
+            latestPost: profileData?.latestPost || '',
+            settings: {
+              dayBeforeNotification: false,
+              weekBeforeNotification: false,
+              tenDaysBefore: false,
+              accountabilityNotice: false,
+            },
           },
         });
       } else {

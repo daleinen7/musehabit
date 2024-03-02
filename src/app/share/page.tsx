@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
-import { ref, push, update, child, serverTimestamp } from 'firebase/database';
+import { collection, addDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { storage, firestore } from '../lib/firebase';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
 // import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
@@ -64,12 +64,26 @@ interface FormData {
   tags: string;
 }
 
+interface NewPost {
+  id: string;
+  draft?: any; // Adjust type based on your use case
+  title: string;
+  description: string;
+  image: string;
+  poster: string | null; // Adjust type based on your use case
+  postedAt: any; // Adjust type based on your use case
+  toolsUsed: string;
+  tags: string[];
+  format?: string; // Include format property when postType is 'file'
+  post?: string; // Add post property when postType is 'text'
+}
+
 const Share: React.FC = () => {
   const { register, handleSubmit } = useForm<FormData>();
   const [shared, setShared] = useState(false);
-  const [postType, setPostType] = useState(null);
-  const [selectedType, setSelectedType] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [postType, setPostType] = useState<null | string>(null);
+  const [selectedType, setSelectedType] = useState<null | string>(null);
+  const [imagePreview, setImagePreview] = useState<null | string>(null);
 
   const { user } = useAuth();
 
@@ -87,7 +101,7 @@ const Share: React.FC = () => {
     // check if draft is allowed file format
     const draftFileFormat = draft && draft[0].name.split('.').pop();
 
-    if (!allowedFileFormats.includes(draftFileFormat) && !postType === 'text') {
+    if (!allowedFileFormats.includes(draftFileFormat) && postType !== 'text') {
       console.error('Draft file format not allowed');
       alert('Draft file format not allowed');
       return;
@@ -102,19 +116,27 @@ const Share: React.FC = () => {
     //   return;
     // }
 
+    if (!user) {
+      console.error('User not found');
+      alert('User not found');
+      return;
+    }
+
+    const userRef = doc(firestore, 'users', user.uid);
+
     const imageFile = image[0];
     const draftFile = postType === 'file' ? draft[0] : null;
 
-    // Generate a unique key for the new post
-    const newPostKey = push(child(doc(firestore), 'posts')).key;
+    const newPostRef = doc(collection(firestore, 'posts'));
+    const newPostKey = newPostRef.id;
 
     const today = new Date();
 
     const imageFileName = `${
-      user.uid
-    }/${today.getFullYear()}/${today.getMonth()}/cover-image-${newPostKey}.${imageFile.name
-      .split('.')
-      .pop()}`;
+      user?.uid || 'unknownUser'
+    }/${today.getFullYear()}/${today.getMonth()}/cover-image-${newPostKey}.${
+      imageFile ? imageFile.name.split('.').pop() : 'unknownFormat'
+    }`;
     const imageFileUrl = await uploadFileToStorage(
       storage,
       imageFileName,
@@ -124,23 +146,25 @@ const Share: React.FC = () => {
     const draftFileName =
       postType === 'file'
         ? `${
-            user.uid
+            user?.uid
           }/${today.getFullYear()}/${today.getMonth()}/draft-${newPostKey}.${draftFileFormat}`
-        : null;
+        : '';
+
     const draftFileUrl =
-      postType === 'file'
+      postType === 'file' && draftFileName
         ? await uploadFileToStorage(storage, draftFileName, draftFile)
         : null;
 
-    const tagsArray = tags.split(',').map((tag) => tag.trim());
+    const tagsArray = tags.split(',').map((tag: string) => tag.trim());
 
-    const newPost = {
-      id: newPostKey,
+    const newPost: NewPost = {
+      id: newPostKey || '', // Assign an empty string if newPostKey is null
+      draft: postType === 'file' ? draftFileUrl : null,
       title,
       description,
       image: imageFileUrl,
-      poster: user.uid,
-      postedAt: serverTimestamp(),
+      poster: user?.uid || null, // Assign null if user?.uid is undefined
+      postedAt: Date.now(),
       toolsUsed,
       tags: tagsArray,
     };
@@ -155,29 +179,28 @@ const Share: React.FC = () => {
       newPost.post = data.post;
     }
 
-    // Write the new post's data in the posts list
-    const updates = {};
-    updates['/posts/' + newPostKey] = newPost;
-
-    // Update the user's posts list with the new post ID
-    updates[`/users/${user.uid}/posts/${newPostKey}`] = true;
-
-    // update Users latest post date
-    updates[`/users/${user.uid}/latestPost`] = serverTimestamp();
+    await setDoc(newPostRef, newPost);
 
     setShared(true);
 
-    return update(ref(db), updates);
+    if (user) {
+      await updateDoc(userRef, {
+        [`posts.${newPostKey}`]: true,
+        latestPost: Date.now(),
+      });
+    }
+
+    return;
   };
 
   if (shared === true) return <p>Thanks for sharing the post</p>;
 
-  if (!userProfile) return <p>Loading...</p>;
+  if (!user) return <p>Loading...</p>;
 
   return (
     <>
       <h2 className=" font-satoshi text-4xl font-bold mt-12">
-        {userProfile.latestPost ? 'New Post' : 'First Post'}
+        {user.profile.latestPost ? 'New Post' : 'First Post'}
       </h2>
       <p className="py-10">
         It&apos;s your day to post! Upload your art, whether it&apos;s finished
@@ -282,7 +305,18 @@ const Share: React.FC = () => {
 };
 export default Share;
 
-const ShareInput = ({ formInput, register, handleFileChange }) => {
+const ShareInput = ({
+  formInput,
+  register,
+  handleFileChange,
+}: {
+  formInput: any;
+  register: any;
+  handleFileChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    input: string
+  ) => void;
+}) => {
   const { label, input, type, required, options } = formInput;
   return (
     <label key={input} className="flex flex-col text-sm font-medium w-full">
@@ -294,7 +328,7 @@ const ShareInput = ({ formInput, register, handleFileChange }) => {
         />
       ) : type === 'select' ? (
         <select className="p-2 m-2 text-black rounded-md" {...register(input)}>
-          {options.map((option) => (
+          {options.map((option: string) => (
             <option key={option} value={option}>
               {option}
             </option>
