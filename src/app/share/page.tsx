@@ -8,6 +8,7 @@ import { storage, firestore } from '../lib/firebase';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
 // import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
 import icons from '../lib/icons';
+import { doc } from 'firebase/firestore';
 
 const fileForm = [
   { label: 'Draft', input: 'draft', type: 'file', required: true },
@@ -54,8 +55,17 @@ const writeForm = [
 
 const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
 
-const Share = () => {
-  const { register, handleSubmit } = useForm();
+interface FormData {
+  title: string;
+  description: string;
+  image: FileList;
+  draft: FileList;
+  toolsUsed: string;
+  tags: string;
+}
+
+const Share: React.FC = () => {
+  const { register, handleSubmit } = useForm<FormData>();
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
@@ -63,15 +73,15 @@ const Share = () => {
 
   const { user } = useAuth();
 
-  const handleFileChange = (event, inputName) => {
+  const handleFileChange = (event: any, inputName: string) => {
     if (inputName === 'image' && event.target.files.length) {
       const file = event.target.files[0];
       const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl); // Update the state to hold the image URL
+      setImagePreview(imageUrl);
     }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     const { title, description, image, draft, toolsUsed, tags } = data;
 
     // check if draft is allowed file format
@@ -83,20 +93,20 @@ const Share = () => {
       return;
     }
 
-    const { canPost } = await daysUntilNextPost(user.uid);
+    // const { canPost } = await daysUntilNextPost(user.uid);
 
     // check if user is allowed to post
-    if (!canPost) {
-      console.error('User not allowed to post');
-      alert('User not allowed to post');
-      return;
-    }
+    // if (!canPost) {
+    //   console.error('User not allowed to post');
+    //   alert('User not allowed to post');
+    //   return;
+    // }
 
     const imageFile = image[0];
     const draftFile = postType === 'file' ? draft[0] : null;
 
     // Generate a unique key for the new post
-    const newPostKey = push(child(ref(db), 'posts')).key;
+    const newPostKey = push(child(doc(firestore), 'posts')).key;
 
     const today = new Date();
 
