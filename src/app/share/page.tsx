@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { collection, addDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { storage, firestore } from '../lib/firebase';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
-// import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
+import { daysUntilNextPost } from '../lib/daysUntilNextPost';
 import icons from '../lib/icons';
 import { doc } from 'firebase/firestore';
 
@@ -107,18 +107,18 @@ const Share: React.FC = () => {
       return;
     }
 
-    // const { canPost } = await daysUntilNextPost(user.uid);
-
-    // check if user is allowed to post
-    // if (!canPost) {
-    //   console.error('User not allowed to post');
-    //   alert('User not allowed to post');
-    //   return;
-    // }
-
     if (!user) {
       console.error('User not found');
       alert('User not found');
+      return;
+    }
+
+    const { canPost } = await daysUntilNextPost(user.uid);
+
+    // check if user is allowed to post
+    if (!canPost) {
+      console.error('User not allowed to post');
+      alert('User not allowed to post');
       return;
     }
 
@@ -137,6 +137,7 @@ const Share: React.FC = () => {
     }/${today.getFullYear()}/${today.getMonth()}/cover-image-${newPostKey}.${
       imageFile ? imageFile.name.split('.').pop() : 'unknownFormat'
     }`;
+
     const imageFileUrl = await uploadFileToStorage(
       storage,
       imageFileName,
