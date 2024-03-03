@@ -13,34 +13,12 @@ import {
 } from 'firebase/auth';
 import { auth, firestore } from '@/app/lib/firebase';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
-import slugify from '../lib/slugify';
+import slugify from '@/app/lib/slugify';
 import { useRouter } from 'next/navigation';
-
-type User = {
-  uid: string;
-  email: string;
-  displayName: string;
-  photoURL: string;
-  profile: {
-    username: string;
-    url: string;
-    bio?: string;
-    medium?: string;
-    location?: string;
-    photoURL?: string;
-    joined?: number;
-    latestPost?: number | false;
-    settings: {
-      dayBeforeNotification?: boolean;
-      weekBeforeNotification?: boolean;
-      tenDaysBefore?: boolean;
-      accountabilityNotice?: boolean;
-    };
-  };
-};
+import { UserType } from '@/app/lib/types';
 
 type AuthContextType = {
-  user: User | null;
+  user: UserType | null;
   loading: boolean;
   signInWithGoogle: () => void;
   signOut: () => void;
