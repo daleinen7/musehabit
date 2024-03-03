@@ -156,7 +156,9 @@ const Share: React.FC = () => {
         ? await uploadFileToStorage(storage, draftFileName, draftFile)
         : null;
 
-    const tagsArray = tags.split(',').map((tag: string) => tag.trim());
+    const tagsArray = tags
+      ? tags.split(',').map((tag: string) => tag.trim())
+      : null;
 
     const newPost: NewPost = {
       id: newPostKey || '', // Assign an empty string if newPostKey is null

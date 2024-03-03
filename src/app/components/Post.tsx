@@ -3,13 +3,14 @@ import React, { useState } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 import getFileType from '@/app/lib/getFileType';
-// import SaveButton from './SaveButton';
+import SaveButton from './SaveButton';
 // import FollowButton from './FollowButton';
 // import CommentsSection from './CommentsSection';
 import { PostType } from '../lib/types';
 
 const Post = ({ post }: { post: PostType }) => {
   const {
+    id,
     title,
     description,
     image,
@@ -21,6 +22,8 @@ const Post = ({ post }: { post: PostType }) => {
   } = post;
   const { username, location, photoURL, medium } = posterData;
   const [showComments, setShowComments] = useState(false);
+
+  const { user } = useAuth();
 
   const postedAt = new Date(post.postedAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -103,9 +106,11 @@ const Post = ({ post }: { post: PostType }) => {
         )}
         <div className="flex items-start">
           <div className="font-satoshi text-2xl font-medium">{title}</div>
-          {/* <div className="ml-auto flex gap-5">
-            <SaveButton artistUid={uid} />
-          </div> */}
+          {user && user.uid !== posterData.uid && (
+            <div className="ml-auto flex gap-5">
+              <SaveButton postUid={id} />
+            </div>
+          )}
         </div>
         <div>
           <h3 className="text-lg font-medium ">About this project:</h3>

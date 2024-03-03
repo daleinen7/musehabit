@@ -18,9 +18,9 @@ export default function Home() {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [selectedFeed, setSelectedFeed] = useState('global');
   const { user } = useAuth();
-  if (user) {
-    console.log('user', user);
-  }
+  // if (user) {
+  //   console.log('user', user);
+  // }
 
   useEffect(() => {
     const getFollowingPosts = async () => {
@@ -59,8 +59,6 @@ export default function Home() {
             const posterRef = doc(firestore, 'users', post.poster);
             const posterSnapshot = await getDoc(posterRef);
             const posterData = posterSnapshot.data() as PostType['posterData'];
-            console.log('post: ', { ...post, posterData });
-
             return { ...post, posterData } as PostType;
           })
         );
@@ -75,7 +73,6 @@ export default function Home() {
           const posterRef = doc(firestore, 'users', post.poster);
           const posterSnapshot = await getDoc(posterRef);
           const posterData = posterSnapshot.data() as PostType['posterData'];
-          console.log('post: ', { ...post, posterData });
           return { ...post, posterData } as PostType;
         })
       );

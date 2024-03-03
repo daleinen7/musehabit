@@ -50,6 +50,7 @@ interface ProfileData {
   photoURL: string;
   joined: number;
   latestPost: Date | false;
+  savedPosts: { [postId: string]: boolean };
 }
 
 export const useAuth = () => {
@@ -98,7 +99,6 @@ export const AuthContextProvider = ({
             }
             await setDoc(doc(firestore, 'users', user.uid), {
               username,
-              email: user.email,
               uid: user.uid,
               photoURL: user.photoURL,
               joined: Date.now(),
@@ -115,7 +115,6 @@ export const AuthContextProvider = ({
             };
             setUser({
               uid: user.uid,
-              email: user.email || '',
               displayName: user.displayName || '',
               photoURL: user.photoURL || '',
               profile: {
@@ -127,6 +126,7 @@ export const AuthContextProvider = ({
                 photoURL: profileData?.photoURL || '',
                 joined: profileData?.joined,
                 latestPost: false,
+                savedPosts: profileData?.savedPosts || {},
                 settings: {
                   dayBeforeNotification: false,
                   weekBeforeNotification: false,
@@ -220,6 +220,7 @@ export const AuthContextProvider = ({
           photoURL: profileData?.photoURL || '',
           joined: profileData?.joined,
           latestPost: false,
+          savedPosts: profileData?.savedPosts || {},
           settings: {
             dayBeforeNotification: false,
             weekBeforeNotification: false,
@@ -298,6 +299,7 @@ export const AuthContextProvider = ({
             photoURL: profileData?.photoURL || '',
             joined: profileData?.joined || '',
             latestPost: profileData?.latestPost || '',
+            savedPosts: profileData?.savedPosts || {},
             settings: {
               dayBeforeNotification: false,
               weekBeforeNotification: false,

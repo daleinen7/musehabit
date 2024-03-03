@@ -20,7 +20,7 @@ export type PostType = {
     uid: string;
     posts: { string: boolean };
   };
-  tags: string[];
+  tags: string[] | null;
   toolsUsed: string;
   uid: string;
   username: string;
@@ -41,6 +41,7 @@ export type UserType = {
     photoURL?: string;
     joined?: number;
     latestPost?: number | false;
+    savedPosts: { [postId: string]: boolean };
     settings: {
       dayBeforeNotification?: boolean;
       weekBeforeNotification?: boolean;
