@@ -14,6 +14,11 @@ export type PostType = {
     location: string;
     photoURL: string;
     medium: string;
+    joined: number;
+    latestPost: number | false;
+    email: string;
+    uid: string;
+    posts: { string: boolean };
   };
   tags: string[];
   toolsUsed: string;

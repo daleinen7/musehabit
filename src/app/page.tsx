@@ -54,13 +54,14 @@ export default function Home() {
         postsRef = collection(firestore, 'posts');
       } else {
         const followingPosts = await getFollowingPosts();
-        console.log('FOLLOWING POSTS: ', followingPosts);
         const postsWithUserData = await Promise.all(
           followingPosts.map(async (post) => {
             const posterRef = doc(firestore, 'users', post.poster);
             const posterSnapshot = await getDoc(posterRef);
-            const posterData = posterSnapshot.data();
-            return { ...post, posterData };
+            const posterData = posterSnapshot.data() as PostType['posterData'];
+            console.log('post: ', { ...post, posterData });
+
+            return { ...post, posterData } as PostType;
           })
         );
         setPosts(postsWithUserData);
@@ -73,8 +74,9 @@ export default function Home() {
         postsData.map(async (post) => {
           const posterRef = doc(firestore, 'users', post.poster);
           const posterSnapshot = await getDoc(posterRef);
-          const posterData = posterSnapshot.data();
-          return { ...post, posterData };
+          const posterData = posterSnapshot.data() as PostType['posterData'];
+          console.log('post: ', { ...post, posterData });
+          return { ...post, posterData } as PostType;
         })
       );
       setPosts(postsWithUserData);
@@ -82,8 +84,6 @@ export default function Home() {
 
     fetchPosts();
   }, [selectedFeed, user]);
-
-  console.log('POSTS: ', posts);
 
   return (
     <>
