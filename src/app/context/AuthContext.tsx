@@ -47,7 +47,7 @@ interface ProfileData {
   bio: string;
   medium: string;
   location: string;
-  photoURL: string;
+  photoURL: string | undefined;
   joined: number;
   latestPost: Date | false;
   savedPosts: { [postId: string]: boolean };
@@ -110,7 +110,9 @@ export const AuthContextProvider = ({
               bio: '',
               medium: '',
               location: '',
-              photoURL: user.photoURL || '',
+              photoURL: user.photoURL || '' || undefined,
+              savedPosts: {},
+              following: {},
               joined: Date.now(),
               latestPost: false,
             };
@@ -205,6 +207,8 @@ export const AuthContextProvider = ({
         medium: '',
         location: '',
         photoURL: user.photoURL || '',
+        savedPosts: {},
+        following: {},
         joined: Date.now(),
         latestPost: false,
       };

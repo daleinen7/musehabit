@@ -51,3 +51,11 @@ export type UserType = {
     };
   };
 };
+
+export type CommentType = {
+  text: string;
+  posterId: string;
+  timestamp: number;
+  username: string;
+  photoURL: string | undefined;
+};

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import getFileType from '@/app/lib/getFileType';
 import SaveButton from './SaveButton';
 import FollowButton from './FollowButton';
-// import CommentsSection from './CommentsSection';
+import CommentsSection from './CommentsSection';
 import { PostType } from '../lib/types';
 
 const Post = ({ post }: { post: PostType }) => {
@@ -118,11 +118,11 @@ const Post = ({ post }: { post: PostType }) => {
           <h3 className="text-lg font-medium ">About this project:</h3>
           <div className="font-satoshi">{description}</div>
         </div>
-        {/* <CommentsSection
-          postId={post.id}
+        <CommentsSection
+          post={post}
           showComments={showComments}
           toggleShowComments={toggleShowComments}
-        /> */}
+        />
 
         {(toolsUsed || tags) && (
           <div className="flex">
