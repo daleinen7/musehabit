@@ -51,6 +51,7 @@ interface ProfileData {
   joined: number;
   latestPost: Date | false;
   savedPosts: { [postId: string]: boolean };
+  following: { [userId: string]: boolean };
 }
 
 export const useAuth = () => {
@@ -127,6 +128,7 @@ export const AuthContextProvider = ({
                 joined: profileData?.joined,
                 latestPost: false,
                 savedPosts: profileData?.savedPosts || {},
+                following: profileData?.following || {},
                 settings: {
                   dayBeforeNotification: false,
                   weekBeforeNotification: false,
@@ -221,6 +223,7 @@ export const AuthContextProvider = ({
           joined: profileData?.joined,
           latestPost: false,
           savedPosts: profileData?.savedPosts || {},
+          following: profileData?.following || {},
           settings: {
             dayBeforeNotification: false,
             weekBeforeNotification: false,
@@ -300,6 +303,7 @@ export const AuthContextProvider = ({
             joined: profileData?.joined || '',
             latestPost: profileData?.latestPost || '',
             savedPosts: profileData?.savedPosts || {},
+            following: profileData?.following || {},
             settings: {
               dayBeforeNotification: false,
               weekBeforeNotification: false,

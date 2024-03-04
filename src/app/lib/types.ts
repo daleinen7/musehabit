@@ -42,6 +42,7 @@ export type UserType = {
     joined?: number;
     latestPost?: number | false;
     savedPosts: { [postId: string]: boolean };
+    following: { [userId: string]: boolean };
     settings: {
       dayBeforeNotification?: boolean;
       weekBeforeNotification?: boolean;

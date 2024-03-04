@@ -4,7 +4,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 import getFileType from '@/app/lib/getFileType';
 import SaveButton from './SaveButton';
-// import FollowButton from './FollowButton';
+import FollowButton from './FollowButton';
 // import CommentsSection from './CommentsSection';
 import { PostType } from '../lib/types';
 
@@ -75,6 +75,8 @@ const Post = ({ post }: { post: PostType }) => {
     ),
   };
 
+  console.log('Stuffs: ', user, posterData);
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex">
       <div className="flex flex-col w-full gap-9">
@@ -95,11 +97,11 @@ const Post = ({ post }: { post: PostType }) => {
               {[medium, location, postedAt].filter(Boolean).join(' | ')}
             </div>
           </div>
-          {/* {userProfile && username !== userProfile.username && (
+          {user && user.uid !== posterData.uid && (
             <div className="items-end ml-auto">
-              <FollowButton artistUid={uid} />
+              <FollowButton artistUid={posterData.uid} />
             </div>
-          )} */}
+          )}
         </div>
         {displayFile[getFileType(format)] || (
           <div className="w-20 h-20 rounded-full bg-slate-300" />

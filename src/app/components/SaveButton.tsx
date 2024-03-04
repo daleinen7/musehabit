@@ -14,7 +14,6 @@ const SaveButton = ({ postUid }: { postUid: string }) => {
 
   const handleSave = async () => {
     if (!user) {
-      // Handle the case when the user is not authenticated
       setShowModal(true);
       return;
     }
