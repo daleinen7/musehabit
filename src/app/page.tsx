@@ -84,33 +84,46 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col max-w-[44rem] mt-16 gap-9 mb-9">
-        <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
-          This is a tagline that summarizes Musehabit
-        </h2>
-        <p className="text-center text-2xl">
-          This is a small description of Musehabit. It gives a little more
-          detail about what users can do on the website.
-        </p>
-        <h3>Feed</h3>
-        {selectedFeed === 'global' ? (
-          <button
-            onClick={() => setSelectedFeed('following')}
-            className="btn btn-primary"
-          >
-            Switch to Following Feed
-          </button>
+      <div className="w-full">
+        {!user && (
+          <div className="flex flex-col max-w-[44rem] mt-16 gap-9 mb-9">
+            <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
+              This is a tagline that summarizes Musehabit
+            </h2>
+            <p className="text-center text-2xl">
+              This is a small description of Musehabit. It gives a little more
+              detail about what users can do on the website.
+            </p>
+          </div>
+        )}
+
+        {user ? (
+          <div className="w-full width-wrapper flex text-xl font-hepta text-center font-bold mt-8">
+            <button
+              className={`w-full border-b border-b-slate-700 py-4 ${
+                selectedFeed === 'global' ? 'bg-slate-200' : ''
+              }`}
+              onClick={() => setSelectedFeed('global')}
+            >
+              Global Feed
+            </button>
+            <button
+              className={`w-full border-b border-b-slate-700 py-4 ${
+                selectedFeed === 'following' ? 'bg-slate-200' : ''
+              }`}
+              onClick={() => setSelectedFeed('following')}
+            >
+              <span>Following Feed</span>
+            </button>
+          </div>
         ) : (
-          <button
-            onClick={() => setSelectedFeed('global')}
-            className="btn btn-primary"
-          >
-            Switch to Global Feed
-          </button>
+          <h3 className="text-4xl font-hepta text-center font-bold">
+            Global Feed
+          </h3>
         )}
       </div>
       {posts.length > 0 ? (
-        <ul className="width-wrapper w-full flex flex-col gap-32">
+        <ul className="width-wrapper w-full flex flex-col gap-32 my-16">
           {posts.map((post) => (
             <li key={post.id}>
               <Post post={post} />
