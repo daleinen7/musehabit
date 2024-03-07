@@ -75,8 +75,6 @@ const Post = ({ post }: { post: PostType }) => {
     ),
   };
 
-  console.log('Stuffs: ', user, posterData);
-
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex">
       <div className="flex flex-col w-full gap-9">

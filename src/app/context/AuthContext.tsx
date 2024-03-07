@@ -16,6 +16,8 @@ import { getDoc, doc, setDoc } from 'firebase/firestore';
 import slugify from '@/app/lib/slugify';
 import { useRouter } from 'next/navigation';
 import { UserType } from '@/app/lib/types';
+import { canUserPost } from '../lib/canUserPost';
+import { daysUntilNextPost as daysUntilPost } from '../lib/daysUntilNextPost';
 
 type AuthContextType = {
   user: UserType | null;
@@ -27,6 +29,8 @@ type AuthContextType = {
   emailSignUp: (email: string, password: string, username: string) => void;
   signIn: (email: string, password: string) => void;
   updateProfile: (displayName: string, photoURL: string) => void;
+  canPost: boolean;
+  daysUntilNextPost: number;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -39,19 +43,30 @@ const AuthContext = createContext<AuthContextType>({
   emailSignUp: () => {},
   signIn: () => {},
   updateProfile: () => {},
+  canPost: false,
+  daysUntilNextPost: 0,
 });
 
 interface ProfileData {
-  username: string;
-  url: string;
   bio: string;
-  medium: string;
-  location: string;
-  photoURL: string | undefined;
+  email: string;
+  following: { [userId: string]: boolean };
   joined: number;
   latestPost: Date | false;
+  medium: string;
+  photoURL: string | undefined;
+  posts: { [postId: string]: boolean };
+  location: string;
   savedPosts: { [postId: string]: boolean };
-  following: { [userId: string]: boolean };
+  uid: string;
+  url: string;
+  username: string;
+  settings: {
+    dayBeforeNotification: boolean;
+    weekBeforeNotification: boolean;
+    tenDaysBefore: boolean;
+    accountabilityNotice: boolean;
+  };
 }
 
 export const useAuth = () => {
@@ -64,6 +79,8 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }>) => {
   const [user, setUser] = useState<UserType | null>(null);
+  const [canPost, setCanPost] = useState<boolean | undefined>(undefined);
+  const [daysUntilNextPost, setDaysUntilNextPost] = useState<number>(NaN);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -115,6 +132,15 @@ export const AuthContextProvider = ({
               following: {},
               joined: Date.now(),
               latestPost: false,
+              email: user.email || '',
+              posts: {},
+              uid: user.uid,
+              settings: {
+                dayBeforeNotification: false,
+                weekBeforeNotification: false,
+                tenDaysBefore: false,
+                accountabilityNotice: false,
+              },
             };
             setUser({
               uid: user.uid,
@@ -139,6 +165,9 @@ export const AuthContextProvider = ({
                 },
               },
             });
+            // User has never posted so allow them to
+            setCanPost(true);
+
             router.push(`/artist/${profileData.username}/profile/edit`);
           } else {
             // User is signing in
@@ -186,21 +215,8 @@ export const AuthContextProvider = ({
 
       const user = userCredential.user;
 
-      await setDoc(doc(firestore, 'users', user.uid), {
-        username: slugify(username),
-        email: user.email,
-        uid: user.uid,
-        photoURL: user.photoURL,
-      });
-
-      await setDoc(doc(firestore, 'users', user.uid), {
-        username,
-        email: user.email,
-        uid: user.uid,
-        photoURL: user.photoURL,
-      });
-
       const profileData: ProfileData = {
+        uid: user.uid,
         username,
         url: username,
         bio: '',
@@ -211,7 +227,20 @@ export const AuthContextProvider = ({
         following: {},
         joined: Date.now(),
         latestPost: false,
+        email: user.email || '',
+        posts: {},
+        settings: {
+          dayBeforeNotification: false,
+          weekBeforeNotification: false,
+          tenDaysBefore: false,
+          accountabilityNotice: false,
+        },
       };
+
+      await setDoc(doc(firestore, 'users', user.uid), {
+        ...profileData,
+      });
+
       setUser({
         uid: user.uid,
         email: user.email || '',
@@ -224,7 +253,7 @@ export const AuthContextProvider = ({
           medium: profileData?.medium || '',
           location: profileData?.location || '',
           photoURL: profileData?.photoURL || '',
-          joined: profileData?.joined,
+          joined: profileData?.joined || Date.now(),
           latestPost: false,
           savedPosts: profileData?.savedPosts || {},
           following: profileData?.following || {},
@@ -267,6 +296,9 @@ export const AuthContextProvider = ({
     signIn,
     signInWithGoogle,
     emailSignUp,
+    canPost,
+    daysUntilNextPost,
+
     updateProfile: (displayName: string, photoURL: string) => {
       if (user) {
         const profileData = {
@@ -282,14 +314,13 @@ export const AuthContextProvider = ({
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userDoc = await getDoc(doc(firestore, 'users', user.uid));
-        if (!userDoc.exists()) {
-          await setDoc(doc(firestore, 'users', user.uid), {
-            username: user.displayName ? slugify(user.displayName) : '',
-            email: user.email || '',
-            uid: user.uid,
-            photoURL: user.photoURL || '',
-          });
-        }
+        const canPostCheck = await canUserPost(user.uid);
+        await setCanPost(canPostCheck);
+        const daysUntilNextPostCheck = await daysUntilPost(user.uid);
+
+        console.log('daysUntilNextPostCheck: ', daysUntilNextPostCheck);
+
+        await setDaysUntilNextPost(daysUntilNextPostCheck.daysUntilNextPost);
 
         const profileData = userDoc.data();
         setUser({

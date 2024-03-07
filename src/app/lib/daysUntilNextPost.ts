@@ -7,9 +7,11 @@ export async function daysUntilNextPost(userId: string) {
 
   if (!userSnapshot.exists()) {
     // Handle the case where the user doesn't exist
+    console.log('User does not exist');
+
     return {
       canPost: false,
-      daysUntilNextPost: null,
+      daysUntilNextPost: NaN,
     };
   }
 

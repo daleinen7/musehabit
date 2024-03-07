@@ -13,49 +13,26 @@ import {
 import { firestore } from './lib/firebase';
 import Post from './components/Post';
 import { PostType } from './lib/types';
+import { log } from 'console';
 
 export default function Home() {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [selectedFeed, setSelectedFeed] = useState('global');
   const { user } = useAuth();
-  // if (user) {
-  //   console.log('user', user);
-  // }
+  if (user) {
+    console.log('user', user);
+  }
 
   useEffect(() => {
-    const getFollowingPosts = async () => {
-      // get the user's following list
-      const followingRef = collection(firestore, `followers/${user?.uid}`);
-
-      // get posts of all the users on the following list
-      const followingSnapshot = await getDocs(followingRef);
-
-      const followingData = followingSnapshot.docs.map((doc) => doc.id);
-
-      console.log('FOLLOWING DATA: ', followingData);
-
-      // get the posts of the users on the following list
-      const followingPostsRef = collection(firestore, 'posts');
-
-      const followingPostsQuery = query(
-        followingPostsRef,
-        where('poster', 'in', followingData),
-        orderBy('postedAt', 'desc') // assuming 'postedAt' is the field name for timestamp
-      );
-
-      const followingPostsSnapshot = await getDocs(followingPostsQuery);
-      return followingPostsSnapshot.docs.map((doc) => doc.data());
-    };
-
     const fetchPosts = async () => {
       let postsRef;
 
       if (selectedFeed === 'global') {
-        postsRef = collection(firestore, 'posts');
-      } else {
-        const followingPosts = await getFollowingPosts();
+        const postsRef = collection(firestore, 'posts');
+        const postsSnapshot = await getDocs(postsRef);
+        const postsData = postsSnapshot.docs.map((doc) => doc.data());
         const postsWithUserData = await Promise.all(
-          followingPosts.map(async (post) => {
+          postsData.map(async (post) => {
             const posterRef = doc(firestore, 'users', post.poster);
             const posterSnapshot = await getDoc(posterRef);
             const posterData = posterSnapshot.data() as PostType['posterData'];
@@ -63,20 +40,40 @@ export default function Home() {
           })
         );
         setPosts(postsWithUserData);
-        return;
-      }
+      } else {
+        if (!user) {
+          console.error('User is missing');
+          return;
+        }
 
-      const postsSnapshot = await getDocs(postsRef);
-      const postsData = postsSnapshot.docs.map((doc) => doc.data());
-      const postsWithUserData = await Promise.all(
-        postsData.map(async (post) => {
-          const posterRef = doc(firestore, 'users', post.poster);
-          const posterSnapshot = await getDoc(posterRef);
-          const posterData = posterSnapshot.data() as PostType['posterData'];
-          return { ...post, posterData } as PostType;
-        })
-      );
-      setPosts(postsWithUserData);
+        if (
+          Object.keys(user.profile.following).length &&
+          Object.keys(user.profile.following)
+        ) {
+          const followingList = Object.keys(user.profile.following);
+
+          postsRef = collection(firestore, 'posts');
+          const postsSnapshot = await getDocs(
+            query(postsRef, where('poster', 'in', followingList))
+          );
+
+          const postsData = postsSnapshot.docs.map((doc) => doc.data());
+
+          const postsWithUserData = await Promise.all(
+            postsData.map(async (post) => {
+              const posterRef = doc(firestore, 'users', post.poster);
+              const posterSnapshot = await getDoc(posterRef);
+              const posterData =
+                posterSnapshot.data() as PostType['posterData'];
+              return { ...post, posterData } as PostType;
+            })
+          );
+
+          setPosts(postsWithUserData);
+        } else {
+          console.error('Following data is missing or not an array');
+        }
+      }
     };
 
     fetchPosts();
@@ -86,7 +83,7 @@ export default function Home() {
     <>
       <div className="w-full">
         {!user && (
-          <div className="flex flex-col max-w-[44rem] mt-16 gap-9 mb-9">
+          <div className="flex flex-col max-w-[44rem] mx-auto mt-16 gap-9 mb-9">
             <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
               This is a tagline that summarizes Musehabit
             </h2>
