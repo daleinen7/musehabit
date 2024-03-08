@@ -52,6 +52,19 @@ export type UserType = {
   };
 };
 
+export type ArtistType = {
+  uid: string;
+  username: string;
+  location: string;
+  photoURL: string;
+  medium: string;
+  joined: number;
+  bio: string;
+  latestPost: number | false;
+  email: string;
+  posts: { [postId: string]: boolean };
+};
+
 export type CommentType = {
   text: string;
   posterId: string;

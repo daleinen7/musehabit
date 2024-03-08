@@ -318,8 +318,6 @@ export const AuthContextProvider = ({
         await setCanPost(canPostCheck);
         const daysUntilNextPostCheck = await daysUntilPost(user.uid);
 
-        console.log('daysUntilNextPostCheck: ', daysUntilNextPostCheck);
-
         await setDaysUntilNextPost(daysUntilNextPostCheck.daysUntilNextPost);
 
         const profileData = userDoc.data();

@@ -13,7 +13,6 @@ import {
 import { firestore } from './lib/firebase';
 import Post from './components/Post';
 import { PostType } from './lib/types';
-import { log } from 'console';
 
 export default function Home() {
   const [posts, setPosts] = useState<PostType[]>([]);

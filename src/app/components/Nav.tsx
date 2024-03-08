@@ -62,7 +62,7 @@ const Nav = () => {
             <>
               <NavItem func={handleDropdown} text="Profile">
                 {showProfile && (
-                  <ul className="absolute mt-2 bg-white shadow-lg p-4 z-50">
+                  <ul className="absolute w-[9rem] mt-2 bg-white shadow-lg p-4 z-50">
                     <li>
                       <Link href={`/artist/${user.profile.username}`}>
                         View Profile
@@ -91,7 +91,10 @@ const Nav = () => {
                     Make Your Post
                   </Link>
                   <div className="absolute -top-3 right-0 bg-red-600 text-white rounded-[10px] px-[3px] -py-1">
-                    {daysUntilNextPost} Days
+                    {user.profile.latestPost &&
+                      (daysUntilNextPost + daysUntilNextPost === 1
+                        ? 'Day'
+                        : 'Days')}
                   </div>
                 </li>
               ) : (
