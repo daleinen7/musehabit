@@ -70,47 +70,47 @@ const EditProfile = () => {
     }
   }, [user]);
 
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImagePreview(event.target.result);
-      };
-      reader.readAsDataURL(file);
-      setForm({ ...form, profileImage: file });
-    }
-  };
+  // const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (event) => {
+  //       setImagePreview(event.target.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //     setForm({ ...form, profileImage: file });
+  //   }
+  // };
 
-  const handleFormChange = (e) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
-  };
+  // const handleFormChange = (e) => {
+  //   setForm({ ...form, [e.target.id]: e.target.value });
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-    if (form.profileImage) {
-      let profileImageUrl = '';
+  //   if (form.profileImage) {
+  //     let profileImageUrl = '';
 
-      if (typeof form.profileImage === 'string') {
-        // If form.profileImage is a string, assume it's a URL (Google profile image URL)
-        profileImageUrl = form.profileImage;
-      } else if (form.profileImage) {
-        // If form.profileImage is a file, proceed with uploading it
-        const fileExtension = (form.profileImage as File).name.split('.').pop();
-        profileImageUrl = await uploadFileToStorage(
-          storage,
-          `users/${user.uid}/profile.${fileExtension}`,
-          form.profileImage as File
-        );
-      }
+  //     if (typeof form.profileImage === 'string') {
+  //       // If form.profileImage is a string, assume it's a URL (Google profile image URL)
+  //       profileImageUrl = form.profileImage;
+  //     } else if (form.profileImage) {
+  //       // If form.profileImage is a file, proceed with uploading it
+  //       const fileExtension = (form.profileImage as File).name.split('.').pop();
+  //       profileImageUrl = await uploadFileToStorage(
+  //         storage,
+  //         `users/${user.uid}/profile.${fileExtension}`,
+  //         form.profileImage as File
+  //       );
+  //     }
 
-      form.profileImageUrl = profileImageUrl;
-    }
+  //     form.profileImageUrl = profileImageUrl;
+  //   }
 
-    await updateUserProfile(form);
-    router.push(`/artist/${userProfile.url}/profile`);
-  };
+  //   await updateUserProfile(form);
+  //   router.push(`/artist/${userProfile.url}/profile`);
+  // };
 
   return <>edit profile</>;
 };

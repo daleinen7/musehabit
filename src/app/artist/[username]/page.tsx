@@ -25,25 +25,11 @@ const Profile = ({ params }: { params: any }) => {
           const userSnapshot = await getDocs(userQuery);
 
           if (!userSnapshot.empty) {
-            const userData = userSnapshot.docs[0].data() as ArtistType;
-
-            // Step 2: Query the 'posts' collection to find all posts by this user
-            const postsQuery = query(
-              collection(firestore, 'posts'),
-              where('poster', '==', userData.uid)
-            );
-            const postsSnapshot = await getDocs(postsQuery);
-
-            const postsData = postsSnapshot.docs.map((doc) => ({
+            const postsData = userSnapshot.docs.map((doc): unknown => ({
               id: doc.id,
               ...doc.data(),
-              posterData: userData,
+              posterData: postsData,
             })) as PostType[];
-
-            console.log('User:', userData);
-            console.log('Posts:', postsData);
-
-            setArtist(userData);
             setPosts(postsData);
           } else {
             console.log('User not found');
