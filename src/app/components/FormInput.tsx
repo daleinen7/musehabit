@@ -5,7 +5,7 @@ type FormInputProps = {
   label: string;
   type: string;
   handleFormChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  required: boolean;
+  required?: boolean;
   value: string;
   profile?: boolean;
 };

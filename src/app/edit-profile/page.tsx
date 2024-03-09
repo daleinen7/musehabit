@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEventHandler } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -79,7 +79,7 @@ const EditProfile = () => {
         if (event.target) setImagePreview(event.target.result as string);
       };
       reader.readAsDataURL(file);
-      setForm({ ...form, profileImage: file.name }); 
+      setForm({ ...form, profileImage: file.name });
     }
   };
 
@@ -90,7 +90,7 @@ const EditProfile = () => {
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
-    if(!user) return;
+    if (!user) return;
 
     if (form.profileImage) {
       let profileImageUrl = '';
@@ -115,6 +115,80 @@ const EditProfile = () => {
     router.push(`/artist/${user.profile.username}/profile`);
   };
 
-  return <>edit profile</>;
+  return (
+    user && (
+      <div className="flex flex-col gap-[2.5rem] items-center">
+        <Link
+          href={`/artist/${user.profile.url}/profile`}
+          className="underline self-end"
+        >
+          I&apos;ll do this later
+        </Link>
+        {user.displayName ? (
+          <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
+            Hey {user.displayName}! <br /> Welcome to your Musehabit Profile.
+          </h2>
+        ) : (
+          <h2 className=" font-satoshi text-[2.25rem] font-bold">
+            Edit Profile
+          </h2>
+        )}
+
+        <p className="font-satoshi text-[1.5rem]">
+          Now that you&apos;ve created your account, let&apos;s build it out.
+        </p>
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Profile Preview"
+            className="mt-2 w-32 h-32 object-cover rounded-full"
+          />
+        )}
+        <form
+          onSubmit={
+            handleSubmit as unknown as FormEventHandler<HTMLFormElement>
+          }
+          className="flex flex-col items-center gap-[1.5rem] w-full"
+        >
+          {formData.map((item) => (
+            <React.Fragment key={item.id}>
+              {item.id === 'profileImage' ? (
+                <>
+                  <label
+                    htmlFor={item.id}
+                    className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
+                  >
+                    {item.label}
+                    <input
+                      type={item.type}
+                      id={item.id}
+                      onChange={handleFileInputChange}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                  </label>
+                </>
+              ) : (
+                <FormInput
+                  id={item.id}
+                  type={item.type}
+                  label={item.label}
+                  handleFormChange={handleFormChange}
+                  value={form[item.id as keyof typeof form]}
+                  profile
+                />
+              )}
+            </React.Fragment>
+          ))}
+          <button
+            type="submit"
+            className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
+          >
+            Save Profile Info
+          </button>
+        </form>
+      </div>
+    )
+  );
 };
 export default EditProfile;
