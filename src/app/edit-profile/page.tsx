@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { firestore } from '@/app/lib/firebase';
+import { firestore, storage } from '@/app/lib/firebase';
 import { useAuth } from '@/app/context/AuthContext';
 import FormInput from '../components/FormInput';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
@@ -44,13 +44,14 @@ const formData = [
 const EditProfile = () => {
   const [form, setForm] = useState({
     profileImage: '',
+    profileImageUrl: '',
     displayName: '',
     location: '',
     medium: '',
     bio: '',
   });
 
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const router = useRouter();
@@ -70,47 +71,49 @@ const EditProfile = () => {
     }
   }, [user]);
 
-  // const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = (event) => {
-  //       setImagePreview(event.target.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //     setForm({ ...form, profileImage: file });
-  //   }
-  // };
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target) setImagePreview(event.target.result as string);
+      };
+      reader.readAsDataURL(file);
+      setForm({ ...form, profileImage: file.name }); 
+    }
+  };
 
-  // const handleFormChange = (e) => {
-  //   setForm({ ...form, [e.target.id]: e.target.value });
-  // };
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
+  };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
+  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
 
-  //   if (form.profileImage) {
-  //     let profileImageUrl = '';
+    if(!user) return;
 
-  //     if (typeof form.profileImage === 'string') {
-  //       // If form.profileImage is a string, assume it's a URL (Google profile image URL)
-  //       profileImageUrl = form.profileImage;
-  //     } else if (form.profileImage) {
-  //       // If form.profileImage is a file, proceed with uploading it
-  //       const fileExtension = (form.profileImage as File).name.split('.').pop();
-  //       profileImageUrl = await uploadFileToStorage(
-  //         storage,
-  //         `users/${user.uid}/profile.${fileExtension}`,
-  //         form.profileImage as File
-  //       );
-  //     }
+    if (form.profileImage) {
+      let profileImageUrl = '';
 
-  //     form.profileImageUrl = profileImageUrl;
-  //   }
+      if (typeof form.profileImage === 'string') {
+        // If form.profileImage is a string, assume it's a URL (Google profile image URL)
+        profileImageUrl = form.profileImage;
+      } else if (form.profileImage) {
+        // If form.profileImage is a file, proceed with uploading it
+        const fileExtension = (form.profileImage as File).name.split('.').pop();
+        profileImageUrl = await uploadFileToStorage(
+          storage,
+          `users/${user.uid}/profile.${fileExtension}`,
+          form.profileImage as File
+        );
+      }
 
-  //   await updateUserProfile(form);
-  //   router.push(`/artist/${userProfile.url}/profile`);
-  // };
+      form.profileImageUrl = profileImageUrl;
+    }
+
+    await updateProfile();
+    router.push(`/artist/${user.profile.username}/profile`);
+  };
 
   return <>edit profile</>;
 };

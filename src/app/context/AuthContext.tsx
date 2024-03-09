@@ -8,7 +8,6 @@ import {
   sendPasswordResetEmail,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  updateProfile,
   getRedirectResult,
 } from 'firebase/auth';
 import { auth, firestore } from '@/app/lib/firebase';
@@ -28,7 +27,7 @@ type AuthContextType = {
   createUser: (email: string, password: string) => void;
   emailSignUp: (email: string, password: string, username: string) => void;
   signIn: (email: string, password: string) => void;
-  updateProfile: (displayName: string, photoURL: string) => void;
+  updateUserProfile: (userId: string, profileInfo: any) => void;
   canPost: boolean;
   daysUntilNextPost: number;
 };
@@ -42,7 +41,7 @@ const AuthContext = createContext<AuthContextType>({
   createUser: () => {},
   emailSignUp: () => {},
   signIn: () => {},
-  updateProfile: () => {},
+  updateUserProfile: () => {},
   canPost: false,
   daysUntilNextPost: 0,
 });
@@ -79,7 +78,7 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }>) => {
   const [user, setUser] = useState<UserType | null>(null);
-  const [canPost, setCanPost] = useState<boolean | undefined>(undefined);
+  const [canPost, setCanPost] = useState<boolean>(false);
   const [daysUntilNextPost, setDaysUntilNextPost] = useState<number>(NaN);
   const [loading, setLoading] = useState(true);
 
@@ -298,16 +297,7 @@ export const AuthContextProvider = ({
     emailSignUp,
     canPost,
     daysUntilNextPost,
-
-    updateProfile: (displayName: string, photoURL: string) => {
-      if (user) {
-        const profileData = {
-          displayName,
-          photoURL,
-        };
-        updateProfile(user.uid, profileData);
-      }
-    },
+    updateUserProfile: updateProfile,
   };
 
   useEffect(() => {
