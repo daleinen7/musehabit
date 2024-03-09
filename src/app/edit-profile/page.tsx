@@ -51,7 +51,7 @@ const EditProfile = () => {
     bio: '',
   });
 
-  const { user, updateProfile } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const router = useRouter();
@@ -111,7 +111,7 @@ const EditProfile = () => {
       form.profileImageUrl = profileImageUrl;
     }
 
-    await updateProfile();
+    await updateUserProfile(user.uid, form);
     router.push(`/artist/${user.profile.username}/profile`);
   };
 
