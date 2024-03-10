@@ -33,19 +33,23 @@ const FormInput: React.FC<FormInputProps> = ({
         />
       </label>
     );
+  } else if (type === 'file') {
+    return (
+      <label
+        htmlFor={id}
+        className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
+      >
+        {label}
+        <input
+          type={type}
+          id={id}
+          onChange={handleFormChange}
+          accept="image/*"
+          className="hidden"
+        />
+      </label>
+    );
   }
-
-  type FormInputProps = {
-    id: string;
-    label: string;
-    type: string;
-    handleFormChange: (
-      e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
-    ) => void;
-    required: boolean;
-    value: string;
-    profile?: boolean;
-  };
 
   if (profile) {
     return (

@@ -62,7 +62,9 @@ const EditProfile = () => {
   });
 
   const { user, updateUserProfile } = useAuth();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null | undefined>(
+    null
+  );
 
   const router = useRouter();
 
@@ -192,7 +194,7 @@ const EditProfile = () => {
                   type={item.type}
                   label={item.label}
                   handleFormChange={handleFormChange}
-                  value={form[item.id as keyof typeof form]}
+                  value={String(form[item.id as keyof typeof form])}
                   profile
                 />
               )}
