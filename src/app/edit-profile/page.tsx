@@ -139,79 +139,100 @@ const EditProfile = () => {
 
   return (
     user && (
-      <div className="flex flex-col gap-[2.5rem] items-center">
-        <Link
-          href={`/artist/${user.profile.url}`}
-          className="underline self-end"
-        >
-          I&apos;ll do this later
-        </Link>
-        {user.displayName ? (
-          <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
-            Hey {user.displayName}! <br /> Welcome to your Musehabit Profile.
-          </h2>
-        ) : (
-          <h2 className=" font-satoshi text-[2.25rem] font-bold">
-            Edit Profile
-          </h2>
-        )}
-
-        <p className="font-satoshi text-[1.5rem]">
-          Now that you&apos;ve created your account, let&apos;s build it out.
-        </p>
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Profile Preview"
-            className="mt-2 w-32 h-32 object-cover rounded-full"
-          />
-        )}
-        <form
-          onSubmit={
-            handleSubmit as unknown as FormEventHandler<HTMLFormElement>
-          }
-          className="flex flex-col items-center gap-[1.5rem] w-full"
-        >
-          {profileFormData.map((item) => (
-            <React.Fragment key={item.id}>
-              {item.id === 'profileImage' ? (
-                <>
-                  <label
-                    htmlFor={item.id}
-                    className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
-                  >
-                    {item.label}
-                    <input
-                      type={item.type}
-                      id={item.id}
-                      onChange={handleFileInputChange}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                  </label>
-                </>
-              ) : (
-                <FormInput
-                  id={item.id}
-                  type={item.type}
-                  label={item.label}
-                  handleFormChange={handleFormChange}
-                  value={String(
-                    profileForm[item.id as keyof typeof profileForm]
-                  )}
-                  profile
-                />
-              )}
-            </React.Fragment>
-          ))}
+      <>
+        <div className="w-full width-wrapper flex text-xl font-hepta text-center font-bold mt-8">
           <button
-            type="submit"
-            className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
+            className={`w-full border-b border-b-slate-700 py-4 ${
+              selectedFeed === 'profile' ? 'bg-slate-200' : ''
+            }`}
+            onClick={() => setSelectedFeed('profile')}
           >
-            Save Profile Info
+            Profile
           </button>
-        </form>
-      </div>
+          <button
+            className={`w-full border-b border-b-slate-700 py-4 ${
+              selectedFeed === 'account' ? 'bg-slate-200' : ''
+            }`}
+            onClick={() => setSelectedFeed('account')}
+          >
+            <span>Account</span>
+          </button>
+        </div>
+        )
+        <div className="flex flex-col gap-[2.5rem] items-center">
+          <Link
+            href={`/artist/${user.profile.url}`}
+            className="underline self-end"
+          >
+            I&apos;ll do this later
+          </Link>
+          {user.displayName ? (
+            <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
+              Hey {user.displayName}! <br /> Welcome to your Musehabit Profile.
+            </h2>
+          ) : (
+            <h2 className=" font-satoshi text-[2.25rem] font-bold">
+              Edit Profile
+            </h2>
+          )}
+
+          <p className="font-satoshi text-[1.5rem]">
+            Now that you&apos;ve created your account, let&apos;s build it out.
+          </p>
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="Profile Preview"
+              className="mt-2 w-32 h-32 object-cover rounded-full"
+            />
+          )}
+          <form
+            onSubmit={
+              handleSubmit as unknown as FormEventHandler<HTMLFormElement>
+            }
+            className="flex flex-col items-center gap-[1.5rem] w-full"
+          >
+            {profileFormData.map((item) => (
+              <React.Fragment key={item.id}>
+                {item.id === 'profileImage' ? (
+                  <>
+                    <label
+                      htmlFor={item.id}
+                      className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
+                    >
+                      {item.label}
+                      <input
+                        type={item.type}
+                        id={item.id}
+                        onChange={handleFileInputChange}
+                        accept="image/*"
+                        className="hidden"
+                      />
+                    </label>
+                  </>
+                ) : (
+                  <FormInput
+                    id={item.id}
+                    type={item.type}
+                    label={item.label}
+                    handleFormChange={handleFormChange}
+                    value={String(
+                      profileForm[item.id as keyof typeof profileForm]
+                    )}
+                    profile
+                  />
+                )}
+              </React.Fragment>
+            ))}
+            <button
+              type="submit"
+              className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
+            >
+              Save Profile Info
+            </button>
+          </form>
+        </div>
+      </>
     )
   );
 };

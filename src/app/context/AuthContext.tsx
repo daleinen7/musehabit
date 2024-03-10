@@ -146,6 +146,7 @@ export const AuthContextProvider = ({
               displayName: user.displayName || '',
               photoURL: user.photoURL || '',
               profile: {
+                displayName: user.displayName || '',
                 username: profileData?.username || '',
                 url: profileData?.url || '',
                 bio: profileData?.bio || '',
@@ -246,6 +247,7 @@ export const AuthContextProvider = ({
         displayName: user.displayName || '',
         photoURL: user.photoURL || '',
         profile: {
+          displayName: user.displayName || '',
           username: profileData?.username || '',
           url: profileData?.url || '',
           bio: profileData?.bio || '',
@@ -317,6 +319,7 @@ export const AuthContextProvider = ({
           displayName: user.displayName || '',
           photoURL: user.photoURL || '',
           profile: {
+            displayName: user.displayName || '',
             username: profileData?.username || '',
             url: profileData?.url || '',
             bio: profileData?.bio || '',
