@@ -7,7 +7,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import FormInput from '../components/FormInput';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
 
-interface FormState {
+interface ProfileFormState {
   profileImage: File | string | null;
   profileImageUrl: string;
   photoUrl: string;
@@ -17,7 +17,7 @@ interface FormState {
   bio: string;
 }
 
-const formData = [
+const profileFormData = [
   {
     id: 'profileImage',
     type: 'file',
@@ -51,7 +51,7 @@ const formData = [
 ];
 
 const EditProfile = () => {
-  const [form, setForm] = useState<FormState>({
+  const [profileForm, setProfileForm] = useState<ProfileFormState>({
     profileImage: null,
     profileImageUrl: '',
     photoUrl: '',
@@ -60,6 +60,8 @@ const EditProfile = () => {
     medium: '',
     bio: '',
   });
+
+  const [selectedFeed, setSelectedFeed] = useState('profile');
 
   const { user, updateUserProfile } = useAuth();
   const [imagePreview, setImagePreview] = useState<string | null | undefined>(
@@ -70,7 +72,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (user) {
-      setForm((prevForm) => ({
+      setProfileForm((prevForm) => ({
         ...prevForm,
         profileImage: user.profile.photoURL || null,
         displayName: user.profile.displayName || '',
@@ -91,12 +93,12 @@ const EditProfile = () => {
         if (event.target) setImagePreview(event.target.result as string);
       };
       reader.readAsDataURL(file);
-      setForm({ ...form, profileImage: file });
+      setProfileForm({ ...profileForm, profileImage: file });
     }
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+    setProfileForm({ ...profileForm, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,33 +106,33 @@ const EditProfile = () => {
 
     if (!user) return;
 
-    if (form.profileImage) {
+    if (profileForm.profileImage) {
       let profileImageUrl = '';
 
-      if (typeof form.profileImage === 'string') {
+      if (typeof profileForm.profileImage === 'string') {
         // If form.profileImage is a string, assume it's a URL (Google profile image URL)
-        profileImageUrl = form.profileImage;
-      } else if (form.profileImage) {
+        profileImageUrl = profileForm.profileImage;
+      } else if (profileForm.profileImage) {
         // If form.profileImage is a file, proceed with uploading it
-        const fileExtension = (form.profileImage as File).name.split('.').pop();
+        const fileExtension = (profileForm.profileImage as File).name
+          .split('.')
+          .pop();
         profileImageUrl = await uploadFileToStorage(
           storage,
           `users/${user.uid}/profile.${fileExtension}`,
-          form.profileImage as File
+          profileForm.profileImage as File
         );
       }
 
-      form.photoUrl = profileImageUrl;
+      profileForm.photoUrl = profileImageUrl;
     }
 
-    console.log('form', form);
-
     await updateUserProfile(user.uid, {
-      displayName: form.displayName,
-      location: form.location,
-      medium: form.medium,
-      bio: form.bio,
-      photoURL: form.photoUrl,
+      displayName: profileForm.displayName,
+      location: profileForm.location,
+      medium: profileForm.medium,
+      bio: profileForm.bio,
+      photoURL: profileForm.photoUrl,
     });
     router.push(`/artist/${user.profile.username}`);
   };
@@ -170,7 +172,7 @@ const EditProfile = () => {
           }
           className="flex flex-col items-center gap-[1.5rem] w-full"
         >
-          {formData.map((item) => (
+          {profileFormData.map((item) => (
             <React.Fragment key={item.id}>
               {item.id === 'profileImage' ? (
                 <>
@@ -194,7 +196,9 @@ const EditProfile = () => {
                   type={item.type}
                   label={item.label}
                   handleFormChange={handleFormChange}
-                  value={String(form[item.id as keyof typeof form])}
+                  value={String(
+                    profileForm[item.id as keyof typeof profileForm]
+                  )}
                   profile
                 />
               )}

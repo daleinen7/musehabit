@@ -34,6 +34,7 @@ const Nav = () => {
   const handleLogOut = async () => {
     try {
       await signOut();
+      setShowProfile(false);
     } catch (error) {
       console.log('ERROR: ', error);
     }
@@ -98,7 +99,6 @@ const Nav = () => {
                       <button
                         onClick={handleLogOut}
                         className="flex items-center"
-                        onClick={() => setShowProfile(false)}
                       >
                         Logout
                       </button>
