@@ -69,7 +69,7 @@ const Nav = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/profile/edit">Edit Profile</Link>
+                      <Link href="/edit-profile">Edit Profile</Link>
                     </li>
                     <li>
                       <Link href="/profile/settings">Settings</Link>

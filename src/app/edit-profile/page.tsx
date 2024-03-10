@@ -112,14 +112,14 @@ const EditProfile = () => {
     }
 
     await updateUserProfile(user.uid, form);
-    router.push(`/artist/${user.profile.username}/profile`);
+    router.push(`/artist/${user.profile.username}`);
   };
 
   return (
     user && (
       <div className="flex flex-col gap-[2.5rem] items-center">
         <Link
-          href={`/artist/${user.profile.url}/profile`}
+          href={`/artist/${user.profile.url}`}
           className="underline self-end"
         >
           I&apos;ll do this later
