@@ -33,6 +33,7 @@ export type UserType = {
   displayName: string;
   photoURL: string;
   profile: {
+    displayName: string;
     username: string;
     url: string;
     bio?: string;

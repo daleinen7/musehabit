@@ -2,11 +2,20 @@
 import React, { useState, useEffect, FormEventHandler } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { firestore, storage } from '@/app/lib/firebase';
+import { storage } from '@/app/lib/firebase';
 import { useAuth } from '@/app/context/AuthContext';
 import FormInput from '../components/FormInput';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
+
+interface FormState {
+  profileImage: File | string | null;
+  profileImageUrl: string;
+  photoUrl: string;
+  displayName: string;
+  location: string;
+  medium: string;
+  bio: string;
+}
 
 const formData = [
   {
@@ -42,9 +51,10 @@ const formData = [
 ];
 
 const EditProfile = () => {
-  const [form, setForm] = useState({
-    profileImage: '',
+  const [form, setForm] = useState<FormState>({
+    profileImage: null,
     profileImageUrl: '',
+    photoUrl: '',
     displayName: '',
     location: '',
     medium: '',
@@ -60,14 +70,14 @@ const EditProfile = () => {
     if (user) {
       setForm((prevForm) => ({
         ...prevForm,
-        profileImage: user.profile.photoURL || '',
-        // displayName: user.profile.displayName || '',
+        profileImage: user.profile.photoURL || null,
+        displayName: user.profile.displayName || '',
         location: user.profile.location || '',
         bio: user.profile.bio || '',
         medium: user.profile.medium || '',
       }));
 
-      setImagePreview(user.photoURL);
+      setImagePreview(user.profile.photoURL);
     }
   }, [user]);
 
@@ -79,7 +89,7 @@ const EditProfile = () => {
         if (event.target) setImagePreview(event.target.result as string);
       };
       reader.readAsDataURL(file);
-      setForm({ ...form, profileImage: file.name });
+      setForm({ ...form, profileImage: file });
     }
   };
 
@@ -108,10 +118,18 @@ const EditProfile = () => {
         );
       }
 
-      form.profileImageUrl = profileImageUrl;
+      form.photoUrl = profileImageUrl;
     }
 
-    await updateUserProfile(user.uid, form);
+    console.log('form', form);
+
+    await updateUserProfile(user.uid, {
+      displayName: form.displayName,
+      location: form.location,
+      medium: form.medium,
+      bio: form.bio,
+      photoURL: form.photoUrl,
+    });
     router.push(`/artist/${user.profile.username}`);
   };
 
