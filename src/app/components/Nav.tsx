@@ -1,7 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/app/context/AuthContext';
+import useClickOutside from '@/app/lib/useClickOutside';
 import icons from '@/app/lib/icons';
 
 type NavItem = {
@@ -38,6 +39,9 @@ const Nav = () => {
     }
   };
 
+  const wrapperRef = useRef(null);
+  useClickOutside(wrapperRef, () => setShowProfile(false));
+
   const handleDropdown = () => {
     setShowProfile(!showProfile);
   };
@@ -62,22 +66,39 @@ const Nav = () => {
             <>
               <NavItem func={handleDropdown} text="Profile">
                 {showProfile && (
-                  <ul className="absolute w-[9rem] mt-2 bg-white shadow-lg p-4 z-50">
+                  <ul
+                    className="absolute w-[9rem] mt-2 bg-white shadow-lg p-4 z-50"
+                    ref={wrapperRef}
+                  >
                     <li>
-                      <Link href={`/artist/${user.profile.username}`}>
+                      <Link
+                        href={`/artist/${user.profile.username}`}
+                        onClick={() => setShowProfile(false)}
+                      >
                         View Profile
                       </Link>
                     </li>
                     <li>
-                      <Link href="/edit-profile">Edit Profile</Link>
+                      <Link
+                        href="/edit-profile"
+                        onClick={() => setShowProfile(false)}
+                      >
+                        Edit Profile
+                      </Link>
                     </li>
                     <li>
-                      <Link href="/profile/settings">Settings</Link>
+                      <Link
+                        href="/profile/settings"
+                        onClick={() => setShowProfile(false)}
+                      >
+                        Settings
+                      </Link>
                     </li>
                     <li>
                       <button
                         onClick={handleLogOut}
                         className="flex items-center"
+                        onClick={() => setShowProfile(false)}
                       >
                         Logout
                       </button>
