@@ -61,10 +61,14 @@ interface ProfileData {
   url: string;
   username: string;
   settings: {
-    dayBeforeNotification: boolean;
-    weekBeforeNotification: boolean;
-    tenDaysBefore: boolean;
-    accountabilityNotice: boolean;
+    tenDay: boolean | undefined;
+    fiveDay: boolean | undefined;
+    threeDay: boolean | undefined;
+    oneDay: boolean | undefined;
+    accountabilityNotice: boolean | undefined;
+    lateImage: string | undefined;
+    lateExcuse: string | undefined;
+    defaultFeed: string | undefined;
   };
 }
 
@@ -135,10 +139,14 @@ export const AuthContextProvider = ({
               posts: {},
               uid: user.uid,
               settings: {
-                dayBeforeNotification: false,
-                weekBeforeNotification: false,
-                tenDaysBefore: false,
+                tenDay: false,
+                fiveDay: false,
+                threeDay: false,
+                oneDay: false,
                 accountabilityNotice: false,
+                lateImage: '',
+                lateExcuse: '',
+                defaultFeed: '',
               },
             };
             setUser({
@@ -158,10 +166,14 @@ export const AuthContextProvider = ({
                 savedPosts: profileData?.savedPosts || {},
                 following: profileData?.following || {},
                 settings: {
-                  dayBeforeNotification: false,
-                  weekBeforeNotification: false,
-                  tenDaysBefore: false,
+                  tenDay: false,
+                  fiveDay: false,
+                  threeDay: false,
+                  oneDay: false,
                   accountabilityNotice: false,
+                  lateImage: '',
+                  lateExcuse: '',
+                  defaultFeed: 'global',
                 },
               },
             });
@@ -230,10 +242,14 @@ export const AuthContextProvider = ({
         email: user.email || '',
         posts: {},
         settings: {
-          dayBeforeNotification: false,
-          weekBeforeNotification: false,
-          tenDaysBefore: false,
+          tenDay: false,
+          fiveDay: false,
+          threeDay: false,
+          oneDay: false,
           accountabilityNotice: false,
+          lateImage: '',
+          lateExcuse: '',
+          defaultFeed: 'global',
         },
       };
 
@@ -259,10 +275,14 @@ export const AuthContextProvider = ({
           savedPosts: profileData?.savedPosts || {},
           following: profileData?.following || {},
           settings: {
-            dayBeforeNotification: false,
-            weekBeforeNotification: false,
-            tenDaysBefore: false,
+            tenDay: false,
+            fiveDay: false,
+            threeDay: false,
+            oneDay: false,
             accountabilityNotice: false,
+            lateImage: '',
+            lateExcuse: '',
+            defaultFeed: 'global',
           },
         },
       });
@@ -331,10 +351,14 @@ export const AuthContextProvider = ({
             savedPosts: profileData?.savedPosts || {},
             following: profileData?.following || {},
             settings: {
-              dayBeforeNotification: false,
-              weekBeforeNotification: false,
-              tenDaysBefore: false,
+              tenDay: false,
+              fiveDay: false,
+              threeDay: false,
+              oneDay: false,
               accountabilityNotice: false,
+              lateImage: '',
+              lateExcuse: '',
+              defaultFeed: 'global',
             },
           },
         });
