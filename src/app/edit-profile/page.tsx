@@ -18,14 +18,16 @@ interface ProfileFormState {
 }
 
 interface AccountFormState {
-  tenDay: boolean;
-  fiveDay: boolean;
-  threeDay: boolean;
-  oneDay: boolean;
-  lateImage: File | string | null;
-  lateImageUrl: string;
-  lateExcuse: string;
-  defaultFeed: 'global' | 'following';
+  tenDay?: boolean;
+  fiveDay?: boolean;
+  threeDay?: boolean;
+  oneDay?: boolean;
+  lateImage?: File | string | null;
+  lateImageUrl?: string;
+  lateExcuse?: string;
+  defaultFeed?: 'global' | 'following';
+  id?: string;
+  value?: string;
 }
 
 const profileFormData = [
@@ -65,6 +67,11 @@ const accountFormData = [
   {
     id: 'heading',
     value: 'Accountability Settings',
+  },
+  {
+    id: 'heading',
+    label:
+      'When would you like to receive an email reminder about your post date?',
   },
   {
     id: 'tenDAy',
@@ -197,35 +204,50 @@ const EditProfile = () => {
 
     if (!user) return;
 
-    if (profileForm.profileImage) {
-      let profileImageUrl = '';
+    if (selectedFeed === 'profile') {
+      if (profileForm.profileImage) {
+        let profileImageUrl = '';
 
-      if (typeof profileForm.profileImage === 'string') {
-        // If form.profileImage is a string, assume it's a URL (Google profile image URL)
-        profileImageUrl = profileForm.profileImage;
-      } else if (profileForm.profileImage) {
-        // If form.profileImage is a file, proceed with uploading it
-        const fileExtension = (profileForm.profileImage as File).name
-          .split('.')
-          .pop();
-        profileImageUrl = await uploadFileToStorage(
-          storage,
-          `users/${user.uid}/profile.${fileExtension}`,
-          profileForm.profileImage as File
-        );
+        if (typeof profileForm.profileImage === 'string') {
+          // If form.profileImage is a string, assume it's a URL (Google profile image URL)
+          profileImageUrl = profileForm.profileImage;
+        } else if (profileForm.profileImage) {
+          // If form.profileImage is a file, proceed with uploading it
+          const fileExtension = (profileForm.profileImage as File).name
+            .split('.')
+            .pop();
+          profileImageUrl = await uploadFileToStorage(
+            storage,
+            `users/${user.uid}/profile.${fileExtension}`,
+            profileForm.profileImage as File
+          );
+        }
+
+        profileForm.photoUrl = profileImageUrl;
       }
 
-      profileForm.photoUrl = profileImageUrl;
+      await updateUserProfile(user.uid, {
+        displayName: profileForm.displayName,
+        location: profileForm.location,
+        medium: profileForm.medium,
+        bio: profileForm.bio,
+        photoURL: profileForm.photoUrl,
+      });
+      router.push(`/artist/${user.profile.username}`);
+    } else {
+      await updateUserProfile(user.uid, {
+        settings: {
+          tenDay: accountForm.tenDay,
+          fiveDay: accountForm.fiveDay,
+          threeDay: accountForm.threeDay,
+          oneDay: accountForm.oneDay,
+          lateImage: accountForm.lateImage,
+          lateExcuse: accountForm.lateExcuse,
+          defaultFeed: accountForm.defaultFeed,
+        },
+      });
+      router.push(`/artist/${user.profile.username}`);
     }
-
-    await updateUserProfile(user.uid, {
-      displayName: profileForm.displayName,
-      location: profileForm.location,
-      medium: profileForm.medium,
-      bio: profileForm.bio,
-      photoURL: profileForm.photoUrl,
-    });
-    router.push(`/artist/${user.profile.username}`);
   };
 
   return (
@@ -332,27 +354,34 @@ const EditProfile = () => {
               Account Settings
             </h2>
 
-            <h3 className="text-left border-b-[1px] text-3xl">
-              Accountability Settings
-            </h3>
             <form
               onSubmit={
                 handleSubmit as unknown as FormEventHandler<HTMLFormElement>
               }
-              className="flex flex-col items-center gap-[1.5rem] w-full"
+              className="flex flex-col items-start gap-[1.5rem] w-full"
             >
               {accountFormData.map((item) => (
                 <React.Fragment key={item.id}>
-                  <FormInput
-                    id={item.id}
-                    type={item.type || ''}
-                    label={item.label || ''}
-                    handleFormChange={handleFormChange}
-                    value={String(
-                      profileForm[item.id as keyof typeof profileForm]
-                    )}
-                    profile
-                  />
+                  {item.id === 'heading' ? (
+                    item.value ? (
+                      <h3 className="text-left border-b-[1px] text-3xl w-full mt-12">
+                        {item.value}
+                      </h3>
+                    ) : (
+                      <p>{item.label}</p>
+                    )
+                  ) : (
+                    <FormInput
+                      id={item.id}
+                      type={item.type || ''}
+                      label={item.label || ''}
+                      handleFormChange={handleFormChange}
+                      value={String(
+                        profileForm[item.id as keyof typeof profileForm]
+                      )}
+                      profile
+                    />
+                  )}
                 </React.Fragment>
               ))}
               <button
