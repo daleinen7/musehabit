@@ -49,6 +49,33 @@ const FormInput: React.FC<FormInputProps> = ({
         />
       </label>
     );
+  } else if (type === 'textarea') {
+    return (
+      <label htmlFor={id} key={id} className="flex flex-col gap-2 w-full">
+        {label}
+        <textarea
+          id={id}
+          value={value}
+          onChange={handleFormChange as (e: React.ChangeEvent<unknown>) => void}
+          required={required}
+          className="text-black p-[0.625rem] border border-black rounded-md w-full"
+        />
+      </label>
+    );
+  } else if (type === 'checkbox') {
+    return (
+      <label htmlFor={id} key={id} className="flex items-center gap-2">
+        <input
+          type={type}
+          id={id}
+          value={value}
+          onChange={handleFormChange}
+          required={required}
+          className="text-black p-[0.625rem] border border-black rounded-md"
+        />
+        {label}
+      </label>
+    );
   }
 
   if (profile) {

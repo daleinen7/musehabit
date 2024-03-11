@@ -17,6 +17,17 @@ interface ProfileFormState {
   bio: string;
 }
 
+interface AccountFormState {
+  tenDay: boolean;
+  fiveDay: boolean;
+  threeDay: boolean;
+  oneDay: boolean;
+  lateImage: File | string | null;
+  lateImageUrl: string;
+  lateExcuse: string;
+  defaultFeed: 'global' | 'following';
+}
+
 const profileFormData = [
   {
     id: 'profileImage',
@@ -50,6 +61,60 @@ const profileFormData = [
   },
 ];
 
+const accountFormData = [
+  {
+    id: 'heading',
+    value: 'Accountability Settings',
+  },
+  {
+    id: 'tenDAy',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '10 Days Before',
+  },
+  {
+    id: 'fiveDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '5 Days Before',
+  },
+  {
+    id: 'threeDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '3 Days Before',
+  },
+  {
+    id: 'oneDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '1 Day Before',
+  },
+  {
+    id: 'lateImage',
+    type: 'file',
+    condition: 'profileImage',
+    label: 'Upload an image you’d like to show if you miss your post date',
+  },
+  {
+    id: 'lateExcuse',
+    type: 'text',
+    label:
+      'If you miss your post date, what would you like your message to say?',
+    placeholder: 'display name',
+  },
+  {
+    id: 'heading',
+    value: 'Default Feed',
+  },
+  {
+    id: 'defaultFeed',
+    type: 'radio',
+    label: 'What is your ideal default home feed?',
+    placeholder: 'Painter, Sculptor, Theremin composer, etc.',
+  },
+];
+
 const EditProfile = () => {
   const [profileForm, setProfileForm] = useState<ProfileFormState>({
     profileImage: null,
@@ -59,6 +124,17 @@ const EditProfile = () => {
     location: '',
     medium: '',
     bio: '',
+  });
+
+  const [accountForm, setAccountForm] = useState<AccountFormState>({
+    tenDay: false,
+    fiveDay: false,
+    threeDay: false,
+    oneDay: false,
+    lateImage: null,
+    lateImageUrl: '',
+    lateExcuse: '',
+    defaultFeed: 'global',
   });
 
   const [selectedFeed, setSelectedFeed] = useState('profile');
@@ -71,7 +147,7 @@ const EditProfile = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
+    if (user && selectedFeed === 'profile') {
       setProfileForm((prevForm) => ({
         ...prevForm,
         profileImage: user.profile.photoURL || null,
@@ -83,7 +159,22 @@ const EditProfile = () => {
 
       setImagePreview(user.profile.photoURL);
     }
-  }, [user]);
+
+    if (user && selectedFeed === 'account') {
+      setAccountForm((prevForm) => ({
+        ...prevForm,
+        tenDay: user.profile.settings.tenDay || false,
+        fiveDay: user.profile.settings.fiveDay || false,
+        threeDay: user.profile.settings.threeDay || false,
+        oneDay: user.profile.settings.oneDay || false,
+        lateImage: user.profile.settings.lateImage || null,
+        lateExcuse: user.profile.settings.lateExcuse || '',
+        defaultFeed: user.profile.settings.defaultFeed || 'global',
+      }));
+    } else {
+      console.error('User is missing');
+    }
+  }, [user, selectedFeed]);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -158,80 +249,121 @@ const EditProfile = () => {
             <span>Account</span>
           </button>
         </div>
-        )
-        <div className="flex flex-col gap-[2.5rem] items-center">
-          <Link
-            href={`/artist/${user.profile.url}`}
-            className="underline self-end"
-          >
-            I&apos;ll do this later
-          </Link>
-          {user.displayName ? (
-            <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
-              Hey {user.displayName}! <br /> Welcome to your Musehabit Profile.
-            </h2>
-          ) : (
-            <h2 className=" font-satoshi text-[2.25rem] font-bold">
-              Edit Profile
-            </h2>
-          )}
 
-          <p className="font-satoshi text-[1.5rem]">
-            Now that you&apos;ve created your account, let&apos;s build it out.
-          </p>
-          {imagePreview && (
-            <img
-              src={imagePreview}
-              alt="Profile Preview"
-              className="mt-2 w-32 h-32 object-cover rounded-full"
-            />
-          )}
-          <form
-            onSubmit={
-              handleSubmit as unknown as FormEventHandler<HTMLFormElement>
-            }
-            className="flex flex-col items-center gap-[1.5rem] w-full"
-          >
-            {profileFormData.map((item) => (
-              <React.Fragment key={item.id}>
-                {item.id === 'profileImage' ? (
-                  <>
-                    <label
-                      htmlFor={item.id}
-                      className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
-                    >
-                      {item.label}
-                      <input
-                        type={item.type}
-                        id={item.id}
-                        onChange={handleFileInputChange}
-                        accept="image/*"
-                        className="hidden"
-                      />
-                    </label>
-                  </>
-                ) : (
+        {selectedFeed === 'profile' ? (
+          <div className="flex flex-col gap-[2.5rem] items-center">
+            <Link
+              href={`/artist/${user.profile.url}`}
+              className="underline self-end"
+            >
+              I&apos;ll do this later
+            </Link>
+            {user.displayName ? (
+              <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
+                Hey {user.displayName}! <br /> Welcome to your Musehabit
+                Profile.
+              </h2>
+            ) : (
+              <h2 className=" font-satoshi text-[2.25rem] font-bold">
+                Edit Profile
+              </h2>
+            )}
+
+            <p className="font-satoshi text-[1.5rem]">
+              Now that you&apos;ve created your account, let&apos;s build it
+              out.
+            </p>
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Profile Preview"
+                className="mt-2 w-32 h-32 object-cover rounded-full"
+              />
+            )}
+            <form
+              onSubmit={
+                handleSubmit as unknown as FormEventHandler<HTMLFormElement>
+              }
+              className="flex flex-col items-center gap-[1.5rem] w-full"
+            >
+              {profileFormData.map((item) => (
+                <React.Fragment key={item.id}>
+                  {item.id === 'profileImage' ? (
+                    <>
+                      <label
+                        htmlFor={item.id}
+                        className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
+                      >
+                        {item.label}
+                        <input
+                          type={item.type}
+                          id={item.id}
+                          onChange={handleFileInputChange}
+                          accept="image/*"
+                          className="hidden"
+                        />
+                      </label>
+                    </>
+                  ) : (
+                    <FormInput
+                      id={item.id}
+                      type={item.type}
+                      label={item.label}
+                      handleFormChange={handleFormChange}
+                      value={String(
+                        profileForm[item.id as keyof typeof profileForm]
+                      )}
+                      profile
+                    />
+                  )}
+                </React.Fragment>
+              ))}
+              <button
+                type="submit"
+                className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
+              >
+                Save Profile Info
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="width-wrapper">
+            <h2 className="font-satoshi text-[2.25rem] font-bold text-center mt-4">
+              Account Settings
+            </h2>
+
+            <h3 className="text-left border-b-[1px] text-3xl">
+              Accountability Settings
+            </h3>
+            <form
+              onSubmit={
+                handleSubmit as unknown as FormEventHandler<HTMLFormElement>
+              }
+              className="flex flex-col items-center gap-[1.5rem] w-full"
+            >
+              {accountFormData.map((item) => (
+                <React.Fragment key={item.id}>
                   <FormInput
                     id={item.id}
-                    type={item.type}
-                    label={item.label}
+                    type={item.type || ''}
+                    label={item.label || ''}
                     handleFormChange={handleFormChange}
                     value={String(
                       profileForm[item.id as keyof typeof profileForm]
                     )}
                     profile
                   />
-                )}
-              </React.Fragment>
-            ))}
-            <button
-              type="submit"
-              className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
-            >
-              Save Profile Info
-            </button>
-          </form>
-        </div>
+                </React.Fragment>
+              ))}
+              <button
+                type="submit"
+                className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
+              >
+                Save Profile Info
+              </button>
+            </form>
+          </div>
+        )}
       </>
     )
   );

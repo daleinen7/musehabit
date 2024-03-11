@@ -45,10 +45,14 @@ export type UserType = {
     savedPosts: { [postId: string]: boolean };
     following: { [userId: string]: boolean };
     settings: {
-      dayBeforeNotification?: boolean;
-      weekBeforeNotification?: boolean;
-      tenDaysBefore?: boolean;
+      tenDay?: boolean;
+      fiveDay?: boolean;
+      threeDay?: boolean;
+      oneDay?: boolean;
       accountabilityNotice?: boolean;
+      lateImage?: string;
+      lateExcuse?: string;
+      defaultFeed?: 'global' | 'following';
     };
   };
 };
