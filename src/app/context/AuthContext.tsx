@@ -186,7 +186,7 @@ export const AuthContextProvider = ({
             // User is signing in
             // Redirect to the homepage
             setLoading(false);
-            // router.push('/');
+            router.push('/');
           }
         }
       } catch (error) {

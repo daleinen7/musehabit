@@ -37,7 +37,7 @@ const Login = () => {
 
   const router = useRouter();
 
-  const { signIn, signInWithGoogle, loading, loadingGoogleSignIn } = useAuth();
+  const { signIn, signInWithGoogle, loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -111,13 +111,8 @@ const Login = () => {
             type="button"
             className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
             onClick={handleGoogleSignIn}
-            disabled={loading || loadingGoogleSignIn} // Disable the button when loading or signing in with Google
           >
-            {loadingGoogleSignIn ? (
-              <FadeLoader color="#000" loading={loadingGoogleSignIn} />
-            ) : (
-              'Log In with Google'
-            )}
+            Log In with Google
           </button>
         </div>
       </div>
