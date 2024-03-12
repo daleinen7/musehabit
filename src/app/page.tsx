@@ -18,9 +18,9 @@ export default function Home() {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [selectedFeed, setSelectedFeed] = useState('global');
   const { user } = useAuth();
-  if (user) {
-    console.log('user', user);
-  }
+  // if (user) {
+  //   console.log('if user', user);
+  // }
 
   useEffect(() => {
     const fetchPosts = async () => {

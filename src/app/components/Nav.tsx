@@ -11,17 +11,24 @@ type NavItem = {
   text: string;
   auth?: boolean;
   children?: React.ReactNode;
+  arrow?: boolean;
 };
 
-const NavItem = ({ url, func, text, children }: NavItem) => (
+const NavItem = ({ url, func, text, children, arrow }: NavItem) => (
   <li
     key={url}
     className="font-satoshi text-lg font-medium text-gray-500 hover:text-black relative"
   >
     {url ? (
-      <Link href={url}>{text}</Link>
+      <Link href={url} className="flex items-center">
+        {text}
+        {arrow && <span className="text-3xl">{icons.arrow}</span>}
+      </Link>
     ) : (
-      <button onClick={func}>{text}</button>
+      <button onClick={func} className="flex items-center">
+        {text}
+        {arrow && <span className="text-3xl">{icons.arrow}</span>}
+      </button>
     )}
     {children}
   </li>
@@ -65,7 +72,7 @@ const Nav = () => {
           )}
           {user && (
             <>
-              <NavItem func={handleDropdown} text="Profile">
+              <NavItem func={handleDropdown} text="Profile" arrow>
                 {showProfile && (
                   <ul
                     className="absolute w-[9rem] mt-2 bg-white shadow-lg p-4 z-50"

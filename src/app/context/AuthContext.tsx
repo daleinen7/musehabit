@@ -34,7 +34,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  loading: true,
+  loading: false,
   signInWithGoogle: () => {},
   signOut: () => {},
   resetPassword: () => {},
@@ -84,7 +84,7 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState<UserType | null>(null);
   const [canPost, setCanPost] = useState<boolean>(false);
   const [daysUntilNextPost, setDaysUntilNextPost] = useState<number>(NaN);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -105,6 +105,7 @@ export const AuthContextProvider = ({
     const handleRedirect = async () => {
       try {
         const result = await getRedirectResult(auth);
+        setLoading(true);
         if (result && result.user) {
           const user = result.user;
           const userDoc = await getDoc(doc(firestore, 'users', user.uid));
@@ -179,18 +180,20 @@ export const AuthContextProvider = ({
             });
             // User has never posted so allow them to
             setCanPost(true);
-
+            setLoading(false);
             router.push(`/artist/${profileData.username}/profile/edit`);
           } else {
             // User is signing in
             // Redirect to the homepage
-            router.push('/');
+            setLoading(false);
+            // router.push('/');
           }
         }
       } catch (error) {
         console.error('Error handling Google redirect: ', error);
       }
     };
+
     handleRedirect();
   }, [router]);
 

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import FormInput from '../components/FormInput';
+import { FadeLoader } from 'react-spinners';
 
 interface FormState {
   email: string;
@@ -36,7 +37,7 @@ const Login = () => {
 
   const router = useRouter();
 
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle, loading, loadingGoogleSignIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -110,8 +111,13 @@ const Login = () => {
             type="button"
             className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
             onClick={handleGoogleSignIn}
+            disabled={loading || loadingGoogleSignIn} // Disable the button when loading or signing in with Google
           >
-            Log In with Google
+            {loadingGoogleSignIn ? (
+              <FadeLoader color="#000" loading={loadingGoogleSignIn} />
+            ) : (
+              'Log In with Google'
+            )}
           </button>
         </div>
       </div>
