@@ -28,7 +28,7 @@ export default function Home() {
 
       if (selectedFeed === 'global') {
         const postsRef = collection(firestore, 'posts');
-        const postsSnapshot = await getDocs(postsRef);
+        const postsSnapshot = await getDocs(query(postsRef, orderBy('postedAt', 'desc')));
         const postsData = postsSnapshot.docs.map((doc) => doc.data());
         const postsWithUserData = await Promise.all(
           postsData.map(async (post) => {

@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 import getFileType from '@/app/lib/getFileType';
@@ -21,6 +22,7 @@ const Post = ({ post }: { post: PostType }) => {
     tags,
   } = post;
   const { username, location, photoURL, medium } = posterData;
+  const [showLightbox, setShowLightbox] = useState<boolean>(false);
   const [showComments, setShowComments] = useState(false);
 
   const { user } = useAuth();
@@ -68,9 +70,21 @@ const Post = ({ post }: { post: PostType }) => {
       </div>
     ),
     writing: (
-      <div className="px-12 py-8 line-clamp-6 font-hepta text-2xl font-medium">
-        {post.post}
-      </div>
+      <>
+        <div onClick={()=> setShowLightbox(true)} tabIndex={0} aria-label='expand writing post' className="px-12 py-8 line-clamp-5 font-hepta whitespace-pre-wrap text-2xl font-medium">
+          {post.post}
+        </div>
+        {showLightbox && (
+          <div
+            className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center"
+            onClick={() => setShowLightbox(false)}
+          >
+            <div className="bg-white p-8 rounded-lg max-w-[40rem] flex flex-col gap-2">
+              <ReactMarkdown>{post.post}</ReactMarkdown>
+            </div>
+          </div>
+        )}
+      </>
     ),
   };
 
@@ -136,7 +150,7 @@ const Post = ({ post }: { post: PostType }) => {
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300"
+                      className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300 text-nowrap"
                     >
                       {tag}
                     </span>
