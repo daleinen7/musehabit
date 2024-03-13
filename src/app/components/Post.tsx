@@ -80,6 +80,7 @@ const Post = ({ post }: { post: PostType }) => {
             onClick={() => setShowLightbox(false)}
           >
             <div className="bg-white p-8 rounded-lg max-w-[40rem] flex flex-col gap-2">
+              <h1 className='font-Satoshi text-5xl font-bold'>{post.title}</h1>
               <ReactMarkdown>{post.post}</ReactMarkdown>
             </div>
           </div>
