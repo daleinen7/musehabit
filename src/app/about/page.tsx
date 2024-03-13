@@ -12,7 +12,7 @@ const About = () => {
           alt={'about image'}
         />
       </div>
-      <div className="flex items-center gap-12 py-[4.375rem] max-w-[65.9375rem]">
+      <div className="width-wrapper flex items-center gap-12 py-[4.375rem] max-w-[65.9375rem]">
         <div className="flex flex-col gap-4 max-w-[44.875rem]">
           <h2 className="font-hepta font-bold text-5xl">about musehabit</h2>
           <p>
@@ -30,7 +30,7 @@ const About = () => {
           className="rounded"
         />
       </div>
-      <section className="flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
+      <section className="width-wrapper flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
         <h3 className="font-satoshi text-4xl font-bold">the history</h3>
         <SideBySide
           reverse
@@ -59,7 +59,7 @@ const About = () => {
           alt={'placeholder'}
         />
       </section>
-      <section className="font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
+      <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
         <h3>the team</h3>
         <ul className="grid grid-cols-3 gap-2">
           <li>

@@ -38,11 +38,10 @@ const Post = ({ post }: { post: PostType }) => {
   const displayFile = {
     image: (
       <div className="w-full flex justify-center items-center">
-        <Image
+        <img
           src={draft}
           alt={title}
-          width={704}
-          height={560}
+          
           className="rounded"
         />
       </div>
