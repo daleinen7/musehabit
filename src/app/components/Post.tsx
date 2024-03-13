@@ -39,7 +39,7 @@ const Post = ({ post }: { post: PostType }) => {
     image: (
       <div className="w-full flex justify-center items-center">
         <Image
-          src={image}
+          src={draft}
           alt={title}
           width={704}
           height={560}

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import FormInput from '../components/FormInput';
-import { FadeLoader } from 'react-spinners';
 
 interface FormState {
   email: string;
