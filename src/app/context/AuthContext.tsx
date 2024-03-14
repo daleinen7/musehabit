@@ -181,7 +181,7 @@ export const AuthContextProvider = ({
             // User has never posted so allow them to
             setCanPost(true);
             setLoading(false);
-            router.push(`/artist/${profileData.username}/profile/edit`);
+            router.push(`/edit-profile`);
           } else {
             // User is signing in
             // Redirect to the homepage
@@ -291,7 +291,7 @@ export const AuthContextProvider = ({
       });
 
       // Redirect to the profile edit page after successful sign-up
-      router.push(`/artist/${profileData.username}/profile/edit`);
+      router.push(`/edit-profile`);
     } catch (error) {
       console.error('Error signing up with email: ', error);
     }
