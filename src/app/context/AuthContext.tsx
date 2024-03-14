@@ -11,7 +11,7 @@ import {
   getRedirectResult,
 } from 'firebase/auth';
 import { auth, firestore } from '@/app/lib/firebase';
-import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { getDoc, getDocs, query, collection, where, doc, setDoc } from 'firebase/firestore';
 import slugify from '@/app/lib/slugify';
 import { useRouter } from 'next/navigation';
 import { UserType } from '@/app/lib/types';
@@ -48,6 +48,7 @@ const AuthContext = createContext<AuthContextType>({
 
 interface ProfileData {
   bio: string;
+  displayName: string;
   email: string;
   following: { [userId: string]: boolean };
   joined: number;
@@ -89,8 +90,29 @@ export const AuthContextProvider = ({
   const router = useRouter();
 
   const isUsernameAvailable = async (username: string): Promise<boolean> => {
-    const usernameSnapshot = await getDoc(doc(firestore, 'users', username));
-    return !usernameSnapshot.exists();
+    // Create a query to find documents where the "username" field matches the specified value
+    const q = query(collection(firestore, 'users'), where('username', '==', username));
+    try {
+      // Execute the query
+      const querySnapshot = await getDocs(q);
+
+      // Check if any documents match the query
+      if (!querySnapshot.empty) {
+        // Iterate over the documents that match the query
+        querySnapshot.forEach((doc) => {
+          // Access the data of each document
+          return false;
+        });
+        return false;
+      } else {
+        // No documents matched the query
+        return true;
+      }
+    } catch (error) {
+      // Handle any errors that occur during the query
+      console.error('Error getting documents:', error);
+      return false;
+    }
   };
 
   const signInWithGoogle = async () => {
@@ -127,6 +149,7 @@ export const AuthContextProvider = ({
             });
             const profileData: ProfileData = {
               username,
+              displayName: user.displayName || '',
               url: username,
               bio: '',
               medium: '',
@@ -217,7 +240,7 @@ export const AuthContextProvider = ({
       // If the username is not available, increment it by appending a number until finding an available username
       let counter = 1;
       while (!usernameAvailable) {
-        newUsername = `${username}${counter}`;
+        newUsername = `${username}-${counter}`;
         usernameAvailable = await isUsernameAvailable(newUsername);
         counter++;
       }
@@ -232,7 +255,7 @@ export const AuthContextProvider = ({
 
       const profileData: ProfileData = {
         uid: user.uid,
-        username,
+        username: newUsername,
         url: username,
         bio: '',
         medium: '',
@@ -302,6 +325,8 @@ export const AuthContextProvider = ({
   };
 
   const updateProfile = async (userId: string, profileData: any) => {
+    console.log('profileData: ', profileData);
+    
     try {
       await setDoc(doc(firestore, 'users', userId), profileData, {
         merge: true,

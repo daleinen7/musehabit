@@ -21,7 +21,7 @@ const Post = ({ post }: { post: PostType }) => {
     toolsUsed,
     tags,
   } = post;
-  const { username, location, photoURL, medium } = posterData;
+  const { username, displayName, location, photoURL, medium } = posterData;
   const [showLightbox, setShowLightbox] = useState<boolean>(false);
   const [showComments, setShowComments] = useState(false);
 
@@ -96,7 +96,7 @@ const Post = ({ post }: { post: PostType }) => {
           <div className="w-16 h-16 rounded-full relative bg-slate-300">
             <Image
               src={photoURL ?? ''}
-              alt={username}
+              alt={displayName ?? username}
               width={64}
               height={64}
               className="rounded-full"
@@ -104,7 +104,7 @@ const Post = ({ post }: { post: PostType }) => {
           </div>
 
           <div className="font-satoshi">
-            <div className=" text-2xl">{username}</div>
+            <div className=" text-2xl">{displayName ?? username}</div>
             <div className="text-sm">
               {[medium, location, postedAt].filter(Boolean).join(' | ')}
             </div>

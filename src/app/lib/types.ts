@@ -11,6 +11,7 @@ export type PostType = {
   postedAt: string;
   posterData: {
     username: string;
+    displayName: string;
     location: string;
     photoURL: string;
     medium: string;
@@ -60,6 +61,7 @@ export type UserType = {
 export type ArtistType = {
   uid: string;
   username: string;
+  displayName: string;
   location: string;
   photoURL: string;
   medium: string;
@@ -75,5 +77,6 @@ export type CommentType = {
   posterId: string;
   timestamp: number;
   username: string;
+  displayName: string;
   photoURL: string | undefined;
 };
