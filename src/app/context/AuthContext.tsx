@@ -11,7 +11,15 @@ import {
   getRedirectResult,
 } from 'firebase/auth';
 import { auth, firestore } from '@/app/lib/firebase';
-import { getDoc, getDocs, query, collection, where, doc, setDoc } from 'firebase/firestore';
+import {
+  getDoc,
+  getDocs,
+  query,
+  collection,
+  where,
+  doc,
+  setDoc,
+} from 'firebase/firestore';
 import slugify from '@/app/lib/slugify';
 import { useRouter } from 'next/navigation';
 import { UserType } from '@/app/lib/types';
@@ -91,7 +99,10 @@ export const AuthContextProvider = ({
 
   const isUsernameAvailable = async (username: string): Promise<boolean> => {
     // Create a query to find documents where the "username" field matches the specified value
-    const q = query(collection(firestore, 'users'), where('username', '==', username));
+    const q = query(
+      collection(firestore, 'users'),
+      where('username', '==', username)
+    );
     try {
       // Execute the query
       const querySnapshot = await getDocs(q);
@@ -255,6 +266,7 @@ export const AuthContextProvider = ({
 
       const profileData: ProfileData = {
         uid: user.uid,
+        displayName: user.displayName || username,
         username: newUsername,
         url: username,
         bio: '',
@@ -326,7 +338,7 @@ export const AuthContextProvider = ({
 
   const updateProfile = async (userId: string, profileData: any) => {
     console.log('profileData: ', profileData);
-    
+
     try {
       await setDoc(doc(firestore, 'users', userId), profileData, {
         merge: true,
