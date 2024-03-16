@@ -4,16 +4,17 @@ import { SideBySide } from '../components/SideBySide';
 const About = () => {
   return (
     <>
-      <div>
+      <div className="w-full">
         <Image
           src={'https://picsum.photos/1512/355'}
           width={1512}
           height={355}
           alt={'about image'}
+          className="w-full h-[20.625rem] object-cover"
         />
       </div>
-      <div className="width-wrapper flex items-center gap-12 py-[4.375rem] max-w-[65.9375rem]">
-        <div className="flex flex-col gap-4 max-w-[44.875rem]">
+      <div className="width-wrapper flex justify-start items-center gap-12 text-balance py-[4.375rem]">
+        <div className="flex flex-col gap-4">
           <h2 className="font-hepta font-bold text-5xl">about musehabit</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit

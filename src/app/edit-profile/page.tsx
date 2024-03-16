@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, FormEventHandler } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { storage } from '@/app/lib/firebase';
@@ -252,9 +253,9 @@ const EditProfile = () => {
 
   return (
     user && (
-      <div className='w-full flex'>
+      <div className="w-full flex">
         <div className="w-full max-w-[20rem] min-h-[screen] sticky bg-slate-100 flex flex-col text-xl align-center gap-3">
-          <h2 className='font-bold text-2xl my-6 px-6'>Account</h2>
+          <h2 className="font-bold text-2xl my-6 px-6">Account</h2>
           <button
             className={`hover:bg-slate-200 w-[14rem] mx-auto rounded py-4 ${
               selectedFeed === 'profile' ? 'bg-slate-300' : ''
@@ -274,15 +275,17 @@ const EditProfile = () => {
         </div>
 
         {selectedFeed === 'profile' ? (
-          <div className="width-wrapper flex flex-col max-w-[40rem]">
-            {!user.profile.photoURL && <Link
-              href={`/artist/${user.profile.url}`}
-              className="underline self-end my-6"
-            >
-              I&apos;ll do this later
-            </Link>}
+          <div className="width-wrapper flex items-center flex-col max-w-[40rem] pb-12">
+            {!user.profile.photoURL && (
+              <Link
+                href={`/artist/${user.profile.url}`}
+                className="underline self-end my-6"
+              >
+                I&apos;ll do this later
+              </Link>
+            )}
             {user.displayName ? (
-              <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
+              <h2 className=" font-satoshi text-[2.25rem] font-bold text-center leading-tight">
                 Hey {user.displayName}! <br /> Welcome to your Musehabit
                 Profile.
               </h2>
@@ -292,14 +295,16 @@ const EditProfile = () => {
               </h2>
             )}
 
-            <p className="font-satoshi text-[1.5rem]">
+            <p className="font-satoshi text-[1.5rem] text-center">
               Now that you&apos;ve created your account, let&apos;s build it
               out.
             </p>
             {imagePreview && (
-              <img
+              <Image
                 src={imagePreview}
                 alt="Profile Preview"
+                width={128}
+                height={128}
                 className="mt-2 w-32 h-32 object-cover rounded-full"
               />
             )}
@@ -341,10 +346,7 @@ const EditProfile = () => {
                   )}
                 </React.Fragment>
               ))}
-              <button
-                type="submit"
-                className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
-              >
+              <button type="submit" className="btn btn-primary">
                 Save Profile Info
               </button>
             </form>
@@ -385,10 +387,7 @@ const EditProfile = () => {
                   )}
                 </React.Fragment>
               ))}
-              <button
-                type="submit"
-                className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
-              >
+              <button type="submit" className="btn btn-primary cursor-pointer">
                 Save Profile Info
               </button>
             </form>

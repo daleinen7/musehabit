@@ -51,8 +51,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       return;
     }
 
+    console.log('COMMENT: ', newComment);
+
     const commentData: CommentType = {
       text: newComment,
+      displayName: user.profile.displayName,
       posterId: user.uid,
       timestamp: Date.now(),
       username: user.profile.username,

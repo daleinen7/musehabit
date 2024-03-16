@@ -136,7 +136,7 @@ const Profile = ({ params }: { params: any }) => {
         </div>
       )}
       {posts.length > 0 ? (
-        <div>
+        <div className="mb-12">
           {posts.map((post) => (
             <Post key={post.id} post={post} />
           ))}

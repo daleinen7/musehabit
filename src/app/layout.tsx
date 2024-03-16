@@ -33,13 +33,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${satoshi.variable} ${satoshiItalic} ${hepta.variable}`}
+        className={`${satoshi.variable} ${satoshiItalic} ${hepta.variable}  min-h-screen`}
       >
         <AuthContextProvider>
           <header>
             <Nav />
           </header>
-          <main className="flex min-h-screen flex-col items-center justify-start">
+          <main className="flex flex-col items-center justify-start">
             {children}
           </main>
         </AuthContextProvider>
