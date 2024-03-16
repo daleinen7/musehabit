@@ -51,8 +51,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       return;
     }
 
-    console.log('COMMENT: ', newComment);
-
     const commentData: CommentType = {
       text: newComment,
       displayName: user.profile.displayName,
@@ -92,7 +90,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           {comments.map((comment, index) => (
             <div key={index} className="flex gap-4">
               <Image
-                src={comment.photoURL || '/user-placeholder.svg'}
+                src={comment.photoURL || '/user-placeholder.png'}
                 alt={comment.username}
                 width={48}
                 height={48}

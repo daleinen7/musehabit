@@ -8,6 +8,7 @@ type FormInputProps = {
   required?: boolean;
   value: string;
   profile?: boolean;
+  name?: string;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -17,6 +18,7 @@ const FormInput: React.FC<FormInputProps> = ({
   handleFormChange,
   required,
   value,
+  name,
   profile,
 }) => {
   if (type === 'text' || type === 'password' || type === 'email') {
@@ -72,6 +74,22 @@ const FormInput: React.FC<FormInputProps> = ({
           onChange={handleFormChange}
           required={required}
           className="text-black p-[0.625rem] border border-black rounded-md"
+        />
+        {label}
+      </label>
+    );
+  } else if (type === 'radio') {
+    return (
+      <label htmlFor={id} key={id} className="flex items-center gap-2">
+        <input
+          type={type}
+          id={id}
+          name={name}
+          checked={value === id} // Assuming value of radio button is its ID
+          onChange={handleFormChange}
+          required={required}
+          className="text-black p-[0.625rem] border border-black rounded-md"
+          value={id} // Assigning the value as the ID of the radio button
         />
         {label}
       </label>

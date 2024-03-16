@@ -25,7 +25,13 @@ const fileForm = [
     type: 'textarea',
     required: false,
   },
-  { label: 'Preview Image', input: 'image', type: 'file', required: false },
+  {
+    label:
+      'Preview Image - note: will not display if your submission is an image (actual image will display)',
+    input: 'image',
+    type: 'file',
+    required: false,
+  },
   {
     label: 'Tools Used - Optional: place to talk some shop',
     input: 'toolsUsed',
@@ -64,7 +70,17 @@ const writeForm = [
   { label: 'Tags', input: 'tags', type: 'text', required: false },
 ];
 
-const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
+const allowedFileFormats = [
+  'png',
+  'jpg',
+  'jpeg',
+  'pdf',
+  'mp3',
+  'mp4',
+  'gif',
+  'webp',
+  'svg',
+];
 
 interface FormData {
   title: string;
@@ -91,6 +107,7 @@ interface NewPost {
 
 const Share: React.FC = () => {
   const { register, handleSubmit } = useForm<FormData>();
+  const [uploading, setUploading] = useState(false);
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState<null | string>(null);
   const [selectedType, setSelectedType] = useState<null | string>(null);
@@ -107,6 +124,7 @@ const Share: React.FC = () => {
   };
 
   const onSubmit = async (data: any) => {
+    setUploading(true);
     const { title, description, image, draft, toolsUsed, tags } = data;
 
     // check if draft is allowed file format
@@ -317,11 +335,15 @@ const Share: React.FC = () => {
               </React.Fragment>
             );
           })}
-          <input
-            type="submit"
-            value="Submit"
-            className="btn btn-primary cursor-pointer"
-          />
+          {uploading ? (
+            <BeatLoader color="#F24236" />
+          ) : (
+            <input
+              type="submit"
+              value="Submit"
+              className="btn btn-primary cursor-pointer"
+            />
+          )}
         </form>
       )}
     </>

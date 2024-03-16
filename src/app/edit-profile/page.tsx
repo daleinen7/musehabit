@@ -75,7 +75,7 @@ const accountFormData = [
       'When would you like to receive an email reminder about your post date?',
   },
   {
-    id: 'tenDAy',
+    id: 'tenDay',
     type: 'checkbox',
     condition: 'profileImage',
     label: '10 Days Before',
@@ -113,13 +113,21 @@ const accountFormData = [
   },
   {
     id: 'heading',
-    value: 'Default Feed',
+    value: 'What is your ideal default home feed?',
   },
   {
-    id: 'defaultFeed',
+    id: 'global',
     type: 'radio',
-    label: 'What is your ideal default home feed?',
-    placeholder: 'Painter, Sculptor, Theremin composer, etc.',
+    label: 'Global',
+    value: 'global',
+    name: 'defaultFeed',
+  },
+  {
+    id: 'following',
+    type: 'radio',
+    label: 'Following',
+    value: 'following',
+    name: 'defaultFeed',
   },
 ];
 
@@ -127,7 +135,7 @@ const EditProfile = () => {
   const [profileForm, setProfileForm] = useState<ProfileFormState>({
     profileImage: null,
     profileImageUrl: '',
-    photoUrl: '',
+    photoUrl: '/user-placeholder.png',
     displayName: '',
     location: '',
     medium: '',
@@ -155,10 +163,12 @@ const EditProfile = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user && selectedFeed === 'profile') {
+    if (!user) return;
+
+    if (selectedFeed === 'profile' && user.profile) {
       setProfileForm((prevForm) => ({
         ...prevForm,
-        profileImage: user.profile.photoURL || null,
+        profileImage: user.profile.photoURL || '/user-placeholder.png',
         displayName: user.profile.displayName || '',
         location: user.profile.location || '',
         bio: user.profile.bio || '',
@@ -168,7 +178,7 @@ const EditProfile = () => {
       setImagePreview(user.profile.photoURL);
     }
 
-    if (user && selectedFeed === 'account') {
+    if (selectedFeed === 'account' && user.profile && user.profile.settings) {
       setAccountForm((prevForm) => ({
         ...prevForm,
         tenDay: user.profile.settings.tenDay || false,
@@ -179,10 +189,10 @@ const EditProfile = () => {
         lateExcuse: user.profile.settings.lateExcuse || '',
         defaultFeed: user.profile.settings.defaultFeed || 'global',
       }));
-    } else {
-      console.error('User is missing');
     }
   }, [user, selectedFeed]);
+
+  console.log('Account Form', accountForm);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -197,7 +207,18 @@ const EditProfile = () => {
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProfileForm({ ...profileForm, [e.target.id]: e.target.value });
+    const { id, value, type, checked, name } = e.target;
+    if (selectedFeed === 'profile') {
+      setProfileForm((prevProfileForm) => ({
+        ...prevProfileForm,
+        [id]: type === 'checkbox' ? checked : value,
+      }));
+    } else {
+      setAccountForm((prevAccountForm) => ({
+        ...prevAccountForm,
+        [name || id]: type === 'checkbox' || type === 'radio' ? value : value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,13 +299,13 @@ const EditProfile = () => {
           <div className="width-wrapper flex items-center flex-col max-w-[40rem] pb-12">
             {!user.profile.photoURL && (
               <Link
-                href={`/artist/${user.profile.url}`}
+                href={`/artist/${user.profile.username}`}
                 className="underline self-end my-6"
               >
                 I&apos;ll do this later
               </Link>
             )}
-            {user.displayName ? (
+            {user.profile.displayName ? (
               <h2 className=" font-satoshi text-[2.25rem] font-bold text-center leading-tight">
                 Hey {user.displayName}! <br /> Welcome to your Musehabit
                 Profile.
@@ -352,7 +373,7 @@ const EditProfile = () => {
             </form>
           </div>
         ) : (
-          <div className="width-wrapper">
+          <div className="width-wrapper mb-12">
             <h2 className="font-satoshi text-[2.25rem] font-bold text-center mt-4">
               Account Settings
             </h2>
@@ -363,8 +384,8 @@ const EditProfile = () => {
               }
               className="flex flex-col items-start gap-[1.5rem] w-full"
             >
-              {accountFormData.map((item) => (
-                <React.Fragment key={item.id}>
+              {accountFormData.map((item, idx) => (
+                <React.Fragment key={idx}>
                   {item.id === 'heading' ? (
                     item.value ? (
                       <h3 className="text-left border-b-[1px] text-3xl w-full mt-12">
@@ -379,8 +400,13 @@ const EditProfile = () => {
                       type={item.type || ''}
                       label={item.label || ''}
                       handleFormChange={handleFormChange}
+                      name={item.name}
                       value={String(
-                        profileForm[item.id as keyof typeof profileForm]
+                        accountForm[
+                          item.name
+                            ? (item.name as keyof typeof accountForm)
+                            : (item.id as keyof typeof accountForm)
+                        ]
                       )}
                       profile
                     />

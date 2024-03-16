@@ -147,7 +147,7 @@ const Profile = ({ params }: { params: any }) => {
           ))}
         </div>
       ) : (
-        <div className="text-4xl font-hepta text-center font-bold">
+        <div className="text-4xl font-hepta text-center font-bold mt-24">
           {selectedFeed === 'myPosts' ? (
             !user || user.profile.latestPost ? (
               <BeatLoader color="#F24236" />
