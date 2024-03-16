@@ -9,6 +9,7 @@ import {
   doc,
   getDoc,
 } from 'firebase/firestore';
+import { BeatLoader } from 'react-spinners';
 import { firestore } from '@/app/lib/firebase';
 import Post from '@/app/components/Post';
 import { useAuth } from '@/app/context/AuthContext';
@@ -94,6 +95,10 @@ const Profile = ({ params }: { params: any }) => {
 
     fetchUserAndPosts();
   }, [user, selectedFeed, params.username]);
+
+  console.log('user', user);
+  console.log('user latest post', user?.profile.latestPost);
+
   return (
     <>
       <div className="flex justify-center items-center gap-[2.25rem] my-12">
@@ -142,9 +147,19 @@ const Profile = ({ params }: { params: any }) => {
           ))}
         </div>
       ) : (
-        <h3 className="text-4xl font-hepta text-center font-bold">
-          No posts to show
-        </h3>
+        <div className="text-4xl font-hepta text-center font-bold">
+          {selectedFeed === 'myPosts' ? (
+            !user || user.profile.latestPost ? (
+              <BeatLoader color="#F24236" />
+            ) : (
+              <p>
+                <Link href="/share">Share</Link> a post to see it here.
+              </p>
+            )
+          ) : (
+            <p>No saved posts yet.</p>
+          )}
+        </div>
       )}
     </>
   );
