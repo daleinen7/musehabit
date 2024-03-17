@@ -165,7 +165,7 @@ export const AuthContextProvider = ({
               bio: '',
               medium: '',
               location: '',
-              photoURL: user.photoURL || '' || undefined,
+              photoURL: user.photoURL || '/user-placeholder.png' || undefined,
               savedPosts: {},
               following: {},
               joined: Date.now(),
@@ -181,13 +181,13 @@ export const AuthContextProvider = ({
                 accountabilityNotice: false,
                 lateImage: '',
                 lateExcuse: '',
-                defaultFeed: '',
+                defaultFeed: 'global',
               },
             };
             setUser({
               uid: user.uid,
               displayName: user.displayName || '',
-              photoURL: user.photoURL || '',
+              photoURL: user.photoURL || '/user-placeholder.png',
               profile: {
                 displayName: user.displayName || '',
                 username: profileData?.username || '',
@@ -195,7 +195,7 @@ export const AuthContextProvider = ({
                 bio: profileData?.bio || '',
                 medium: profileData?.medium || '',
                 location: profileData?.location || '',
-                photoURL: profileData?.photoURL || '',
+                photoURL: profileData?.photoURL || '/user-placeholder.png',
                 joined: profileData?.joined,
                 latestPost: false,
                 savedPosts: profileData?.savedPosts || {},
@@ -272,7 +272,7 @@ export const AuthContextProvider = ({
         bio: '',
         medium: '',
         location: '',
-        photoURL: user.photoURL || '',
+        photoURL: user.photoURL || '/user-placeholder.png' || undefined,
         savedPosts: {},
         following: {},
         joined: Date.now(),
@@ -295,36 +295,6 @@ export const AuthContextProvider = ({
         ...profileData,
       });
 
-      setUser({
-        uid: user.uid,
-        email: user.email || '',
-        displayName: user.displayName || '',
-        photoURL: user.photoURL || '',
-        profile: {
-          displayName: user.displayName || '',
-          username: profileData?.username || '',
-          url: profileData?.url || '',
-          bio: profileData?.bio || '',
-          medium: profileData?.medium || '',
-          location: profileData?.location || '',
-          photoURL: profileData?.photoURL || '',
-          joined: profileData?.joined || Date.now(),
-          latestPost: false,
-          savedPosts: profileData?.savedPosts || {},
-          following: profileData?.following || {},
-          settings: {
-            tenDay: false,
-            fiveDay: false,
-            threeDay: false,
-            oneDay: false,
-            accountabilityNotice: false,
-            lateImage: '',
-            lateExcuse: '',
-            defaultFeed: 'global',
-          },
-        },
-      });
-
       // Redirect to the profile edit page after successful sign-up
       router.push(`/edit-profile`);
     } catch (error) {
@@ -337,8 +307,6 @@ export const AuthContextProvider = ({
   };
 
   const updateProfile = async (userId: string, profileData: any) => {
-    console.log('profileData: ', profileData);
-
     try {
       await setDoc(doc(firestore, 'users', userId), profileData, {
         merge: true,
@@ -376,29 +344,30 @@ export const AuthContextProvider = ({
         setUser({
           uid: user.uid,
           email: user.email || '',
-          displayName: user.displayName || '',
-          photoURL: user.photoURL || '',
+          displayName: profileData?.displayName || '',
+          photoURL: user.photoURL || '/user-placeholder.png',
           profile: {
-            displayName: user.displayName || '',
+            displayName: profileData?.displayName || '',
             username: profileData?.username || '',
             url: profileData?.url || '',
             bio: profileData?.bio || '',
             medium: profileData?.medium || '',
             location: profileData?.location || '',
-            photoURL: profileData?.photoURL || '',
+            photoURL: profileData?.photoURL || '/user-placeholder',
             joined: profileData?.joined || '',
             latestPost: profileData?.latestPost || '',
             savedPosts: profileData?.savedPosts || {},
             following: profileData?.following || {},
             settings: {
-              tenDay: false,
-              fiveDay: false,
-              threeDay: false,
-              oneDay: false,
-              accountabilityNotice: false,
-              lateImage: '',
-              lateExcuse: '',
-              defaultFeed: 'global',
+              tenDay: profileData?.settings?.tenDay || false,
+              fiveDay: profileData?.settings?.fiveDay || false,
+              threeDay: profileData?.settings?.threeDay || false,
+              oneDay: profileData?.settings?.oneDay || false,
+              accountabilityNotice:
+                profileData?.settings?.accountabilityNotice || false,
+              lateImage: profileData?.settings?.lateImage || '',
+              lateExcuse: profileData?.settings?.lateExcuse || '',
+              defaultFeed: profileData?.settings?.defaultFeed || 'global',
             },
           },
         });

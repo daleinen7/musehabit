@@ -53,6 +53,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
     const commentData: CommentType = {
       text: newComment,
+      displayName: user.profile.displayName,
       posterId: user.uid,
       timestamp: Date.now(),
       username: user.profile.username,
@@ -75,48 +76,51 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   };
 
   return (
-    <div className="comments-section mx-4 px-4">
-      <div className="flex justify-between">
-        <h4 className="border-b-2 border-black">
-          Comments ({comments.length})
-        </h4>
-        <button onClick={toggleShowComments} className="text-2xl">
-          {showComments ? icons.comment : icons.closedComment}
-        </button>
-      </div>
-      {showComments && (
-        <div className="flex flex-col my-8 gap-4">
-          {comments.map((comment, index) => (
-            <div key={index} className="flex gap-4">
-              <Image
-                src={comment.photoURL || '/user-placeholder.svg'}
-                alt={comment.username}
-                width={48}
-                height={48}
-                className="w-12 h-12 rounded-full"
-              />
-              <div className="flex flex-col">
-                <h5>{comment.username}</h5>
-                <p>{comment.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      {user && showComments && (
-        <form onSubmit={handleSubmit}>
-          <textarea
-            value={newComment}
-            className="p-2 w-full border border-slate-200 rounded-md mt-2 mb-4"
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-          />
-          <button className="btn btn-primary" type="submit">
-            Post Comment
+    (user || comments.length > 0) && (
+      <div className="comments-section py-8 border-t-2 border-b-2 border-slate-200">
+        <div className="flex justify-between">
+          <h4 className="border-b-2 border-black">
+            Comments ({comments.length})
+          </h4>
+          <button onClick={toggleShowComments} className="text-2xl">
+            {showComments ? icons.comment : icons.closedComment}
           </button>
-        </form>
-      )}
-    </div>
+        </div>
+
+        {showComments && (
+          <div className="flex flex-col mt-8 gap-4">
+            {comments.map((comment, index) => (
+              <div key={index} className="flex gap-4">
+                <Image
+                  src={comment.photoURL || '/user-placeholder.png'}
+                  alt={comment.username}
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 rounded-full"
+                />
+                <div className="flex flex-col">
+                  <h5>{comment.username}</h5>
+                  <p>{comment.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {user && showComments && (
+          <form onSubmit={handleSubmit}>
+            <textarea
+              value={newComment}
+              className="p-2 w-full border border-slate-200 rounded-md mt-2 mb-4"
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+            />
+            <button className="btn btn-primary" type="submit">
+              Post Comment
+            </button>
+          </form>
+        )}
+      </div>
+    )
   );
 };
 

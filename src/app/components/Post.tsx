@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
@@ -40,12 +41,7 @@ const Post = ({ post }: { post: PostType }) => {
   const displayFile = {
     image: (
       <div className="w-full flex justify-center items-center">
-        <img
-          src={draft}
-          alt={title}
-          
-          className="rounded"
-        />
+        <img src={draft} alt={title} className="rounded" />
       </div>
     ),
     video: (
@@ -71,16 +67,28 @@ const Post = ({ post }: { post: PostType }) => {
     ),
     writing: (
       <>
-        <div onClick={()=> setShowLightbox(true)} tabIndex={0} aria-label='expand writing post' className="px-12 py-8 line-clamp-5 font-hepta whitespace-pre-wrap text-2xl font-medium">
+        <div
+          onClick={() => setShowLightbox(true)}
+          tabIndex={0}
+          aria-label="expand writing post"
+          className="px-12 my-8 line-clamp-5 font-hepta whitespace-pre-wrap text-2xl font-medium hover:cursor-pointer rounded hover:bg-slate-300 hover:transition-all hover:duration-400 hover:ease-in-out"
+        >
           {post.post}
         </div>
         {showLightbox && (
           <div
-            className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center"
+            className="fixed inset-0 z-50 bg-black bg-opacity-50  flex whitespace-pre-wrap justify-center items-center"
             onClick={() => setShowLightbox(false)}
           >
-            <div className="bg-white p-8 rounded-lg max-w-[40rem] flex flex-col gap-2">
-              <h1 className='font-Satoshi text-5xl font-bold'>{post.title}</h1>
+            <div className="bg-white p-8 rounded-lg max-w-[40rem]  overflow-y-scroll h-[90%] flex flex-col gap-2">
+              <button
+                className="ml-auto font-satoshi text-xsm font-bold text-slate-600 hover:text-slate-950"
+                aria-label="close lightbox"
+                onClick={() => setShowLightbox(false)}
+              >
+                close
+              </button>
+              <h1 className="font-Satoshi text-5xl font-bold">{post.title}</h1>
               <ReactMarkdown>{post.post}</ReactMarkdown>
             </div>
           </div>
@@ -93,18 +101,26 @@ const Post = ({ post }: { post: PostType }) => {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex">
       <div className="flex flex-col w-full gap-9">
         <div className="flex w-full gap-4 items-center -pt-2">
-          <div className="w-16 h-16 rounded-full relative bg-slate-300">
+          <Link
+            href={`/artist/${user?.profile.username}`}
+            className="w-16 h-16 rounded-full relative bg-slate-300"
+          >
             <Image
-              src={photoURL ?? ''}
+              src={photoURL ?? '/user-placeholder.png'}
               alt={displayName ?? username}
               width={64}
               height={64}
               className="rounded-full"
             />
-          </div>
+          </Link>
 
           <div className="font-satoshi">
-            <div className=" text-2xl">{displayName ?? username}</div>
+            <Link
+              href={`/artist/${user?.profile.username}`}
+              className=" text-2xl"
+            >
+              {displayName ?? username}
+            </Link>
             <div className="text-sm">
               {[medium, location, postedAt].filter(Boolean).join(' | ')}
             </div>

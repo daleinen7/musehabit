@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, FormEventHandler } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { storage } from '@/app/lib/firebase';
@@ -64,61 +65,69 @@ const profileFormData = [
 ];
 
 const accountFormData = [
+  // {
+  //   id: 'heading',
+  //   value: 'Accountability Settings',
+  // },
+  // {
+  //   id: 'heading',
+  //   label:
+  //     'When would you like to receive an email reminder about your post date?',
+  // },
+  // {
+  //   id: 'tenDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '10 Days Before',
+  // },
+  // {
+  //   id: 'fiveDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '5 Days Before',
+  // },
+  // {
+  //   id: 'threeDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '3 Days Before',
+  // },
+  // {
+  //   id: 'oneDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '1 Day Before',
+  // },
+  // {
+  //   id: 'lateImage',
+  //   type: 'file',
+  //   condition: 'profileImage',
+  //   label: 'Upload an image you’d like to show if you miss your post date',
+  // },
+  // {
+  //   id: 'lateExcuse',
+  //   type: 'text',
+  //   label:
+  //     'If you miss your post date, what would you like your message to say?',
+  //   placeholder: 'display name',
+  // },
   {
     id: 'heading',
-    value: 'Accountability Settings',
+    value: 'What is your ideal default home feed?',
   },
   {
-    id: 'heading',
-    label:
-      'When would you like to receive an email reminder about your post date?',
-  },
-  {
-    id: 'tenDAy',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '10 Days Before',
-  },
-  {
-    id: 'fiveDay',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '5 Days Before',
-  },
-  {
-    id: 'threeDay',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '3 Days Before',
-  },
-  {
-    id: 'oneDay',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '1 Day Before',
-  },
-  {
-    id: 'lateImage',
-    type: 'file',
-    condition: 'profileImage',
-    label: 'Upload an image you’d like to show if you miss your post date',
-  },
-  {
-    id: 'lateExcuse',
-    type: 'text',
-    label:
-      'If you miss your post date, what would you like your message to say?',
-    placeholder: 'display name',
-  },
-  {
-    id: 'heading',
-    value: 'Default Feed',
-  },
-  {
-    id: 'defaultFeed',
+    id: 'global',
     type: 'radio',
-    label: 'What is your ideal default home feed?',
-    placeholder: 'Painter, Sculptor, Theremin composer, etc.',
+    label: 'Global',
+    value: 'global',
+    name: 'defaultFeed',
+  },
+  {
+    id: 'following',
+    type: 'radio',
+    label: 'Following',
+    value: 'following',
+    name: 'defaultFeed',
   },
 ];
 
@@ -126,7 +135,7 @@ const EditProfile = () => {
   const [profileForm, setProfileForm] = useState<ProfileFormState>({
     profileImage: null,
     profileImageUrl: '',
-    photoUrl: '',
+    photoUrl: '/user-placeholder.png',
     displayName: '',
     location: '',
     medium: '',
@@ -154,10 +163,15 @@ const EditProfile = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user && selectedFeed === 'profile') {
+    // If user is not logged in, redirect to login page
+    if (!user) {
+      router.push('/login');
+    }
+
+    if (selectedFeed === 'profile' && user && user.profile) {
       setProfileForm((prevForm) => ({
         ...prevForm,
-        profileImage: user.profile.photoURL || null,
+        profileImage: user.profile.photoURL || '/user-placeholder.png',
         displayName: user.profile.displayName || '',
         location: user.profile.location || '',
         bio: user.profile.bio || '',
@@ -167,21 +181,25 @@ const EditProfile = () => {
       setImagePreview(user.profile.photoURL);
     }
 
-    if (user && selectedFeed === 'account') {
-      setAccountForm((prevForm) => ({
-        ...prevForm,
-        tenDay: user.profile.settings.tenDay || false,
-        fiveDay: user.profile.settings.fiveDay || false,
-        threeDay: user.profile.settings.threeDay || false,
-        oneDay: user.profile.settings.oneDay || false,
-        lateImage: user.profile.settings.lateImage || null,
-        lateExcuse: user.profile.settings.lateExcuse || '',
-        defaultFeed: user.profile.settings.defaultFeed || 'global',
-      }));
-    } else {
-      console.error('User is missing');
+    if (selectedFeed === 'account' && user && user.profile) {
+      const userProfileSettings = user.profile.settings;
+
+      console.log('userProfileSettings', userProfileSettings);
+
+      if (userProfileSettings) {
+        setAccountForm((prevForm) => ({
+          ...prevForm,
+          tenDay: userProfileSettings.tenDay || false,
+          fiveDay: userProfileSettings.fiveDay || false,
+          threeDay: userProfileSettings.threeDay || false,
+          oneDay: userProfileSettings.oneDay || false,
+          lateImage: userProfileSettings.lateImage || null,
+          lateExcuse: userProfileSettings.lateExcuse || '',
+          defaultFeed: userProfileSettings.defaultFeed || 'global',
+        }));
+      }
     }
-  }, [user, selectedFeed]);
+  }, [user, selectedFeed, router]);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -196,7 +214,18 @@ const EditProfile = () => {
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProfileForm({ ...profileForm, [e.target.id]: e.target.value });
+    const { id, value, type, checked, name } = e.target;
+    if (selectedFeed === 'profile') {
+      setProfileForm((prevProfileForm) => ({
+        ...prevProfileForm,
+        [id]: type === 'checkbox' ? checked : value,
+      }));
+    } else {
+      setAccountForm((prevAccountForm) => ({
+        ...prevAccountForm,
+        [name || id]: type === 'checkbox' || type === 'radio' ? value : value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -252,9 +281,9 @@ const EditProfile = () => {
 
   return (
     user && (
-      <div className='w-full flex'>
-        <div className="w-full max-w-[20rem] min-h-[screen] sticky bg-slate-100 flex flex-col text-xl align-center gap-3">
-          <h2 className='font-bold text-2xl my-6 px-6'>Account</h2>
+      <div className="w-full flex min-h-screen">
+        <div className="w-full max-w-[20rem] min-h-screen sticky bg-slate-100 flex flex-col text-xl align-center gap-3">
+          <h2 className="font-bold text-2xl my-6 px-6">Account</h2>
           <button
             className={`hover:bg-slate-200 w-[14rem] mx-auto rounded py-4 ${
               selectedFeed === 'profile' ? 'bg-slate-300' : ''
@@ -274,15 +303,17 @@ const EditProfile = () => {
         </div>
 
         {selectedFeed === 'profile' ? (
-          <div className="width-wrapper flex flex-col max-w-[40rem]">
-            {!user.profile.photoURL && <Link
-              href={`/artist/${user.profile.url}`}
-              className="underline self-end my-6"
-            >
-              I&apos;ll do this later
-            </Link>}
-            {user.displayName ? (
-              <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
+          <div className="width-wrapper flex items-center flex-col max-w-[40rem] pb-12">
+            {!user.profile.photoURL && (
+              <Link
+                href={`/artist/${user.profile.username}`}
+                className="underline self-end my-6"
+              >
+                I&apos;ll do this later
+              </Link>
+            )}
+            {user.profile.displayName ? (
+              <h2 className=" font-satoshi text-[2.25rem] font-bold text-center leading-tight">
                 Hey {user.displayName}! <br /> Welcome to your Musehabit
                 Profile.
               </h2>
@@ -292,14 +323,16 @@ const EditProfile = () => {
               </h2>
             )}
 
-            <p className="font-satoshi text-[1.5rem]">
+            <p className="font-satoshi text-[1.5rem] text-center">
               Now that you&apos;ve created your account, let&apos;s build it
               out.
             </p>
             {imagePreview && (
-              <img
+              <Image
                 src={imagePreview}
                 alt="Profile Preview"
+                width={128}
+                height={128}
                 className="mt-2 w-32 h-32 object-cover rounded-full"
               />
             )}
@@ -341,16 +374,13 @@ const EditProfile = () => {
                   )}
                 </React.Fragment>
               ))}
-              <button
-                type="submit"
-                className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
-              >
+              <button type="submit" className="btn btn-primary">
                 Save Profile Info
               </button>
             </form>
           </div>
         ) : (
-          <div className="width-wrapper">
+          <div className="width-wrapper mb-12">
             <h2 className="font-satoshi text-[2.25rem] font-bold text-center mt-4">
               Account Settings
             </h2>
@@ -361,8 +391,8 @@ const EditProfile = () => {
               }
               className="flex flex-col items-start gap-[1.5rem] w-full"
             >
-              {accountFormData.map((item) => (
-                <React.Fragment key={item.id}>
+              {accountFormData.map((item, idx) => (
+                <React.Fragment key={idx}>
                   {item.id === 'heading' ? (
                     item.value ? (
                       <h3 className="text-left border-b-[1px] text-3xl w-full mt-12">
@@ -377,18 +407,20 @@ const EditProfile = () => {
                       type={item.type || ''}
                       label={item.label || ''}
                       handleFormChange={handleFormChange}
+                      name={item.name}
                       value={String(
-                        profileForm[item.id as keyof typeof profileForm]
+                        accountForm[
+                          item.name
+                            ? (item.name as keyof typeof accountForm)
+                            : (item.id as keyof typeof accountForm)
+                        ]
                       )}
                       profile
                     />
                   )}
                 </React.Fragment>
               ))}
-              <button
-                type="submit"
-                className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
-              >
+              <button type="submit" className="btn btn-primary cursor-pointer">
                 Save Profile Info
               </button>
             </form>

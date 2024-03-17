@@ -1,6 +1,6 @@
 const getFileType = (format: string) => {
   // Map file extensions to types
-  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
   const videoExtensions = ['mp4', 'avi', 'mkv', 'mov'];
   const audioExtensions = ['mp3', 'wav', 'ogg', 'aac'];
 

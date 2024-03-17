@@ -78,5 +78,5 @@ export type CommentType = {
   timestamp: number;
   username: string;
   displayName: string;
-  photoURL: string | undefined;
+  photoURL?: string | undefined;
 };

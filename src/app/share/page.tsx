@@ -1,6 +1,7 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
 import { collection, addDoc, setDoc, updateDoc } from 'firebase/firestore';
@@ -9,6 +10,7 @@ import uploadFileToStorage from '../lib/uploadFileToStorage';
 import { daysUntilNextPost } from '../lib/daysUntilNextPost';
 import icons from '../lib/icons';
 import { doc } from 'firebase/firestore';
+import { BeatLoader } from 'react-spinners';
 
 const fileForm = [
   { label: 'Draft', input: 'draft', type: 'file', required: true },
@@ -24,9 +26,26 @@ const fileForm = [
     type: 'textarea',
     required: false,
   },
-  { label: 'Preview Image', input: 'image', type: 'file', required: false },
-  { label: 'Tools Used', input: 'toolsUsed', type: 'text', required: false },
-  { label: 'Tags', input: 'tags', type: 'text', required: false },
+  {
+    label:
+      'Preview Image - note: will not display if your submission is an image (actual image will display)',
+    input: 'image',
+    type: 'file',
+    required: false,
+  },
+  {
+    label: 'Tools Used - Optional: place to talk some shop',
+    input: 'toolsUsed',
+    type: 'text',
+    required: false,
+  },
+  {
+    label:
+      'Tags - comma separate tags to categorize your work; eg: "euro americana, cyber knitting, synth folk"',
+    input: 'tags',
+    type: 'text',
+    required: false,
+  },
 ];
 
 const writeForm = [
@@ -49,11 +68,20 @@ const writeForm = [
     required: false,
   },
   { label: 'Preview Image', input: 'image', type: 'file', required: false },
-  { label: 'Tools Used', input: 'toolsUsed', type: 'text', required: false },
   { label: 'Tags', input: 'tags', type: 'text', required: false },
 ];
 
-const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
+const allowedFileFormats = [
+  'png',
+  'jpg',
+  'jpeg',
+  'pdf',
+  'mp3',
+  'mp4',
+  'gif',
+  'webp',
+  'svg',
+];
 
 interface FormData {
   title: string;
@@ -72,7 +100,7 @@ interface NewPost {
   image: string;
   poster: string | null; // Adjust type based on your use case
   postedAt: any; // Adjust type based on your use case
-  toolsUsed: string;
+  toolsUsed?: string;
   tags: string[];
   format?: string; // Include format property when postType is 'file'
   post?: string; // Add post property when postType is 'text'
@@ -80,12 +108,20 @@ interface NewPost {
 
 const Share: React.FC = () => {
   const { register, handleSubmit } = useForm<FormData>();
+  const [uploading, setUploading] = useState(false);
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState<null | string>(null);
   const [selectedType, setSelectedType] = useState<null | string>(null);
   const [imagePreview, setImagePreview] = useState<null | string>(null);
 
   const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, router]);
 
   const handleFileChange = (event: any, inputName: string) => {
     if (inputName === 'image' && event.target.files.length) {
@@ -96,6 +132,7 @@ const Share: React.FC = () => {
   };
 
   const onSubmit = async (data: any) => {
+    setUploading(true);
     const { title, description, image, draft, toolsUsed, tags } = data;
 
     // check if draft is allowed file format
@@ -168,7 +205,6 @@ const Share: React.FC = () => {
       image: imageFileUrl,
       poster: user?.uid || null, // Assign null if user?.uid is undefined
       postedAt: Date.now(),
-      toolsUsed,
       tags: tagsArray,
     };
 
@@ -176,6 +212,7 @@ const Share: React.FC = () => {
       newPost.draft = draftFileUrl;
       newPost.image = imageFileUrl;
       newPost.draft = draftFileUrl;
+      newPost.toolsUsed = toolsUsed;
       newPost.format = draftFileFormat;
     }
     if (postType === 'text') {
@@ -196,9 +233,19 @@ const Share: React.FC = () => {
     return;
   };
 
-  if (shared === true) return <p>Thanks for sharing the post</p>;
+  if (shared === true)
+    return (
+      <p className="font-satoshi font-bold text-3xl mt-24">
+        Thanks for sharing!
+      </p>
+    );
 
-  if (!user) return <p>Loading...</p>;
+  if (!user)
+    return (
+      <p>
+        <BeatLoader /> Loading...
+      </p>
+    );
 
   return (
     <>
@@ -296,11 +343,15 @@ const Share: React.FC = () => {
               </React.Fragment>
             );
           })}
-          <input
-            type="submit"
-            value="Submit"
-            className="border-gray-400 p-4 border-2 rounded hover:border-white"
-          />
+          {uploading ? (
+            <BeatLoader color="#F24236" />
+          ) : (
+            <input
+              type="submit"
+              value="Submit"
+              className="btn btn-primary cursor-pointer"
+            />
+          )}
         </form>
       )}
     </>
