@@ -181,7 +181,7 @@ export const AuthContextProvider = ({
                 accountabilityNotice: false,
                 lateImage: '',
                 lateExcuse: '',
-                defaultFeed: '',
+                defaultFeed: 'global',
               },
             };
             setUser({
@@ -359,14 +359,15 @@ export const AuthContextProvider = ({
             savedPosts: profileData?.savedPosts || {},
             following: profileData?.following || {},
             settings: {
-              tenDay: false,
-              fiveDay: false,
-              threeDay: false,
-              oneDay: false,
-              accountabilityNotice: false,
-              lateImage: '',
-              lateExcuse: '',
-              defaultFeed: 'global',
+              tenDay: profileData?.settings?.tenDay || false,
+              fiveDay: profileData?.settings?.fiveDay || false,
+              threeDay: profileData?.settings?.threeDay || false,
+              oneDay: profileData?.settings?.oneDay || false,
+              accountabilityNotice:
+                profileData?.settings?.accountabilityNotice || false,
+              lateImage: profileData?.settings?.lateImage || '',
+              lateExcuse: profileData?.settings?.lateExcuse || '',
+              defaultFeed: profileData?.settings?.defaultFeed || 'global',
             },
           },
         });

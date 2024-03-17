@@ -1,6 +1,7 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
 import { collection, addDoc, setDoc, updateDoc } from 'firebase/firestore';
@@ -114,6 +115,13 @@ const Share: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<null | string>(null);
 
   const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, router]);
 
   const handleFileChange = (event: any, inputName: string) => {
     if (inputName === 'image' && event.target.files.length) {

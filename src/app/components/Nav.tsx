@@ -95,14 +95,6 @@ const Nav = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link
-                        href="/profile/settings"
-                        onClick={() => setShowProfile(false)}
-                      >
-                        Settings
-                      </Link>
-                    </li>
-                    <li>
                       <button
                         onClick={handleLogOut}
                         className="flex items-center"

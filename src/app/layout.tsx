@@ -39,7 +39,7 @@ export default function RootLayout({
           <header>
             <Nav />
           </header>
-          <main className="flex flex-col items-center justify-start">
+          <main className="flex flex-col items-center justify-start min-h-[100vh]">
             {children}
           </main>
         </AuthContextProvider>

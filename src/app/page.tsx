@@ -17,17 +17,25 @@ import { PostType } from './lib/types';
 
 export default function Home() {
   const [posts, setPosts] = useState<PostType[] | null>([]);
-  const [selectedFeed, setSelectedFeed] = useState('global');
+  const [selectedFeed, setSelectedFeed] = useState<
+    null | 'global' | 'following'
+  >(null);
   const { user } = useAuth();
   // if (user) {
   //   console.log('if user', user);
   // }
 
   useEffect(() => {
+    if (user) {
+      setSelectedFeed(user?.profile?.settings?.defaultFeed || 'global');
+    }
+  }, [user]);
+
+  useEffect(() => {
     const fetchPosts = async () => {
       let postsRef;
 
-      if (selectedFeed === 'global') {
+      if (selectedFeed === 'global' || !user) {
         const postsRef = collection(firestore, 'posts');
         const postsSnapshot = await getDocs(
           query(postsRef, orderBy('postedAt', 'desc'))
@@ -41,13 +49,9 @@ export default function Home() {
             return { ...post, posterData } as PostType;
           })
         );
+
         setPosts(postsWithUserData);
       } else {
-        if (!user) {
-          console.error('User is missing');
-          return;
-        }
-
         if (
           Object.keys(user.profile.following).length &&
           Object.keys(user.profile.following)
@@ -75,6 +79,7 @@ export default function Home() {
             setPosts(null);
             return;
           }
+
           setPosts(postsWithUserData);
         } else {
           setPosts(null);

@@ -65,52 +65,52 @@ const profileFormData = [
 ];
 
 const accountFormData = [
-  {
-    id: 'heading',
-    value: 'Accountability Settings',
-  },
-  {
-    id: 'heading',
-    label:
-      'When would you like to receive an email reminder about your post date?',
-  },
-  {
-    id: 'tenDay',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '10 Days Before',
-  },
-  {
-    id: 'fiveDay',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '5 Days Before',
-  },
-  {
-    id: 'threeDay',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '3 Days Before',
-  },
-  {
-    id: 'oneDay',
-    type: 'checkbox',
-    condition: 'profileImage',
-    label: '1 Day Before',
-  },
-  {
-    id: 'lateImage',
-    type: 'file',
-    condition: 'profileImage',
-    label: 'Upload an image you’d like to show if you miss your post date',
-  },
-  {
-    id: 'lateExcuse',
-    type: 'text',
-    label:
-      'If you miss your post date, what would you like your message to say?',
-    placeholder: 'display name',
-  },
+  // {
+  //   id: 'heading',
+  //   value: 'Accountability Settings',
+  // },
+  // {
+  //   id: 'heading',
+  //   label:
+  //     'When would you like to receive an email reminder about your post date?',
+  // },
+  // {
+  //   id: 'tenDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '10 Days Before',
+  // },
+  // {
+  //   id: 'fiveDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '5 Days Before',
+  // },
+  // {
+  //   id: 'threeDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '3 Days Before',
+  // },
+  // {
+  //   id: 'oneDay',
+  //   type: 'checkbox',
+  //   condition: 'profileImage',
+  //   label: '1 Day Before',
+  // },
+  // {
+  //   id: 'lateImage',
+  //   type: 'file',
+  //   condition: 'profileImage',
+  //   label: 'Upload an image you’d like to show if you miss your post date',
+  // },
+  // {
+  //   id: 'lateExcuse',
+  //   type: 'text',
+  //   label:
+  //     'If you miss your post date, what would you like your message to say?',
+  //   placeholder: 'display name',
+  // },
   {
     id: 'heading',
     value: 'What is your ideal default home feed?',
@@ -163,9 +163,12 @@ const EditProfile = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) return;
+    // If user is not logged in, redirect to login page
+    if (!user) {
+      router.push('/login');
+    }
 
-    if (selectedFeed === 'profile' && user.profile) {
+    if (selectedFeed === 'profile' && user && user.profile) {
       setProfileForm((prevForm) => ({
         ...prevForm,
         profileImage: user.profile.photoURL || '/user-placeholder.png',
@@ -178,21 +181,25 @@ const EditProfile = () => {
       setImagePreview(user.profile.photoURL);
     }
 
-    if (selectedFeed === 'account' && user.profile && user.profile.settings) {
-      setAccountForm((prevForm) => ({
-        ...prevForm,
-        tenDay: user.profile.settings.tenDay || false,
-        fiveDay: user.profile.settings.fiveDay || false,
-        threeDay: user.profile.settings.threeDay || false,
-        oneDay: user.profile.settings.oneDay || false,
-        lateImage: user.profile.settings.lateImage || null,
-        lateExcuse: user.profile.settings.lateExcuse || '',
-        defaultFeed: user.profile.settings.defaultFeed || 'global',
-      }));
-    }
-  }, [user, selectedFeed]);
+    if (selectedFeed === 'account' && user && user.profile) {
+      const userProfileSettings = user.profile.settings;
 
-  console.log('Account Form', accountForm);
+      console.log('userProfileSettings', userProfileSettings);
+
+      if (userProfileSettings) {
+        setAccountForm((prevForm) => ({
+          ...prevForm,
+          tenDay: userProfileSettings.tenDay || false,
+          fiveDay: userProfileSettings.fiveDay || false,
+          threeDay: userProfileSettings.threeDay || false,
+          oneDay: userProfileSettings.oneDay || false,
+          lateImage: userProfileSettings.lateImage || null,
+          lateExcuse: userProfileSettings.lateExcuse || '',
+          defaultFeed: userProfileSettings.defaultFeed || 'global',
+        }));
+      }
+    }
+  }, [user, selectedFeed, router]);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -274,8 +281,8 @@ const EditProfile = () => {
 
   return (
     user && (
-      <div className="w-full flex">
-        <div className="w-full max-w-[20rem] min-h-[screen] sticky bg-slate-100 flex flex-col text-xl align-center gap-3">
+      <div className="w-full flex min-h-screen">
+        <div className="w-full max-w-[20rem] min-h-screen sticky bg-slate-100 flex flex-col text-xl align-center gap-3">
           <h2 className="font-bold text-2xl my-6 px-6">Account</h2>
           <button
             className={`hover:bg-slate-200 w-[14rem] mx-auto rounded py-4 ${
