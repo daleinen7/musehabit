@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { getPostById, updatePost } from '../../lib/posts'; 
 import { PostType } from '../../lib/types';
 
@@ -14,6 +15,8 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
     tags: [] as string[] | null,
   });
 
+  const router = useRouter();
+  
   useEffect(() => {
     // Fetch post data by postId when the component mounts
     const fetchPostData = async () => {
@@ -88,7 +91,7 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
           <input
             type="text"
             name="tags"
-            value={formData.tags.join(',')}
+            value={formData.tags ? formData.tags.join(',') : ''}
             onChange={handleFormChange}
           />
         </div>
