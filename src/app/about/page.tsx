@@ -75,22 +75,23 @@ const About = () => {
           alt={'placeholder'}
         >
           <p>
-            In addition to <i>only</i> being able to post once per month,
-            Musehabit has an optional &quot;accountability&quot; feature that
-            allows you to set the goal of creating something and sharing it once
-            per month.
+            In addition to only being able to post once per month, Musehabit
+            offers an optional &quot;accountability&quot; feature. This feature
+            allows you to set a goal of creating and sharing something once per
+            month.
           </p>
           <p>
-            From the date that you sign up, you have until that date next month
-            to post. If you don&apos;t share, Musehabit will post for you and
-            your feed will replace what would have been your post with a
-            (customizable) automated post pointing out that you missed your
-            deadline. This is a playful way to keep yourself accountable.
+            Upon signing up, you&apos;ll have until the same date next month to
+            post. If you miss the deadline, Musehabit will automatically post
+            for you. Your feed will replace what would have been your post with
+            a customizable automated message, gently reminding you that you
+            missed your deadline. It&apos;s a playful way to keep yourself
+            accountable.
           </p>
           <p>
-            This feature is optional and can be turned off at any time. It is
-            not meant to shame or guilt anyone, but to help users who want to
-            stay on track with their creative goals.
+            This feature is entirely optional and can be turned off at any time.
+            Its purpose is not to shame or guilt anyone but to assist users who
+            wish to stay on track with their creative goals.
           </p>
         </SideBySide>
       </section>
