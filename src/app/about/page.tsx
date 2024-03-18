@@ -17,7 +17,10 @@ const About = () => {
         <div className="flex flex-col gap-4">
           <h2 className="font-hepta font-bold text-5xl">about musehabit</h2>
           <p>
-            Musehabit is an online open-mic platform for artists of multiple disciplines to share their work and connect with other creatives. We want to capture the essence and community feeling of the open-mic but utilize the advantages and accessibility of the internet.
+            Musehabit is an online open-mic platform for artists of multiple
+            disciplines to share their work and connect with other creatives. We
+            want to capture the essence and community feeling of an open-mic but
+            utilize the advantages and accessibility of the internet.
           </p>
         </div>
         <Image
@@ -36,7 +39,14 @@ const About = () => {
           image={'https://picsum.photos/504/350'}
           alt={'placeholder'}
         >
-          <p>As an artist, you sign up and share one post per month. Other artists can see and save your posts, or follow you as an artist and you are encouraged to do the same! Artists on Musehabit should know that this isn&paso;t a platform that requires fully realized art pieces. Share failed experiments. Share incomplete ideas. Challenge others with your vision.</p>
+          <p>
+            As an artist, you sign up and share one post per month. Other
+            artists can see and favorite your posts, or follow you as an artist
+            and you are encouraged to do the same! Artists on Musehabit should
+            know that this isn&apos;t a platform that requires fully realized
+            art pieces. Share failed experiments. Share incomplete ideas.
+            Challenge others with your vision.
+          </p>
         </SideBySide>
         <SideBySide
           headline={'community and connection'}
@@ -45,13 +55,19 @@ const About = () => {
         >
           <div className="flex flex-col gap-4">
             <p>
-              Musehabit is a unique social platform in that users can post only once per month. This helps all users have an equal chance to be seen and heard. It also encourages users to be more thoughtful about what they share. What represents where you are at as an artist this month?
+              Musehabit is a unique social platform in that users can only post
+              once per month. This helps all users have an equal chance to be
+              seen and heard. It also encourages users to be more thoughtful
+              about what they share. What represents where you are as an artist
+              this month?
             </p>
             <p>
-              It also harkens back to a time when the internet was less about curated content, and more about seeing what your friends are up to and sharing what is going on in your artistic journey.
+              It also harkens back to a time when the internet was more about
+              staying connected with your friends and artistic peers than
+              curated content.
             </p>
           </div>
-          </SideBySide>
+        </SideBySide>
         <SideBySide
           reverse
           headline={'accountability'}
@@ -59,7 +75,23 @@ const About = () => {
           alt={'placeholder'}
         >
           <p>
-            In addition to <i>only</i> being able to post once per month, Musehabit has an optional &quot;accountability&quot; feature that allows you to set the goal of sharing once per month. If you don&apos;t share, Musehabit will remind you (and optionally all of your followers that you <i>haven&apos;t shared this month</i>). This is a great way to keep yourself accountable.
+            In addition to only being able to post once per month, Musehabit
+            offers an optional &quot;accountability&quot; feature. This feature
+            allows you to set a goal of creating and sharing something once per
+            month.
+          </p>
+          <p>
+            Upon signing up, you&apos;ll have until the same date next month to
+            post. If you miss the deadline, Musehabit will automatically post
+            for you. Your feed will replace what would have been your post with
+            a customizable automated message, gently reminding you that you
+            missed your deadline. It&apos;s a playful way to keep yourself
+            accountable.
+          </p>
+          <p>
+            This feature is entirely optional and can be turned off at any time.
+            Its purpose is not to shame or guilt anyone but to assist users who
+            wish to stay on track with their creative goals.
           </p>
         </SideBySide>
       </section>
