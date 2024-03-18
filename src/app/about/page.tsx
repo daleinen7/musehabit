@@ -74,25 +74,27 @@ const About = () => {
           image={'https://picsum.photos/504/350'}
           alt={'placeholder'}
         >
-          <p>
-            In addition to only being able to post once per month, Musehabit
-            offers an optional &quot;accountability&quot; feature. This feature
-            allows you to set a goal of creating and sharing something once per
-            month.
-          </p>
-          <p>
-            Upon signing up, you&apos;ll have until the same date next month to
-            post. If you miss the deadline, Musehabit will automatically post
-            for you. Your feed will replace what would have been your post with
-            a customizable automated message, gently reminding you that you
-            missed your deadline. It&apos;s a playful way to keep yourself
-            accountable.
-          </p>
-          <p>
-            This feature is entirely optional and can be turned off at any time.
-            Its purpose is not to shame or guilt anyone but to assist users who
-            wish to stay on track with their creative goals.
-          </p>
+          <div className="flex flex-col gap-4">
+            <p>
+              In addition to only being able to post once per month, Musehabit
+              offers an optional &quot;accountability&quot; feature. This
+              feature allows you to set a goal of creating and sharing something
+              once per month.
+            </p>
+            <p>
+              Upon signing up, you&apos;ll have until the same date next month
+              to post. If you miss the deadline, Musehabit will automatically
+              post for you. Your feed will replace what would have been your
+              post with a customizable automated message, gently reminding you
+              that you missed your deadline. It&apos;s a playful way to keep
+              yourself accountable.
+            </p>
+            <p>
+              This feature is entirely optional and can be turned off at any
+              time. Its purpose is not to shame or guilt anyone but to assist
+              users who wish to stay on track with their creative goals.
+            </p>
+          </div>
         </SideBySide>
       </section>
       <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
