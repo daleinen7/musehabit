@@ -2,15 +2,15 @@ import Image from 'next/image';
 
 type SideBySideProps = {
   headline: string;
-  text: string;
   image: string;
   alt: string;
   reverse?: boolean;
+  children?: React.ReactNode;
 };
 
 export const SideBySide = ({
   headline,
-  text,
+  children,
   image,
   alt,
   reverse,
@@ -24,7 +24,7 @@ export const SideBySide = ({
       >
         <div className="flex flex-col">
           <h2 className="text-2xl mb-2">{headline}</h2>
-          <p className="text-xl font-normal">{text}</p>
+          {children}
         </div>
         <Image
           src={image}
