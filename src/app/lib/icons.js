@@ -7,6 +7,7 @@ import { MdOutlineInsertComment } from 'react-icons/md';
 import { MdFileUpload } from 'react-icons/md';
 import { TfiWrite } from 'react-icons/tfi';
 import { RiArrowDropDownLine } from 'react-icons/ri';
+import {PiDotsThreeOutlineVerticalFill} from 'react-icons/pi';
 
 const icons = {
   close: <IoClose />,
@@ -18,6 +19,7 @@ const icons = {
   upload: <MdFileUpload />,
   write: <TfiWrite />,
   arrow: <RiArrowDropDownLine />,
+  dots: <PiDotsThreeOutlineVerticalFill className=" text-xl" />,
 };
 
 export default icons;
