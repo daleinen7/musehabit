@@ -97,6 +97,17 @@ const About = () => {
           </div>
         </SideBySide>
       </section>
+      <section>
+        <h3>Roadmap</h3>
+        <ul>
+          <li>April: MVP</li>
+          <li>
+            May: Email Notifications | Audience account (commenting, saving
+            posts to a list, no posting/sharing)
+          </li>
+          <li>June: ???</li>
+        </ul>
+      </section>
       <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
         <h3>the team</h3>
         <ul className="grid grid-cols-3 gap-2">
