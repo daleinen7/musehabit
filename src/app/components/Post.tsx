@@ -29,6 +29,7 @@ const Post = ({ post }: { post: PostType }) => {
   const [showLightbox, setShowLightbox] = useState<boolean>(false);
   const [showComments, setShowComments] = useState(false);
   const [showEditDropdown, setShowEditDropdown] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { user } = useAuth();
   const router = useRouter();
@@ -47,10 +48,16 @@ const Post = ({ post }: { post: PostType }) => {
     setShowEditDropdown(!showEditDropdown);
   };
 
+  const toggleDeleteModal = () => {
+    setShowEditDropdown(false);
+    setShowDeleteModal(!showDeleteModal);
+  };
+
   const handleDeletePost = async () => {
     try {
-      await deletePost(id); // Assuming 'id' is the postId
-      router.push('/'); // Redirect to home page
+      await deletePost(id);
+      setShowDeleteModal(false);
+      router.push('/');
     } catch (error) {
       console.error('Error deleting post:', error);
     }
@@ -161,9 +168,36 @@ const Post = ({ post }: { post: PostType }) => {
               {showEditDropdown && (
                 <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg p-4">
                   <Link href={`/edit-post/${id}`}>Edit</Link>
-                  <button onClick={handleDeletePost}>Delete</button>
+                  <button onClick={toggleDeleteModal}>Delete</button>
                 </div>
               )}
+            </div>
+          )}
+          {showDeleteModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded-lg shadow-lg">
+                <p>Are you sure you want to delete this post?</p>
+                <p>
+                  This action is irreversible. If this post was uploaded within
+                  the last 30 days before your next scheduled post, deleting it
+                  will prevent you from posting again until your next scheduled
+                  window for sharing.
+                </p>
+                <div className="flex justify-end mt-4">
+                  <button
+                    className="mr-2"
+                    onClick={() => setShowDeleteModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDeletePost}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
