@@ -6,10 +6,13 @@ export const getPostById = async (postId: string): Promise<PostType | null> => {
   try {
     const postRef = doc(collection(firestore, 'posts'), postId);
     const postSnapshot = await getDoc(postRef);
-    
+
     if (postSnapshot.exists()) {
-      const postData = postSnapshot.data() as PostType;
-      return postData;
+      const post = postSnapshot.data();
+      const posterRef = doc(firestore, 'users', post.poster);
+      const posterSnapshot = await getDoc(posterRef);
+      const posterData = posterSnapshot.data() as PostType['posterData'];
+      return { ...post, posterData } as PostType;
     } else {
       return null;
     }
@@ -19,7 +22,10 @@ export const getPostById = async (postId: string): Promise<PostType | null> => {
   }
 };
 
-export const updatePost = async (postId: string, postData: any): Promise<void> => {
+export const updatePost = async (
+  postId: string,
+  postData: any
+): Promise<void> => {
   try {
     const postRef = doc(collection(firestore, 'posts'), postId);
     await updateDoc(postRef, postData);

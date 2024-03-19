@@ -96,28 +96,35 @@ const About = () => {
           </div>
         </SideBySide>
       </section>
-      <section>
-        <h3>Roadmap</h3>
-        <ul>
-          <li>April: MVP</li>
-          <li>
-            May: Email Notifications | Audience account (commenting, saving
-            posts to a list, no posting/sharing)
-          </li>
-          <li>June: ???</li>
-        </ul>
+      <section className="bg-slate-100 flex flex-col items-center w-full py-8">
+        <div className="width-wrapper">
+          <h3 className="font-satoshi text-4xl font-bold">the roadmap</h3>
+          <ul className="max-w-[40rem] py-4 flex flex-col gap-2">
+            <li>
+              <span className="font-bold">April:</span> MVP
+            </li>
+            <li>
+              <span className="font-bold">May:</span> Email Notifications |
+              Audience account (commenting, saving posts to a list, no
+              posting/sharing)
+            </li>
+            <li>
+              <span className="font-bold">June:</span> ???
+            </li>
+          </ul>
+        </div>
       </section>
-      <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
-        <h3>the team</h3>
+      <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12 py-12">
+        <h3 className="font-satoshi text-4xl font-bold">the team</h3>
         <ul className="grid grid-cols-3 gap-2">
           <li>
-            <TeamMember name={'Doug'} role={'code placer'} />
+            <TeamMember name={'Doug'} role={'Developer/Founder'} />
           </li>
           <li>
-            <TeamMember name={'Cassidy'} role={'prettifier'} />
+            <TeamMember name={'Cassidy'} role={'Designer'} />
           </li>
           <li>
-            <TeamMember name={'Mark'} role={'project manager ftw'} />
+            <TeamMember name={'Mark'} role={'Product Manager'} />
           </li>
         </ul>
       </section>

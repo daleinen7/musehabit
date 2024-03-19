@@ -249,7 +249,7 @@ const Share: React.FC = () => {
 
   return (
     <>
-      <h2 className=" font-satoshi text-4xl font-bold mt-12">
+      <h2 className="font-satoshi text-4xl font-bold mt-12">
         {user.profile.latestPost ? 'New Post' : 'First Post'}
       </h2>
       <p className="py-10">

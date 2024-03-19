@@ -1,11 +1,12 @@
-'use client'
+'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getPostById, updatePost } from '../../lib/posts'; 
+import { getPostById, updatePost } from '../../lib/posts';
 import { PostType } from '../../lib/types';
+import { BeatLoader } from 'react-spinners';
 
 const EditPost = ({ params }: { params: { postId: string } }) => {
-  const { postId } = params; 
+  const { postId } = params;
 
   const [post, setPost] = useState<PostType | null>(null);
   const [formData, setFormData] = useState({
@@ -16,13 +17,13 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
   });
 
   const router = useRouter();
-  
+
   useEffect(() => {
     // Fetch post data by postId when the component mounts
     const fetchPostData = async () => {
       if (postId) {
-        const postData = await getPostById(postId as string); 
-        setPost(postData); 
+        const postData = await getPostById(postId as string);
+        setPost(postData);
         setFormData({
           title: postData?.title ?? '',
           description: postData?.description ?? '',
@@ -37,67 +38,91 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
     }
   }, [postId]);
 
-  const handleFormChange = (e: any ) => {
+  const handleFormChange = (e: any) => {
     const { name, value } = e.target;
+
+    if (name === 'tags') {
+      setFormData({ ...formData, [name]: value.split(',') });
+      return;
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      await updatePost(postId as string, formData); // Implement this function to update post data
-      router.push(`/post/${postId}`); // Redirect to the post detail page after successful update
+      // Trim whitespace from tags
+      const trimmedTags = formData.tags?.map((tag: string) => tag.trim());
+      const trimmedFormData = { ...formData, tags: trimmedTags };
+      await updatePost(postId as string, trimmedFormData);
+      router.push(`/post/${postId}`);
     } catch (error) {
       console.error('Error updating post:', error);
     }
   };
 
   if (!post) {
-    return <div>Loading...</div>; // Show loading indicator while fetching post data
+    return (
+      <div>
+        Loading... <BeatLoader color="#F24236" />
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h2>Edit Post</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title:</label>
+    <>
+      <h2 className="font-satoshi text-4xl font-bold mt-12">Edit Post</h2>
+      <form
+        className="flex flex-col gap-8 w-full width-wrapper mb-12 items-center"
+        onSubmit={handleSubmit}
+      >
+        <label className="flex flex-col gap-2 w-full">
+          Title:
           <input
+            className="text-black p-[0.625rem] border border-black rounded-md w-full"
             type="text"
             name="title"
             value={formData.title}
             onChange={handleFormChange}
           />
-        </div>
-        <div>
-          <label>Description:</label>
+        </label>
+        <label className="flex flex-col gap-2 w-full">
+          Description:
           <textarea
+            className="text-black p-[0.625rem] border border-black rounded-md w-full"
             name="description"
             value={formData.description}
             onChange={handleFormChange}
           ></textarea>
-        </div>
-        <div>
-          <label>Tools Used:</label>
+        </label>
+        <label className="flex flex-col gap-2 w-full">
+          Tools Used:
           <input
+            className="text-black p-[0.625rem] border border-black rounded-md w-full"
             type="text"
             name="toolsUsed"
             value={formData.toolsUsed}
             onChange={handleFormChange}
           />
-        </div>
-        <div>
-          <label>Tags:</label>
+        </label>
+        <label className="flex flex-col gap-2 w-full">
+          Tags:
           <input
+            className="text-black p-[0.625rem] border border-black rounded-md w-full"
             type="text"
             name="tags"
             value={formData.tags ? formData.tags.join(',') : ''}
             onChange={handleFormChange}
           />
-        </div>
-        <button type="submit">Save Changes</button>
+        </label>
+        <button className="btn btn-primary" type="submit">
+          Save Changes
+        </button>
       </form>
-    </div>
+    </>
   );
 };
 
