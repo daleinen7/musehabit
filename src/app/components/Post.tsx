@@ -135,7 +135,7 @@ const Post = ({ post }: { post: PostType }) => {
               alt={displayName ?? username}
               width={64}
               height={64}
-              className="rounded-full"
+              className="rounded-full h-16 w-16 object-cover"
             />
           </Link>
           <div className="font-satoshi">
@@ -175,7 +175,7 @@ const Post = ({ post }: { post: PostType }) => {
           )}
           {showDeleteModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-4 rounded-lg shadow-lg">
+              <div className="bg-white p-4 rounded-lg shadow-lg max-w-[40rem] flex flex-col gap-4">
                 <p>Are you sure you want to delete this post?</p>
                 <p>
                   This action is irreversible. If this post was uploaded within
