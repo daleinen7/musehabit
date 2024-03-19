@@ -19,8 +19,8 @@ const About = () => {
           <p>
             Musehabit is an online open-mic platform for artists of multiple
             disciplines to share their work and connect with other creatives. We
-            want to capture the essence and community feeling of an open-mic but
-            utilize the advantages and accessibility of the internet.
+            want to capture the essence and community feeling of an open-mic
+            while utilizing the advantages and accessibility of the internet.
           </p>
         </div>
         <Image
@@ -43,8 +43,8 @@ const About = () => {
             As an artist, you sign up and share one post per month. Musehabit
             isn&apos;t about showcasing polished masterpieces – it&apos;s a
             place to share works in progress, experiments, and ideas in their
-            raw form. Try something you would interest you and challenge others
-            with your unique perspective.
+            raw form. Try something that would interest you and you alone.
+            Challenge others with your unique perspective. Follow your muse.
           </p>
         </SideBySide>
         <SideBySide
