@@ -1,7 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 import getFileType from '@/app/lib/getFileType';
@@ -9,6 +10,7 @@ import SaveButton from './SaveButton';
 import FollowButton from './FollowButton';
 import CommentsSection from './CommentsSection';
 import { PostType } from '../lib/types';
+import { deletePost } from '@/app/lib/posts';
 import icon from '@/app/lib/icons';
 
 const Post = ({ post }: { post: PostType }) => {
@@ -29,6 +31,7 @@ const Post = ({ post }: { post: PostType }) => {
   const [showEditDropdown, setShowEditDropdown] = useState(false);
 
   const { user } = useAuth();
+  const router = useRouter();
 
   const postedAt = new Date(post.postedAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -42,22 +45,21 @@ const Post = ({ post }: { post: PostType }) => {
 
   const toggleEditDropdown = () => {
     setShowEditDropdown(!showEditDropdown);
-  }
+  };
 
-  const handleDeletePost = () => {
-    console.log('delete post');
-    
-  }
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(id); // Assuming 'id' is the postId
+      router.push('/'); // Redirect to home page
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
 
   const displayFile = {
     image: (
       <div className="w-full flex justify-center items-center">
-        <img
-          src={draft}
-          alt={title}
-          
-          className="rounded"
-        />
+        <img src={draft} alt={title} className="rounded" />
       </div>
     ),
     video: (
@@ -83,7 +85,12 @@ const Post = ({ post }: { post: PostType }) => {
     ),
     writing: (
       <>
-        <div onClick={()=> setShowLightbox(true)} tabIndex={0} aria-label='expand writing post' className="px-12 py-8 line-clamp-5 font-hepta whitespace-pre-wrap text-2xl font-medium">
+        <div
+          onClick={() => setShowLightbox(true)}
+          tabIndex={0}
+          aria-label="expand writing post"
+          className="px-12 py-8 line-clamp-5 font-hepta whitespace-pre-wrap text-2xl font-medium"
+        >
           {post.post}
         </div>
         {showLightbox && (
@@ -92,7 +99,7 @@ const Post = ({ post }: { post: PostType }) => {
             onClick={() => setShowLightbox(false)}
           >
             <div className="bg-white p-8 rounded-lg max-w-[40rem] flex flex-col gap-2">
-              <h1 className='font-Satoshi text-5xl font-bold'>{post.title}</h1>
+              <h1 className="font-Satoshi text-5xl font-bold">{post.title}</h1>
               <ReactMarkdown>{post.post}</ReactMarkdown>
             </div>
           </div>
@@ -137,14 +144,12 @@ const Post = ({ post }: { post: PostType }) => {
           {user && user.uid === posterData.uid && (
             <div className="ml-auto flex gap-5 relative">
               <button onClick={toggleEditDropdown}>{icon.dots}</button>
-              {
-                showEditDropdown && (
-                  <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg p-4">
-                    <Link href={`/edit-post/${id}`}>Edit</Link>
-                    <button>Delete</button>
-                  </div>
-                )
-              }
+              {showEditDropdown && (
+                <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg p-4">
+                  <Link href={`/edit-post/${id}`}>Edit</Link>
+                  <button onClick={handleDeletePost}>Delete</button>
+                </div>
+              )}
             </div>
           )}
         </div>

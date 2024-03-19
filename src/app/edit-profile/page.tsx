@@ -184,8 +184,6 @@ const EditProfile = () => {
     if (selectedFeed === 'account' && user && user.profile) {
       const userProfileSettings = user.profile.settings;
 
-      console.log('userProfileSettings', userProfileSettings);
-
       if (userProfileSettings) {
         setAccountForm((prevForm) => ({
           ...prevForm,

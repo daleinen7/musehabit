@@ -1,5 +1,11 @@
 import { firestore } from '../lib/firebase';
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} from 'firebase/firestore';
 import { PostType } from '../lib/types';
 
 export const getPostById = async (postId: string): Promise<PostType | null> => {
@@ -32,5 +38,17 @@ export const updatePost = async (
     console.log('Post updated successfully.');
   } catch (error) {
     console.error('Error updating post:', error);
+  }
+};
+
+export const deletePost = async (postId: string): Promise<void> => {
+  console.log('Deleting post...');
+  console.log('postId:', postId);
+
+  try {
+    await deleteDoc(doc(collection(firestore, 'posts'), postId));
+    console.log('Post deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting post:', error);
   }
 };

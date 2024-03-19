@@ -24,8 +24,6 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
     fetchPost();
   }, [postId]);
 
-  console.log(post);
-
   return (
     <div className="flex justify-center items-center min-h-[screen] py-12">
       {post ? <Post post={post} /> : <BeatLoader color="#F24236" />}

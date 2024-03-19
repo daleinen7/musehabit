@@ -96,9 +96,6 @@ const Profile = ({ params }: { params: any }) => {
     fetchUserAndPosts();
   }, [user, selectedFeed, params.username]);
 
-  console.log('user', user);
-  console.log('user latest post', user?.profile.latestPost);
-
   return (
     <>
       <div className="flex justify-center items-center gap-[2.25rem] my-12">
