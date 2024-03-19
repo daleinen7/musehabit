@@ -40,12 +40,11 @@ const About = () => {
           alt={'placeholder'}
         >
           <p>
-            As an artist, you sign up and share one post per month. Other
-            artists can see and favorite your posts, or follow you as an artist
-            and you are encouraged to do the same! Artists on Musehabit should
-            know that this isn&apos;t a platform that requires fully realized
-            art pieces. Share failed experiments. Share incomplete ideas.
-            Challenge others with your vision.
+            As an artist, you sign up and share one post per month. Musehabit
+            isn&apos;t about showcasing polished masterpieces – it&apos;s a
+            place to share works in progress, experiments, and ideas in their
+            raw form. Try something you would interest you and challenge others
+            with your unique perspective.
           </p>
         </SideBySide>
         <SideBySide
