@@ -7,7 +7,7 @@ import Modal from './Modal';
 import icons from '@/app/lib/icons';
 
 const FollowButton = ({ artistUid }: { artistUid: string }) => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [isFollowing, setIsFollowing] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -34,6 +34,14 @@ const FollowButton = ({ artistUid }: { artistUid: string }) => {
     }
 
     await updateDoc(followingRef, followingData);
+
+    // Update the user state with the updated following data
+    const newProfile = {
+      ...user.profile,
+      following: { ...followingData.following },
+    };
+
+    setUser({ ...user, profile: newProfile });
   };
 
   useEffect(() => {

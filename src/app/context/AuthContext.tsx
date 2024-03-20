@@ -28,6 +28,7 @@ import { daysUntilNextPost as daysUntilPost } from '../lib/daysUntilNextPost';
 
 type AuthContextType = {
   user: UserType | null;
+  setUser: (user: UserType | null) => void;
   loading: boolean;
   signInWithGoogle: () => void;
   signOut: () => void;
@@ -42,6 +43,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  setUser: () => {},
   loading: false,
   signInWithGoogle: () => {},
   signOut: () => {},
@@ -318,6 +320,7 @@ export const AuthContextProvider = ({
 
   const value = {
     user,
+    setUser,
     loading,
     signOut: () => signOut(auth),
     resetPassword,

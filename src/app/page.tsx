@@ -21,9 +21,9 @@ export default function Home() {
     null | 'global' | 'following'
   >(null);
   const { user } = useAuth();
-  // if (user) {
-  //   console.log('if user', user);
-  // }
+  if (user) {
+    console.log('if user', user);
+  }
 
   useEffect(() => {
     if (user) {

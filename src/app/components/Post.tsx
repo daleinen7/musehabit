@@ -127,7 +127,7 @@ const Post = ({ post }: { post: PostType }) => {
       <div className="flex flex-col w-full gap-9">
         <div className="flex w-full gap-4 items-center -pt-2">
           <Link
-            href={`/artist/${user?.profile.username}`}
+            href={`/artist/${username}`}
             className="w-16 h-16 rounded-full relative bg-slate-300"
           >
             <Image
@@ -140,7 +140,7 @@ const Post = ({ post }: { post: PostType }) => {
           </Link>
           <div className="font-satoshi">
             <Link
-              href={`/artist/${user?.profile.username}`}
+              href={`/artist/${username}`}
               className=" text-2xl hover:text-slate-700"
             >
               {displayName ?? username}
