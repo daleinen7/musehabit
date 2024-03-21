@@ -9,6 +9,7 @@ type FormInputProps = {
   value: string;
   profile?: boolean;
   name?: string;
+  error?: undefined | string;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -20,6 +21,7 @@ const FormInput: React.FC<FormInputProps> = ({
   value,
   name,
   profile,
+  error,
 }) => {
   if (type === 'text' || type === 'password' || type === 'email') {
     return (
@@ -33,6 +35,7 @@ const FormInput: React.FC<FormInputProps> = ({
           required={required}
           className="text-black p-[0.625rem] border border-black rounded-md w-full"
         />
+        {error && <p className="text-red-500">{error}</p>}
       </label>
     );
   } else if (type === 'file') {
@@ -49,6 +52,7 @@ const FormInput: React.FC<FormInputProps> = ({
           accept="image/*"
           className="hidden"
         />
+        {error && <p className="text-red-500">{error}</p>}
       </label>
     );
   } else if (type === 'textarea') {
@@ -62,6 +66,7 @@ const FormInput: React.FC<FormInputProps> = ({
           required={required}
           className="text-black p-[0.625rem] border border-black rounded-md w-full"
         />
+        {error && <p className="text-red-500">{error}</p>}
       </label>
     );
   } else if (type === 'checkbox') {

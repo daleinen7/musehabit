@@ -35,19 +35,14 @@ export const updatePost = async (
   try {
     const postRef = doc(collection(firestore, 'posts'), postId);
     await updateDoc(postRef, postData);
-    console.log('Post updated successfully.');
   } catch (error) {
     console.error('Error updating post:', error);
   }
 };
 
 export const deletePost = async (postId: string): Promise<void> => {
-  console.log('Deleting post...');
-  console.log('postId:', postId);
-
   try {
     await deleteDoc(doc(collection(firestore, 'posts'), postId));
-    console.log('Post deleted successfully.');
   } catch (error) {
     console.error('Error deleting post:', error);
   }

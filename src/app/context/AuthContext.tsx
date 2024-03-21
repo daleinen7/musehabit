@@ -304,8 +304,14 @@ export const AuthContextProvider = ({
     }
   };
 
-  const signIn = (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password);
+  const signIn = async (email: string, password: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Login succeeded, no need to return anything
+    } catch (error) {
+      // Login failed, throw an error with the error message
+      throw new Error('Invalid email or password');
+    }
   };
 
   const updateProfile = async (userId: string, profileData: any) => {

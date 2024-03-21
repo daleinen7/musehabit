@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -34,14 +34,26 @@ const Login = () => {
     password: '',
   });
 
+  const [error, setError] = useState<undefined | string>(undefined);
+
   const router = useRouter();
 
-  const { signIn, signInWithGoogle, loading } = useAuth();
+  const { signIn, signInWithGoogle, user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/');
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signIn(form.email, form.password);
-    router.push('/');
+    try {
+      await signIn(form.email, form.password);
+      // If login succeeds, user will be redirected automatically
+    } catch (error) {
+      setError('Wrong username or password');
+    }
   };
 
   const handleGoogleSignIn = async () => {
@@ -92,6 +104,7 @@ const Login = () => {
                 value={form[item.id as keyof FormState]}
                 handleFormChange={handleFormChange}
                 required={item.required}
+                error={error}
               />
             ))}
             <Link href="forgot-password" className="underline">
