@@ -8,7 +8,7 @@ import Modal from './Modal';
 import Link from 'next/link';
 
 const SaveButton = ({ postUid }: { postUid: string }) => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [saved, setSaved] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -36,6 +36,14 @@ const SaveButton = ({ postUid }: { postUid: string }) => {
     }
 
     await setDoc(savedPostRef, savedPostData);
+
+    // Update the user state with the updated favorited data
+    const newProfile = {
+      ...user.profile,
+      savedPosts: { ...savedPostData.savedPosts },
+    };
+
+    setUser({ ...user, profile: newProfile });
   };
 
   useEffect(() => {

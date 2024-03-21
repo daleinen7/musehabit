@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { getPostById, updatePost } from '../../lib/posts';
 import { PostType } from '../../lib/types';
 import { BeatLoader } from 'react-spinners';
+import { useAuth } from '@/app/context/AuthContext';
 
 const EditPost = ({ params }: { params: { postId: string } }) => {
   const { postId } = params;
@@ -17,6 +18,13 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
   });
 
   const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, router]);
 
   useEffect(() => {
     // Fetch post data by postId when the component mounts
