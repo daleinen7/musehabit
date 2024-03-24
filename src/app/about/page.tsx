@@ -97,7 +97,25 @@ const About = () => {
           </div>
         </SideBySide>
       </section>
-      <section>
+      <section className="bg-slate-100 flex flex-col items-center w-full py-8">
+        <div className="width-wrapper">
+          <h3 className="font-satoshi text-4xl font-bold">the roadmap</h3>
+          <ul className="max-w-[40rem] py-4 flex flex-col gap-2">
+            <li>
+              <span className="font-bold">April:</span> MVP
+            </li>
+            <li>
+              <span className="font-bold">May:</span> Email Notifications |
+              Audience account (commenting, saving posts to a list, no
+              posting/sharing)
+            </li>
+            <li>
+              <span className="font-bold">June:</span> ???
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section className="width-wrapper">
         <h3 className="font-satoshi text-4xl font-bold">History</h3>
         <p>
           Musehabit was a passion project I started in 2014 and ran for almost a
@@ -121,24 +139,6 @@ const About = () => {
         </p>
         <p>I hope you enjoy your time here.</p>
         <p>- Doug Leinen</p>
-      </section>
-      <section className="bg-slate-100 flex flex-col items-center w-full py-8">
-        <div className="width-wrapper">
-          <h3 className="font-satoshi text-4xl font-bold">the roadmap</h3>
-          <ul className="max-w-[40rem] py-4 flex flex-col gap-2">
-            <li>
-              <span className="font-bold">April:</span> MVP
-            </li>
-            <li>
-              <span className="font-bold">May:</span> Email Notifications |
-              Audience account (commenting, saving posts to a list, no
-              posting/sharing)
-            </li>
-            <li>
-              <span className="font-bold">June:</span> ???
-            </li>
-          </ul>
-        </div>
       </section>
       <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12 py-12">
         <h3 className="font-satoshi text-4xl font-bold">the team</h3>
