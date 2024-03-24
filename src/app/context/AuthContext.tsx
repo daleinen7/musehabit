@@ -160,6 +160,15 @@ export const AuthContextProvider = ({
               photoURL: user.photoURL,
               joined: Date.now(),
             });
+
+            await fetch('/email/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ email: result.user.email, username }),
+            });
+
             const profileData: ProfileData = {
               username,
               displayName: user.displayName || '',
@@ -295,6 +304,14 @@ export const AuthContextProvider = ({
 
       await setDoc(doc(firestore, 'users', user.uid), {
         ...profileData,
+      });
+
+      await fetch('/email/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, username }),
       });
 
       // Redirect to the profile edit page after successful sign-up

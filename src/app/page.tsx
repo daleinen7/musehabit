@@ -97,11 +97,13 @@ export default function Home() {
         {!user && (
           <div className="flex flex-col max-w-[44rem] mx-auto mt-16 gap-9 mb-9">
             <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
-              This is a tagline that summarizes Musehabit
+              Musehabit - an online open-mic.
             </h2>
             <p className="text-center text-2xl">
-              This is a small description of Musehabit. It gives a little more
-              detail about what users can do on the website.
+              Share your artistic expression for the month. From music, poetry,
+              sculpture, photography, painting, a writing excerpt, recorded
+              stand-up bit, or better yet something that doesn&apos;t fit in any
+              category.
             </p>
           </div>
         )}
@@ -143,7 +145,7 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center mt-24 gap-4">
           {<BeatLoader color="#F24236" />}
         </div>
-      ) : (
+      ) : selectedFeed === 'following' ? (
         <div className="flex flex-col items-center justify-center gap-4">
           <h3 className="text-4xl font-hepta text-center font-bold mt-16">
             No posts from following
@@ -151,6 +153,10 @@ export default function Home() {
           <p className="text-center">
             Follow some users to see their posts here!
           </p>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center mt-24 gap-4">
+          {<BeatLoader color="#F24236" />}
         </div>
       )}
     </>
