@@ -42,9 +42,10 @@ const About = () => {
           <p>
             As an artist, you sign up and share one post per month. Musehabit
             isn&apos;t about showcasing polished masterpieces – it&apos;s a
-            place to share works in progress, experiments, and ideas in their
-            raw form. Try something that would interest you and you alone.
-            Challenge others with your unique perspective. Follow your muse.
+            place to share works in progress, experiments, and explore ideas in
+            their raw form. Try something that would interest you, and you
+            alone. Challenge others with your unique perspective. Follow your
+            muse.
           </p>
         </SideBySide>
         <SideBySide
@@ -95,6 +96,31 @@ const About = () => {
             </p>
           </div>
         </SideBySide>
+      </section>
+      <section>
+        <h3 className="font-satoshi text-4xl font-bold">History</h3>
+        <p>
+          Musehabit was a passion project I started in 2014 and ran for almost a
+          year. It was audio only and had around 20 participants. I started it
+          because I had already felt social media was failing at helping me keep
+          up with my friends.
+        </p>
+        <p>
+          More than that, I found that surrounding myself with art was inspiring
+          and made me want to create. I envisioned a platform that would
+          constantly remind me that it&apos;s okay to share incomplete ideas. Or
+          things that aren&apos;t perfect. For the most part I feel it was a
+          success, but 2014 was a different time for the internet and me than
+          2024.
+        </p>
+        <p>
+          Ten years later, I have more knowledge of creating on the web, and I
+          think even more we need a place to express ourselves that embraces
+          distortion, noise, tangents, and all manner of things that do not fit
+          in a neat package.
+        </p>
+        <p>I hope you enjoy your time here.</p>
+        <p>- Doug Leinen</p>
       </section>
       <section className="bg-slate-100 flex flex-col items-center w-full py-8">
         <div className="width-wrapper">
