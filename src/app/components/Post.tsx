@@ -80,13 +80,15 @@ const Post = ({ post }: { post: PostType }) => {
     ),
     audio: (
       <div className="flex flex-col justify-center items-center gap-4">
-        <Image
-          src={image}
-          alt={title}
-          height={181}
-          width={181}
-          className="object-cover  rounded-s-sm h-[11.3125rem] w-[11.3125rem]"
-        />
+        {image && (
+          <Image
+            src={image}
+            alt={title}
+            height={181}
+            width={181}
+            className="object-cover  rounded-s-sm h-[11.3125rem] w-[11.3125rem]"
+          />
+        )}
         <audio src={draft} controls className="rounded" />
       </div>
     ),
