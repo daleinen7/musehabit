@@ -8,6 +8,7 @@ import { collection, addDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { storage, firestore } from '../lib/firebase';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
 import { daysUntilNextPost } from '../lib/daysUntilNextPost';
+import getFileType from '../lib/getFileType';
 import icons from '../lib/icons';
 import { doc } from 'firebase/firestore';
 import { BeatLoader } from 'react-spinners';
@@ -67,8 +68,13 @@ const writeForm = [
     type: 'textarea',
     required: false,
   },
-  { label: 'Preview Image', input: 'image', type: 'file', required: false },
-  { label: 'Tags', input: 'tags', type: 'text', required: false },
+  {
+    label:
+      'Tags - comma separate tags to categorize your work; eg: "euro americana, cyber knitting, synth folk"',
+    input: 'tags',
+    type: 'text',
+    required: false,
+  },
 ];
 
 const allowedFileFormats = [
@@ -97,7 +103,7 @@ interface NewPost {
   draft?: any; // Adjust type based on your use case
   title: string;
   description: string;
-  image: string;
+  image: string | null;
   poster: string | null; // Adjust type based on your use case
   postedAt: any; // Adjust type based on your use case
   toolsUsed?: string;
@@ -107,7 +113,7 @@ interface NewPost {
 }
 
 const Share: React.FC = () => {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, watch } = useForm<FormData>();
   const [uploading, setUploading] = useState(false);
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState<null | string>(null);
@@ -132,6 +138,9 @@ const Share: React.FC = () => {
   };
 
   const onSubmit = async (data: any) => {
+    if (!user) return;
+    if (uploading) return;
+
     setUploading(true);
     const { title, description, image, draft, toolsUsed, tags } = data;
 
@@ -161,7 +170,7 @@ const Share: React.FC = () => {
 
     const userRef = doc(firestore, 'users', user.uid);
 
-    const imageFile = image[0];
+    const imageFile = (image && image[0]) || null;
     const draftFile = postType === 'file' ? draft[0] : null;
 
     const newPostRef = doc(collection(firestore, 'posts'));
@@ -175,11 +184,10 @@ const Share: React.FC = () => {
       imageFile ? imageFile.name.split('.').pop() : 'unknownFormat'
     }`;
 
-    const imageFileUrl = await uploadFileToStorage(
-      storage,
-      imageFileName,
-      imageFile
-    );
+    const imageFileUrl =
+      imageFile && imageFile[0]
+        ? await uploadFileToStorage(storage, imageFileName, imageFile)
+        : null;
 
     const draftFileName =
       postType === 'file'
@@ -317,6 +325,7 @@ const Share: React.FC = () => {
             type="submit"
             value="Share Your Post"
             className="btn btn-primary"
+            disabled={uploading}
           />
         </form>
       ) : (
@@ -325,6 +334,20 @@ const Share: React.FC = () => {
           className="flex flex-col gap-8 w-full width-wrapper mb-12 items-end"
         >
           {fileForm.map((formInput) => {
+            // Check if the current formInput is for the "image" input
+            const isImageInput = formInput.input === 'image';
+
+            const draftFile = watch('draft') as FileList;
+            const draftFileExtension =
+              draftFile?.[0]?.name?.split('.').pop()?.toLowerCase() || '';
+
+            const draftFileType = getFileType(draftFileExtension);
+
+            // Conditionally render the "image" input only if the "draft" input is not an image
+            if (isImageInput && draftFileType === 'image') {
+              return null; // Don't render the "image" input
+            }
+
             return (
               <React.Fragment key={formInput.label}>
                 <ShareInput
@@ -350,6 +373,7 @@ const Share: React.FC = () => {
               type="submit"
               value="Submit"
               className="btn btn-primary cursor-pointer"
+              disabled={uploading}
             />
           )}
         </form>

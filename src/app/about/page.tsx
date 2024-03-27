@@ -115,7 +115,7 @@ const About = () => {
           </ul>
         </div>
       </section>
-      <section className="width-wrapper">
+      <section className="width-wrapper flex flex-col py-8 gap-6 [&>p]:text-balance ">
         <h3 className="font-satoshi text-4xl font-bold">History</h3>
         <p>
           Musehabit was a passion project I started in 2014 and ran for almost a
