@@ -87,6 +87,7 @@ const allowedFileFormats = [
   'gif',
   'webp',
   'svg',
+  'mov',
 ];
 
 interface FormData {
