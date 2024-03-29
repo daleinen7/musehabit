@@ -96,7 +96,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   alt={comment.username}
                   width={48}
                   height={48}
-                  className="w-12 h-12 rounded-full"
+                  className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
                   <h5>{comment.username}</h5>
