@@ -83,6 +83,8 @@ const allowedFileFormats = [
   'jpeg',
   'pdf',
   'mp3',
+  'avi',
+  'mkv',
   'mp4',
   'gif',
   'webp',
