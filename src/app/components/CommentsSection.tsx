@@ -13,7 +13,6 @@ import { firestore } from '@/app/lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import icons from '@/app/lib/icons';
 import { PostType, CommentType } from '@/app/lib/types';
-import { log } from 'console';
 
 interface CommentsSectionProps {
   post: PostType;
