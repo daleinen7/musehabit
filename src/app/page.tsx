@@ -60,7 +60,11 @@ export default function Home() {
 
           postsRef = collection(firestore, 'posts');
           const postsSnapshot = await getDocs(
-            query(postsRef, where('poster', 'in', followingList))
+            query(
+              postsRef,
+              where('poster', 'in', followingList),
+              orderBy('postedAt', 'desc')
+            )
           );
 
           const postsData = postsSnapshot.docs.map((doc) => doc.data());

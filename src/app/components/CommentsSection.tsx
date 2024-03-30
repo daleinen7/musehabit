@@ -1,5 +1,7 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import {
+  doc,
+  getDoc,
   getDocs,
   collection,
   addDoc,
@@ -38,6 +40,22 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       const commentsData: CommentType[] = commentsSnapshot.docs.map(
         (doc) => doc.data() as CommentType
       );
+
+      // Fetch the commenter's profile data
+      for (const commentData of commentsData) {
+        const commenterProfileRef = doc(
+          firestore,
+          'users',
+          commentData.posterId
+        );
+        const commenterProfileSnapshot = await getDoc(commenterProfileRef);
+        if (commenterProfileSnapshot.exists()) {
+          const commenterProfile = commenterProfileSnapshot.data();
+          // Update the comment data with the profile picture URL
+          commentData.commenterProfile = commenterProfile;
+        }
+      }
+
       setComments(commentsData);
     };
 
@@ -78,28 +96,39 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   return (
     (user || comments.length > 0) && (
       <div className="comments-section py-8 border-t-2 border-b-2 border-slate-200">
-        <div className="flex justify-between">
+        <button
+          onClick={toggleShowComments}
+          className="flex justify-between items-center w-full"
+        >
           <h4 className="border-b-2 border-black">
             Comments ({comments.length})
           </h4>
-          <button onClick={toggleShowComments} className="text-2xl">
+          <div className="text-2xl">
             {showComments ? icons.comment : icons.closedComment}
-          </button>
-        </div>
+          </div>
+        </button>
 
         {showComments && (
           <div className="flex flex-col mt-8 gap-4">
             {comments.map((comment, index) => (
               <div key={index} className="flex gap-4">
                 <Image
-                  src={comment.photoURL || '/user-placeholder.png'}
-                  alt={comment.username}
+                  src={
+                    comment.commenterProfile.photoURL || '/user-placeholder.png'
+                  }
+                  alt={
+                    comment.commenterProfile.displayName ||
+                    comment.commenterProfile.username
+                  }
                   width={48}
                   height={48}
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
-                  <h5>{comment.username}</h5>
+                  <h5>
+                    {comment.commenterProfile.displayName ||
+                      comment.commenterProfile.username}
+                  </h5>
                   <p>{comment.text}</p>
                 </div>
               </div>
