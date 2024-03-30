@@ -27,13 +27,12 @@ const fileForm = [
     type: 'textarea',
     required: false,
   },
-  {
-    label:
-      'Preview Image - note: will not display if your submission is an image (actual image will display)',
-    input: 'image',
-    type: 'file',
-    required: false,
-  },
+  // {
+  //   label: 'Preview Image - Optional: for audio posts ',
+  //   input: 'image',
+  //   type: 'file',
+  //   required: false,
+  // },
   {
     label: 'Tools Used - Optional: place to talk some shop',
     input: 'toolsUsed',

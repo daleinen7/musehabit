@@ -56,7 +56,13 @@ const SignUp = () => {
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+    if (e.target.id === 'username') {
+      const username = e.target.value.replace(/\s/g, '');
+      setForm({ ...form, [e.target.id]: username });
+      return;
+    } else {
+      setForm({ ...form, [e.target.id]: e.target.value });
+    }
   };
 
   useEffect(() => {

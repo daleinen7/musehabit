@@ -155,7 +155,7 @@ const EditProfile = () => {
 
   const [selectedFeed, setSelectedFeed] = useState('profile');
 
-  const { user, updateUserProfile } = useAuth();
+  const { user, setUser, updateUserProfile } = useAuth();
   const [imagePreview, setImagePreview] = useState<string | null | undefined>(
     null
   );
@@ -260,6 +260,18 @@ const EditProfile = () => {
         bio: profileForm.bio,
         photoURL: profileForm.photoUrl,
       });
+
+      const newProfile = {
+        ...user.profile,
+        displayName: profileForm.displayName,
+        location: profileForm.location,
+        medium: profileForm.medium,
+        bio: profileForm.bio,
+        photoURL: profileForm.photoUrl,
+      };
+
+      setUser({ ...user, profile: newProfile });
+
       router.push(`/artist/${user.profile.username}`);
     } else {
       await updateUserProfile(user.uid, {

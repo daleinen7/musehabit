@@ -1,7 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getPostById, updatePost } from '../../lib/posts';
+import getFileType from '../../lib/getFileType';
 import { PostType } from '../../lib/types';
 import { BeatLoader } from 'react-spinners';
 import { useAuth } from '@/app/context/AuthContext';
@@ -16,6 +18,7 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
     toolsUsed: '',
     tags: [] as string[] | null,
   });
+  const [imagePreview, setImagePreview] = useState<null | string>(null);
 
   const router = useRouter();
   const { user } = useAuth();
@@ -46,17 +49,28 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
     }
   }, [postId]);
 
+  // const handleFileChange = (event: any, inputName: string) => {
+  //   if (inputName === 'image' && event.target.files.length) {
+  //     const file = event.target.files[0];
+  //     const imageUrl = URL.createObjectURL(file);
+  //     setImagePreview(imageUrl);
+  //   }
+  // };
+
   const handleFormChange = (e: any) => {
     const { name, value } = e.target;
 
     if (name === 'tags') {
-      setFormData({ ...formData, [name]: value.split(',') });
-      return;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value.split(','),
+      }));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
     }
-
-    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e: any) => {
@@ -106,6 +120,28 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
             onChange={handleFormChange}
           ></textarea>
         </label>
+        {/* {getFileType(post.format) === 'audio' && (
+          <>
+            <label htmlFor="image">
+              Image:
+              <input
+                className="text-black p-[0.625rem] border border-black rounded-md w-full"
+                type="file"
+                name="image"
+                onChange={(e) => handleFileChange(e, 'image')}
+              />
+            </label>
+            {imagePreview && (
+              <Image
+                src={imagePreview}
+                alt={`preview of audio image`}
+                height={181}
+                width={181}
+                className="object-cover  rounded-s-sm h-[11.3125rem] w-[11.3125rem]"
+              />
+            )}
+          </>
+        )} */}
         <label className="flex flex-col gap-2 w-full">
           Tools Used:
           <input
