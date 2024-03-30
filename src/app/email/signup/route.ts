@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     await client.sendEmail({
       From: process.env.ADMIN_EMAIL,
-      To: data.email,
+      To: process.env.ADMIN_EMAIL,
       Subject: 'New Musehabit signup',
       HtmlBody: `New user ${data.username} signed up with ${data.email}.`,
       TextBody: `New user ${data.username} signed up with ${data.email}.`,
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     });
 
     await client.sendEmail({
-      From: process.env.ADMIN_EMAI,
+      From: process.env.ADMIN_EMAIL,
       To: data.email,
       Subject: 'Welcome to Musehabit',
       HtmlBody: `<!DOCTYPE html>

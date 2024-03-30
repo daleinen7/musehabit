@@ -89,7 +89,12 @@ const Post = ({ post }: { post: PostType }) => {
             className="object-cover  rounded-s-sm h-[11.3125rem] w-[11.3125rem]"
           />
         )}
-        <audio src={draft} controls className="rounded" />
+        <audio
+          src={draft}
+          controls
+          controlsList="nodownload noplaybackrate"
+          className="rounded"
+        />
       </div>
     ),
     writing: (
@@ -123,6 +128,8 @@ const Post = ({ post }: { post: PostType }) => {
       </>
     ),
   };
+
+  console.log('POST: ', post);
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex">

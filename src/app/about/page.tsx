@@ -110,7 +110,8 @@ const About = () => {
               posting/sharing)
             </li>
             <li>
-              <span className="font-bold">June:</span> ???
+              <span className="font-bold">June:</span> Optional artwork with
+              audio posts (like an album cover)
             </li>
           </ul>
         </div>
