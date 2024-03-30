@@ -129,8 +129,6 @@ const Post = ({ post }: { post: PostType }) => {
     ),
   };
 
-  console.log('POST: ', post);
-
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex">
       <div className="flex flex-col w-full gap-9">
@@ -215,7 +213,7 @@ const Post = ({ post }: { post: PostType }) => {
         )}
         <div>
           <h4 className="text-lg font-medium ">About this project:</h4>
-          <div className="font-satoshi">{description}</div>
+          <div className="font-satoshi whitespace-pre-wrap">{description}</div>
         </div>
         <CommentsSection
           post={post}

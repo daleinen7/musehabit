@@ -18,7 +18,8 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
     toolsUsed: '',
     tags: [] as string[] | null,
   });
-  const [imagePreview, setImagePreview] = useState<null | string>(null);
+  // const [imagePreview, setImagePreview] = useState<null | string>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
   const { user } = useAuth();
@@ -75,6 +76,7 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       // Trim whitespace from tags
       const trimmedTags = formData.tags?.map((tag: string) => tag.trim());
@@ -83,6 +85,7 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
       router.push(`/post/${postId}`);
     } catch (error) {
       console.error('Error updating post:', error);
+      setIsSubmitting(false);
     }
   };
 
@@ -162,9 +165,13 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
             onChange={handleFormChange}
           />
         </label>
-        <button className="btn btn-primary" type="submit">
-          Save Changes
-        </button>
+        {isSubmitting ? (
+          <BeatLoader color="#F24236" />
+        ) : (
+          <button className="btn btn-primary" type="submit">
+            Save Changes
+          </button>
+        )}
       </form>
     </>
   );
