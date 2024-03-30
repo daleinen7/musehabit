@@ -213,7 +213,7 @@ const Post = ({ post }: { post: PostType }) => {
         )}
         <div>
           <h4 className="text-lg font-medium ">About this project:</h4>
-          <div className="font-satoshi">{description}</div>
+          <div className="font-satoshi whitespace-pre-wrap">{description}</div>
         </div>
         <CommentsSection
           post={post}
