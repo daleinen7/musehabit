@@ -65,15 +65,15 @@ const Post = ({ post }: { post: PostType }) => {
 
   const displayFile = {
     image: (
-      <div className="w-full flex justify-center items-center">
-        <img src={draft} alt={title} className="rounded" />
+      <div className="w-full flex justify-center items-center max-h-[98vh]">
+        <img src={draft} alt={title} className="rounded max-h-[98vh]" />
       </div>
     ),
     video: (
       <video
         src={draft}
         controls
-        className="rounded"
+        className="rounded max-h-[98vh]"
         width="100%"
         height="auto"
       />
@@ -115,7 +115,7 @@ const Post = ({ post }: { post: PostType }) => {
               >
                 close
               </button>
-              <h1 className="font-Satoshi text-5xl font-bold">{post.title}</h1>
+              <h4 className="font-Satoshi text-5xl font-bold">{post.title}</h4>
               <ReactMarkdown>{post.post}</ReactMarkdown>
             </div>
           </div>
@@ -207,7 +207,7 @@ const Post = ({ post }: { post: PostType }) => {
           <div className="w-20 h-20 rounded-full bg-slate-300" />
         )}
         <div>
-          <h3 className="text-lg font-medium ">About this project:</h3>
+          <h4 className="text-lg font-medium ">About this project:</h4>
           <div className="font-satoshi">{description}</div>
         </div>
         <CommentsSection
@@ -217,21 +217,21 @@ const Post = ({ post }: { post: PostType }) => {
         />
 
         {(toolsUsed || tags) && (
-          <div className="flex">
+          <div className="flex gap-4 flex-col sm:flex-row">
             {toolsUsed && (
-              <div className="flex-1">
-                <h3 className="text-lg font-medium ">Tools Used:</h3>
+              <div className={`flex-1 ${tags && 'max-w-[50%]'}`}>
+                <h4 className="text-lg font-medium ">Tools Used:</h4>
                 <div className="font-satoshi">{toolsUsed}</div>
               </div>
             )}
             {tags && (
-              <div className="flex-1">
-                <h3 className="text-lg font-medium mb-2">Tags:</h3>
-                <div className="font-satoshi">
+              <div className={`flex-1 ${toolsUsed && 'max-w-[50%]'}`}>
+                <h4 className="text-lg font-medium mb-2">Tags:</h4>
+                <div className="font-satoshi flex flex-wrap gap-2">
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300 text-nowrap"
+                      className="text-sm py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300 text-nowrap"
                     >
                       {tag}
                     </span>

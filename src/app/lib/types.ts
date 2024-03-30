@@ -79,4 +79,5 @@ export type CommentType = {
   username: string;
   displayName: string;
   photoURL?: string | undefined;
+  commenterProfile?: any;
 };

@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   collection,
@@ -98,8 +99,19 @@ const Profile = ({ params }: { params: any }) => {
 
   return (
     <>
+      {artist?.photoURL && (
+        <Image
+          src={artist?.photoURL}
+          alt={artist.displayName}
+          height={146}
+          width={146}
+          className="rounded-full mx-auto mt-12"
+        />
+      )}
       <div className="flex justify-center items-center gap-[2.25rem] my-12">
-        <h2 className="font-satoshi font-bold text-5xl">{params.username}</h2>
+        <h2 className="font-satoshi font-bold text-5xl">
+          {artist?.displayName}
+        </h2>
         {artist && user && user.uid === artist.uid ? (
           <Link href={`/edit-profile`} className="btn btn-primary">
             Edit Profile
