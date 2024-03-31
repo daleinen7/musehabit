@@ -12,7 +12,14 @@ const config: Config = {
       satoshiItalic: ['var(--font-satoshi-italic)'],
       hepta: ['var(--font-hepta)'],
     },
-    extend: {},
+    extend: {
+      colors: {
+        dark: '#222222',
+        light: '#f5f5f5',
+        'light-gray': '#ebebeb',
+        coral: '#F24236',
+      },
+    },
   },
   plugins: [],
 };

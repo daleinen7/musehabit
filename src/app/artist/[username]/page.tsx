@@ -132,16 +132,20 @@ const Profile = ({ params }: { params: any }) => {
       {artist && user && user.uid === artist.uid && (
         <div className="w-full width-wrapper flex text-xl font-hepta text-center font-bold my-8">
           <button
-            className={`w-full border-b border-b-slate-700 py-4 ${
-              selectedFeed === 'myPosts' ? 'bg-slate-200' : ''
+            className={`w-full border-b rounded-t-[6px] border-b-light-gray py-4 ${
+              selectedFeed === 'myPosts'
+                ? 'bg-light-gray text-dark'
+                : 'text-white'
             }`}
             onClick={() => setSelectedFeed('myPosts')}
           >
             My Posts
           </button>
           <button
-            className={`w-full border-b border-b-slate-700 py-4 ${
-              selectedFeed === 'savedPosts' ? 'bg-slate-200' : ''
+            className={`w-full border-b rounded-t-[6px] border-b-light-gray py-4 ${
+              selectedFeed === 'savedPosts'
+                ? 'bg-light-gray text-dark'
+                : 'text-white'
             }`}
             onClick={() => setSelectedFeed('savedPosts')}
           >

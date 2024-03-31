@@ -17,7 +17,7 @@ type NavItem = {
 const NavItem = ({ url, func, text, children, arrow }: NavItem) => (
   <li
     key={url}
-    className="font-satoshi text-lg font-medium text-gray-500 hover:text-black relative"
+    className="font-satoshi text-lg font-medium text-gray-300 hover:text-white relative"
   >
     {url ? (
       <Link href={url} className="flex items-center">
@@ -55,7 +55,7 @@ const Nav = () => {
   };
 
   return (
-    <nav className="bg-slate-200 py-3">
+    <nav className="bg-black py-3">
       <ul className="width-wrapper w-full flex justify-between items-center">
         <li>
           <Link href="/">
@@ -75,7 +75,7 @@ const Nav = () => {
               <NavItem func={handleDropdown} text="Profile" arrow>
                 {showProfile && (
                   <ul
-                    className="absolute w-[9rem] mt-2 bg-white shadow-lg p-4 z-50"
+                    className="absolute w-[9rem] mt-2 bg-slate-600 shadow-lg p-4 z-50"
                     ref={wrapperRef}
                   >
                     <li>

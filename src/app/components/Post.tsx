@@ -173,7 +173,7 @@ const Post = ({ post }: { post: PostType }) => {
             <div className="ml-auto flex gap-5 relative">
               <button onClick={toggleEditDropdown}>{icon.dots}</button>
               {showEditDropdown && (
-                <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg p-4">
+                <div className="absolute right-0 top-10 bg-light-gray text-dark hover:text-black rounded-lg shadow-lg p-4">
                   <Link href={`/edit-post/${id}`}>Edit</Link>
                   <button onClick={toggleDeleteModal}>Delete</button>
                 </div>
@@ -199,7 +199,7 @@ const Post = ({ post }: { post: PostType }) => {
                   </button>
                   <button
                     onClick={handleDeletePost}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-coral text-white px-4 py-2 rounded-lg"
                   >
                     Delete
                   </button>
@@ -236,7 +236,7 @@ const Post = ({ post }: { post: PostType }) => {
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-sm py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300 text-nowrap"
+                      className="text-sm py-[0.3125rem] px-[0.625rem] rounded-full bg-light-gray text-dark text-nowrap"
                     >
                       {tag}
                     </span>

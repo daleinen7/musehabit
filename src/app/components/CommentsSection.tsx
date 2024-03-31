@@ -95,7 +95,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   return (
     (user || comments.length > 0) && (
-      <div className="comments-section py-8 border-t-2 border-b-2 border-slate-200">
+      <div className="comments-section py-8 border-t-[1px] border-b-[1px] border-light-gray">
         <button
           onClick={toggleShowComments}
           className="flex justify-between items-center w-full"
