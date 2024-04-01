@@ -102,17 +102,14 @@ const SignUp = () => {
                 required={item.required}
               />
             ))}
-            <button
-              type="submit"
-              className="mt-6 bg-gray-400 rounded-md px-[0.875] py-[0.625rem]"
-            >
+            <button type="submit" className="mt-6 btn btn-primary w-full">
               Sign up
             </button>
           </form>
           <div className="py-10 text-[1.125rem] font-medium">Or</div>
           <button
             type="button"
-            className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
+            className="btn btn-secondary w-full"
             onClick={handleGoogleSignIn}
           >
             Sign Up with Google

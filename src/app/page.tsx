@@ -101,7 +101,7 @@ export default function Home() {
         {!user && (
           <div className="flex flex-col max-w-[44rem] mx-auto mt-16 gap-9 mb-9">
             <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
-              Musehabit - an online open-mic.
+              an online open-mic.
             </h2>
             <p className="text-center text-2xl">
               Share your artistic expression for the month. From music, poetry,
