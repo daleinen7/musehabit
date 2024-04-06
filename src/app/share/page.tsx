@@ -403,10 +403,10 @@ const ShareInput = ({
   const { label, input, type, required, options } = formInput;
   return (
     <label key={input} className="flex flex-col text-sm font-medium w-full">
-      {label}
+      {label !== 'Draft' && label}
       {type === 'textarea' ? (
         <textarea
-          className="p-2 m-2 text-black rounded-md border-2 border-gray-400 min-h-[22rem]"
+          className="p-2 m-2 text-light-gray bg-dark-gray rounded-md min-h-[22rem]"
           {...register(input)}
         />
       ) : type === 'select' ? (
@@ -419,7 +419,7 @@ const ShareInput = ({
         </select>
       ) : type === 'file' ? (
         <>
-          <div className="flex flex-col items-center justify-center w-full h-64 border-2  border-dashed rounded-lg cursor-pointer hover:bg-bray-800 bg-dark  border-dark-gray hover:border-medium-gray hover:bg-dark-gray">
+          <div className="flex flex-col items-center justify-center w-full h-64 border-2  border-dashed rounded-lg cursor-pointer hover:bg-bray-800 bg-dark  border-medium-gray hover:border-medium-gray hover:bg-dark-gray">
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
                 className="w-8 h-8 mb-4 text-light-gray"
@@ -436,7 +436,7 @@ const ShareInput = ({
                   d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                 />
               </svg>
-              <p className="mb-2 text-sm text-light-gray">
+              <p className="mb-2 text-xl text-light-gray">
                 <span className="font-semibold">Click to upload</span> or drag
                 and drop
               </p>
@@ -447,7 +447,12 @@ const ShareInput = ({
                 <li>audio: mp3, ogg, aac</li>
               </ul>
             </div>
-            <input id="dropzone-file" type="file" className="hidden" />
+            <input
+              type="file"
+              className="hidden"
+              onChange={(event) => handleFileChange(event, input)}
+              {...register(input)}
+            />
           </div>
           {/* <input
             className="flex items-center justify-center h-[20rem] p-4 m-2 text-black rounded-md border-2 border-gray-400 border-dashed"
@@ -458,7 +463,7 @@ const ShareInput = ({
         </>
       ) : (
         <input
-          className="p-2 m-2 text-black rounded-md border-2 border-gray-400"
+          className="p-2 m-2 text-light-gray rounded-md bg-dark-gray"
           type={type}
           {...register(input)}
         />
