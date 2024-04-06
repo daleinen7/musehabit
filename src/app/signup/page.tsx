@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import FormInput from '../components/FormInput';
+import icons from '../lib/icons';
 
 const formData = [
   {
@@ -109,10 +110,10 @@ const SignUp = () => {
           <div className="py-10 text-[1.125rem] font-medium">Or</div>
           <button
             type="button"
-            className="btn btn-secondary w-full"
+            className="btn btn-secondary w-full flex items-center justify-center gap-2"
             onClick={handleGoogleSignIn}
           >
-            Sign Up with Google
+            <div className="text-xl">{icons.google}</div> Sign Up with Google
           </button>
         </div>
       </div>

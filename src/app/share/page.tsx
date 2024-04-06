@@ -77,17 +77,18 @@ const writeForm = [
 ];
 
 const allowedFileFormats = [
-  'png',
   'jpg',
   'jpeg',
-  'pdf',
+  'png',
+  'gif',
+  'svg',
+  'webp',
   'mp3',
+  'oog',
+  'aac',
+  'mp4',
   'avi',
   'mkv',
-  'mp4',
-  'gif',
-  'webp',
-  'svg',
   'mov',
 ];
 
@@ -279,12 +280,14 @@ const Share: React.FC = () => {
             ].map((type) => (
               <button
                 key={type.text}
-                className={`flex flex-col items-center justify-center py-12 px-5 border-2 rounded w-72 bg-${
-                  type.type === selectedType ? 'slate-200' : 'white'
-                } hover:bg-slate-100 bg`}
+                className={`flex flex-col items-center justify-center py-12 px-5 rounded w-72 gap-2 ${
+                  type.type === selectedType
+                    ? 'bg-light-purple text-black'
+                    : 'bg-dark-gray hover:bg-dark-gray-h'
+                } `}
                 onClick={() => setSelectedType(type.type)}
               >
-                <div>{type.icon}</div>
+                <div className="text-3xl">{type.icon}</div>
                 <div>{type.text}</div>
               </button>
             ))}
@@ -416,12 +419,42 @@ const ShareInput = ({
         </select>
       ) : type === 'file' ? (
         <>
-          <input
-            className="p-2 m-2 text-black rounded-md border-2 border-gray-400 border-dashed"
+          <div className="flex flex-col items-center justify-center w-full h-64 border-2  border-dashed rounded-lg cursor-pointer hover:bg-bray-800 bg-dark  border-dark-gray hover:border-medium-gray hover:bg-dark-gray">
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg
+                className="w-8 h-8 mb-4 text-light-gray"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 16"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                />
+              </svg>
+              <p className="mb-2 text-sm text-light-gray">
+                <span className="font-semibold">Click to upload</span> or drag
+                and drop
+              </p>
+              <p className="text-xs text-light-gray">File types allowed:</p>
+              <ul>
+                <li>image: jpg, jpeg, png, gif, svg, webp</li>
+                <li>video: mp4, avi, mkv, mov</li>
+                <li>audio: mp3, ogg, aac</li>
+              </ul>
+            </div>
+            <input id="dropzone-file" type="file" className="hidden" />
+          </div>
+          {/* <input
+            className="flex items-center justify-center h-[20rem] p-4 m-2 text-black rounded-md border-2 border-gray-400 border-dashed"
             type={type}
             onChange={(event) => handleFileChange(event, input)}
             {...register(input)}
-          />
+          ></input> */}
         </>
       ) : (
         <input

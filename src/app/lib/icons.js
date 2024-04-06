@@ -7,7 +7,10 @@ import { MdOutlineInsertComment } from 'react-icons/md';
 import { MdFileUpload } from 'react-icons/md';
 import { TfiWrite } from 'react-icons/tfi';
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import {PiDotsThreeOutlineVerticalFill} from 'react-icons/pi';
+import { PiDotsThreeOutlineVerticalFill } from 'react-icons/pi';
+import { AiFillGoogleCircle } from 'react-icons/ai';
+import { IoSettingsSharp } from 'react-icons/io5';
+import { FaUser } from 'react-icons/fa';
 
 const icons = {
   close: <IoClose />,
@@ -15,11 +18,14 @@ const icons = {
   bookmarked: <FaBookmark className=" text-xl" />,
   plus: <FiPlus className="" />,
   comment: <MdComment />,
+  google: <AiFillGoogleCircle />,
   closedComment: <MdOutlineInsertComment />,
   upload: <MdFileUpload />,
   write: <TfiWrite />,
   arrow: <RiArrowDropDownLine />,
   dots: <PiDotsThreeOutlineVerticalFill className=" text-xl" />,
+  settings: <IoSettingsSharp />,
+  user: <FaUser />,
 };
 
 export default icons;

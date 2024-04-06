@@ -56,7 +56,7 @@ const SaveButton = ({ postUid }: { postUid: string }) => {
 
   return (
     <div className="">
-      <button onClick={handleSave}>
+      <button onClick={handleSave} className="hover:text-medium-gray-h">
         {saved ? icons.bookmarked : icons.bookmark}
       </button>
       <Modal

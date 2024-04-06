@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import FormInput from '../components/FormInput';
+import icons from '../lib/icons';
 
 interface FormState {
   email: string;
@@ -118,10 +119,10 @@ const Login = () => {
           <div className="py-10 text-[1.125rem] font-medium">Or</div>
           <button
             type="button"
-            className="btn btn-secondary w-full"
+            className="btn btn-secondary w-full flex items-center justify-center gap-2"
             onClick={handleGoogleSignIn}
           >
-            Log In with Google
+            <div className="text-xl">{icons.google}</div> Log In with Google
           </button>
         </div>
       </div>
