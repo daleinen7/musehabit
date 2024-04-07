@@ -97,7 +97,7 @@ const About = () => {
           </div>
         </SideBySide>
       </section>
-      <section className="bg-slate-100 flex flex-col items-center w-full py-8">
+      <section className="bg-light-gray text-dark flex flex-col items-center w-full py-8">
         <div className="width-wrapper">
           <h3 className="font-satoshi text-4xl font-bold">the roadmap</h3>
           <ul className="max-w-[40rem] py-4 flex flex-col gap-2">

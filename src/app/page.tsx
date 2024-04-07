@@ -101,7 +101,7 @@ export default function Home() {
         {!user && (
           <div className="flex flex-col max-w-[44rem] mx-auto mt-16 gap-9 mb-9">
             <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
-              Musehabit - an online open-mic.
+              an online open-mic.
             </h2>
             <p className="text-center text-2xl">
               Share your artistic expression for the month. From music, poetry,
@@ -115,16 +115,20 @@ export default function Home() {
         {user ? (
           <div className="w-full width-wrapper flex text-xl font-hepta text-center font-bold mt-8">
             <button
-              className={`w-full border-b border-b-slate-700 py-4 ${
-                selectedFeed === 'global' ? 'bg-slate-200' : ''
+              className={`w-full border-b border-b-light-gray rounded-t-[6px] py-4 ${
+                selectedFeed === 'global'
+                  ? 'bg-light-gray text-dark'
+                  : 'text-white'
               }`}
               onClick={() => setSelectedFeed('global')}
             >
               Global Feed
             </button>
             <button
-              className={`w-full border-b border-b-slate-700 py-4 ${
-                selectedFeed === 'following' ? 'bg-slate-200' : ''
+              className={`w-full border-b border-b-light-gray rounded-t-[6px] py-4 ${
+                selectedFeed === 'following'
+                  ? 'bg-light-gray text-dark'
+                  : 'text-white'
               }`}
               onClick={() => setSelectedFeed('following')}
             >

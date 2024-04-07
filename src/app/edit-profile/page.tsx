@@ -7,6 +7,7 @@ import { storage } from '@/app/lib/firebase';
 import { useAuth } from '@/app/context/AuthContext';
 import FormInput from '../components/FormInput';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
+import icons from '../lib/icons';
 
 interface ProfileFormState {
   profileImage: File | string | null;
@@ -292,28 +293,28 @@ const EditProfile = () => {
   return (
     user && (
       <div className="w-full flex min-h-screen">
-        <div className="w-full max-w-[20rem] min-h-screen sticky bg-slate-100 flex flex-col text-xl align-center gap-3">
+        <div className="w-full max-w-[20rem] min-h-screen sticky bg-medium-gray flex flex-col text-xl align-center gap-3">
           <h2 className="font-bold text-2xl my-6 px-6">Account</h2>
           <button
-            className={`hover:bg-slate-200 w-[14rem] mx-auto rounded py-4 ${
-              selectedFeed === 'profile' ? 'bg-slate-300' : ''
+            className={`hover:bg-dark-gray w-[14rem] mx-auto rounded py-4 flex items-center justify-start gap-2 ${
+              selectedFeed === 'profile' ? 'bg-dark-gray-h' : ''
             }`}
             onClick={() => setSelectedFeed('profile')}
           >
-            Profile
+            <div className="text-xl ml-4">{icons.user}</div>Profile
           </button>
           <button
-            className={`hover:bg-slate-200 w-[14rem] mx-auto rounded py-4 ${
-              selectedFeed === 'account' ? 'bg-slate-300' : ''
+            className={`hover:bg-dark-gray w-[14rem] mx-auto rounded py-4 flex items-center justify-start gap-2 ${
+              selectedFeed === 'account' ? 'bg-dark-gray-h' : ''
             }`}
             onClick={() => setSelectedFeed('account')}
           >
-            <span>Account</span>
+            <div className="text-xl ml-4">{icons.settings}</div>Account
           </button>
         </div>
 
         {selectedFeed === 'profile' ? (
-          <div className="width-wrapper flex items-center flex-col max-w-[40rem] pb-12">
+          <div className="width-wrapper flex items-center flex-col max-w-[40rem] pt-6 pb-12">
             {!user.profile.photoURL && (
               <Link
                 href={`/artist/${user.profile.username}`}
@@ -358,8 +359,9 @@ const EditProfile = () => {
                     <>
                       <label
                         htmlFor={item.id}
-                        className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] my-6 text-[1.125rem] hover:bg-gray-200 cursor-pointer border-dashed"
+                        className="rounded border-[1px] border-medium-gray px-[1rem] py-[0.625rem] my-6 text-[1.125rem] hover:bg-dark-gray cursor-pointer border-dashed flex items-center justify-center gap-2"
                       >
+                        <span className="text-xl">{icons.plus}</span>{' '}
                         {item.label}
                         <input
                           type={item.type}

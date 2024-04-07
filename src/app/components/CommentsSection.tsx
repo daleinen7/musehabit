@@ -75,7 +75,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       posterId: user.uid,
       timestamp: Date.now(),
       username: user.profile.username,
-      photoURL: user.profile.photoURL || undefined,
+      photoURL: user.profile?.photoURL || undefined,
     };
 
     try {
@@ -95,12 +95,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   return (
     (user || comments.length > 0) && (
-      <div className="comments-section py-8 border-t-2 border-b-2 border-slate-200">
+      <div className="comments-section py-8 border-t-[1px] border-b-[1px] border-medium-gray-h">
         <button
           onClick={toggleShowComments}
-          className="flex justify-between items-center w-full"
+          className="flex justify-between items-center w-full hover:text-medium-gray-h group"
         >
-          <h4 className="border-b-2 border-black">
+          <h4 className="border-b-2 border-white group-hover:border-b-medium-gray-h">
             Comments ({comments.length})
           </h4>
           <div className="text-2xl">
@@ -139,7 +139,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           <form onSubmit={handleSubmit}>
             <textarea
               value={newComment}
-              className="p-2 w-full border border-slate-200 rounded-md mt-2 mb-4"
+              className="h-24 p-3 border border-dark-gray w-full bg-dark-gray rounded-md mt-4 mb-4 active:border-dark-gray-h focus:border-dark-gray-h focus-within:border-dark-gray-h focus-visible:border-dark-gray-h focus-visible:outline-dark-gray-h"
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Add a comment..."
             />

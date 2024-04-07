@@ -173,17 +173,29 @@ const Post = ({ post }: { post: PostType }) => {
             <div className="ml-auto flex gap-5 relative">
               <button onClick={toggleEditDropdown}>{icon.dots}</button>
               {showEditDropdown && (
-                <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg p-4">
-                  <Link href={`/edit-post/${id}`}>Edit</Link>
-                  <button onClick={toggleDeleteModal}>Delete</button>
+                <div className="absolute right-10 -top-6 bg-light-gray text-dark hover:text-black rounded-lg shadow-lg p-4">
+                  <Link
+                    href={`/edit-post/${id}`}
+                    className="hover:text-dark-gray"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={toggleDeleteModal}
+                    className="hover:text-dark-gray"
+                  >
+                    Delete
+                  </button>
                 </div>
               )}
             </div>
           )}
           {showDeleteModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-4 rounded-lg shadow-lg max-w-[40rem] flex flex-col gap-4">
-                <p>Are you sure you want to delete this post?</p>
+              <div className="bg-dark-gray text-light-gray p-4 rounded-lg shadow-lg max-w-[40rem] flex flex-col gap-4">
+                <p className="text-xl font-bold">
+                  Are you sure you want to delete this post?
+                </p>
                 <p>
                   This action is irreversible. If this post was uploaded within
                   the last 30 days before your next scheduled post, deleting it
@@ -199,7 +211,7 @@ const Post = ({ post }: { post: PostType }) => {
                   </button>
                   <button
                     onClick={handleDeletePost}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-coral text-white px-4 py-2 rounded-lg"
                   >
                     Delete
                   </button>
@@ -236,7 +248,7 @@ const Post = ({ post }: { post: PostType }) => {
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-sm py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300 text-nowrap"
+                      className="text-sm py-[0.3125rem] px-[0.625rem] rounded-full bg-light-gray text-dark text-nowrap"
                     >
                       {tag}
                     </span>

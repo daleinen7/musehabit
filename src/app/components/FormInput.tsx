@@ -33,16 +33,16 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={handleFormChange}
           required={required}
-          className="text-black p-[0.625rem] border border-black rounded-md w-full"
+          className="text-white bg-medium-gray p-[0.625rem] border border-light-gray rounded-md w-full"
         />
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-coral">{error}</p>}
       </label>
     );
   } else if (type === 'file') {
     return (
       <label
         htmlFor={id}
-        className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
+        className="rounded border-[1px] border-light-gray px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
       >
         {label}
         <input
@@ -52,7 +52,7 @@ const FormInput: React.FC<FormInputProps> = ({
           accept="image/*"
           className="hidden"
         />
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-coral">{error}</p>}
       </label>
     );
   } else if (type === 'textarea') {
@@ -64,9 +64,9 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={handleFormChange as (e: React.ChangeEvent<unknown>) => void}
           required={required}
-          className="text-black p-[0.625rem] border border-black rounded-md w-full"
+          className="text-white p-[0.625rem] border border-light-gray bg-medium-gray rounded-md w-full"
         />
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-coral">{error}</p>}
       </label>
     );
   } else if (type === 'checkbox') {
@@ -78,7 +78,7 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={handleFormChange}
           required={required}
-          className="text-black p-[0.625rem] border border-black rounded-md"
+          className="text-white p-[0.625rem] border border-light-gray rounded-md"
         />
         {label}
       </label>
@@ -93,7 +93,7 @@ const FormInput: React.FC<FormInputProps> = ({
           checked={value === id} // Assuming value of radio button is its ID
           onChange={handleFormChange}
           required={required}
-          className="text-black p-[0.625rem] border border-black rounded-md"
+          className="text-white p-[0.625rem] border border-light-gray rounded-md"
           value={id} // Assigning the value as the ID of the radio button
         />
         {label}
@@ -111,7 +111,7 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={handleFormChange}
           required={required}
-          className="text-black p-[0.625rem] border border-black rounded-md w-full"
+          className="text-white p-[0.625rem] border border-light-gray bg-medium-gray rounded-md w-full"
         />
       </label>
     );
