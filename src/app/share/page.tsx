@@ -1,14 +1,12 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
-import { collection, addDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, setDoc, updateDoc } from 'firebase/firestore';
 import { storage, firestore } from '../lib/firebase';
 import uploadFileToStorage from '../lib/uploadFileToStorage';
 import { daysUntilNextPost } from '../lib/daysUntilNextPost';
-import getFileType from '../lib/getFileType';
 import icons from '../lib/icons';
 import { doc } from 'firebase/firestore';
 import { BeatLoader } from 'react-spinners';
@@ -116,7 +114,7 @@ interface NewPost {
 }
 
 const Share: React.FC = () => {
-  const { register, handleSubmit, watch } = useForm<FormData>();
+  const { register, handleSubmit, setValue, watch } = useForm<FormData>();
   const [uploading, setUploading] = useState(false);
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState<null | string>(null);
@@ -126,17 +124,41 @@ const Share: React.FC = () => {
   const { user } = useAuth();
   const router = useRouter();
 
+  const watchDraft = watch('draft');
+
   useEffect(() => {
     if (!user) {
       router.push('/login');
     }
   }, [user, router]);
 
-  const handleFileChange = (event: any, inputName: string) => {
-    if (inputName === 'image' && event.target.files.length) {
-      const file = event.target.files[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event?.target?.files?.[0];
+    setValue('draft', event?.target?.files ?? new DataTransfer().files);
+    // Check if the dropped file is an image
+    if (file?.type && file.type.startsWith('image')) {
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl);
+    } else {
+      setImagePreview(null); // Clear previous image preview
+    }
+  };
+
+  const handleDragOver = (e: any) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: any, input: any) => {
+    e.preventDefault();
+
+    const file = e.dataTransfer.files[0];
+
+    setValue('draft', e.dataTransfer.files);
+    if (file.type && file.type.startsWith('image')) {
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+    } else {
+      setImagePreview(null);
     }
   };
 
@@ -148,7 +170,7 @@ const Share: React.FC = () => {
     const { title, description, image, draft, toolsUsed, tags } = data;
 
     // check if draft is allowed file format
-    const draftFileFormat = draft && draft[0].name.split('.').pop();
+    const draftFileFormat = draft && draft[0]?.name.split('.').pop();
 
     if (!allowedFileFormats.includes(draftFileFormat) && postType !== 'text') {
       console.error('Draft file format not allowed');
@@ -205,7 +227,10 @@ const Share: React.FC = () => {
         : null;
 
     const tagsArray = tags
-      ? tags.split(',').map((tag: string) => tag.trim())
+      ? tags
+          .split(',')
+          .map((tag: string) => tag.trim())
+          .filter((tag: string) => tag !== '')
       : null;
 
     const newPost: NewPost = {
@@ -314,14 +339,9 @@ const Share: React.FC = () => {
                   formInput={formInput}
                   register={register}
                   handleFileChange={handleFileChange}
+                  handleDragOver={handleDragOver}
+                  handleDrop={handleDrop}
                 />
-                {imagePreview && formInput.type === 'file' && (
-                  <Image
-                    src={imagePreview}
-                    alt="Image Preview"
-                    className="w-1/4"
-                  />
-                )}
               </React.Fragment>
             );
           })}
@@ -339,20 +359,6 @@ const Share: React.FC = () => {
           className="flex flex-col gap-8 w-full width-wrapper mb-12 items-end"
         >
           {fileForm.map((formInput) => {
-            // Check if the current formInput is for the "image" input
-            const isImageInput = formInput.input === 'image';
-
-            const draftFile = watch('draft') as FileList;
-            const draftFileExtension =
-              draftFile?.[0]?.name?.split('.').pop()?.toLowerCase() || '';
-
-            const draftFileType = getFileType(draftFileExtension);
-
-            // Conditionally render the "image" input only if the "draft" input is not an image
-            if (isImageInput && draftFileType === 'image') {
-              return null; // Don't render the "image" input
-            }
-
             return (
               <React.Fragment key={formInput.label}>
                 <ShareInput
@@ -360,14 +366,11 @@ const Share: React.FC = () => {
                   formInput={formInput}
                   register={register}
                   handleFileChange={handleFileChange}
+                  handleDragOver={handleDragOver}
+                  handleDrop={handleDrop}
+                  imagePreview={imagePreview}
+                  watchDraft={watchDraft}
                 />
-                {imagePreview && (
-                  <Image
-                    src={imagePreview}
-                    alt="Image Preview"
-                    className="w-1/4"
-                  />
-                )}
               </React.Fragment>
             );
           })}
@@ -392,17 +395,30 @@ const ShareInput = ({
   formInput,
   register,
   handleFileChange,
+  handleDragOver,
+  handleDrop,
+  imagePreview,
+  watchDraft,
 }: {
   formInput: any;
   register: any;
+  handleDragOver: (e: any) => void;
+  handleDrop: (e: any, input: any) => void;
   handleFileChange: (
     event: React.ChangeEvent<HTMLInputElement>,
-    input: string
+    input: any
   ) => void;
+  imagePreview?: string | null;
+  watchDraft?: any;
 }) => {
   const { label, input, type, required, options } = formInput;
+
   return (
-    <label key={input} className="flex flex-col text-sm font-medium w-full">
+    <label
+      key={input}
+      htmlFor={label}
+      className="flex flex-col text-sm font-medium w-full"
+    >
       {label !== 'Draft' && label}
       {type === 'textarea' ? (
         <textarea
@@ -419,7 +435,11 @@ const ShareInput = ({
         </select>
       ) : type === 'file' ? (
         <>
-          <div className="flex flex-col items-center justify-center w-full h-64 border-2  border-dashed rounded-lg cursor-pointer hover:bg-bray-800 bg-dark  border-medium-gray hover:border-medium-gray hover:bg-dark-gray">
+          <div
+            className="flex flex-col items-center justify-center w-full border-2 p-4 border-dashed rounded-lg cursor-pointer hover:bg-bray-800 bg-dark  border-medium-gray hover:border-medium-gray hover:bg-dark-gray"
+            onDragOver={(e) => handleDragOver(e)}
+            onDrop={(e) => handleDrop(e, input)}
+          >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
                 className="w-8 h-8 mb-4 text-light-gray"
@@ -430,9 +450,9 @@ const ShareInput = ({
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                 />
               </svg>
@@ -447,19 +467,28 @@ const ShareInput = ({
                 <li>audio: mp3, ogg, aac</li>
               </ul>
             </div>
-            <input
-              type="file"
-              className="hidden"
-              onChange={(event) => handleFileChange(event, input)}
-              {...register(input)}
-            />
+            {watchDraft && watchDraft[0]?.name && (
+              <p className="text-light-gray font-hepta">
+                File: {watchDraft[0]?.name}
+              </p>
+            )}
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Image Preview"
+                className="max-w-[50%] max-h-[50%] rounded-md object-cover"
+              />
+            )}
           </div>
-          {/* <input
-            className="flex items-center justify-center h-[20rem] p-4 m-2 text-black rounded-md border-2 border-gray-400 border-dashed"
-            type={type}
-            onChange={(event) => handleFileChange(event, input)}
+          <input
+            type="file"
+            id={label}
+            className="hidden"
+            onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleFileChange(e, input)
+            }
             {...register(input)}
-          ></input> */}
+          />
         </>
       ) : (
         <input
