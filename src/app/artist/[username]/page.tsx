@@ -176,7 +176,7 @@ const Profile = ({ params }: { params: any }) => {
         </div>
       )}
       {posts.length > 0 ? (
-        <div className="mb-12">
+        <div className="flex flex-col gap-32 w-full mb-12">
           {posts.map((post) => (
             <Post key={post.id} post={post} />
           ))}
