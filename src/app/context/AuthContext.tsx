@@ -67,6 +67,8 @@ interface ProfileData {
   photoURL: string | undefined;
   posts: { [postId: string]: boolean };
   location: string;
+  website: string;
+  pronouns: string;
   savedPosts: { [postId: string]: boolean };
   uid: string;
   url: string;
@@ -176,6 +178,8 @@ export const AuthContextProvider = ({
               bio: '',
               medium: '',
               location: '',
+              website: '',
+              pronouns: '',
               photoURL: user.photoURL || '/user-placeholder.png' || undefined,
               savedPosts: {},
               following: {},
@@ -206,6 +210,8 @@ export const AuthContextProvider = ({
                 bio: profileData?.bio || '',
                 medium: profileData?.medium || '',
                 location: profileData?.location || '',
+                website: profileData?.website || '',
+                pronouns: profileData?.pronouns || '',
                 photoURL: profileData?.photoURL || '/user-placeholder.png',
                 joined: profileData?.joined,
                 latestPost: false,
@@ -283,6 +289,8 @@ export const AuthContextProvider = ({
         bio: '',
         medium: '',
         location: '',
+        website: '',
+        pronouns: '',
         photoURL: user.photoURL || '/user-placeholder.png' || undefined,
         savedPosts: {},
         following: {},
@@ -379,6 +387,8 @@ export const AuthContextProvider = ({
             bio: profileData?.bio || '',
             medium: profileData?.medium || '',
             location: profileData?.location || '',
+            website: profileData?.website || '',
+            pronouns: profileData?.pronouns || '',
             photoURL: profileData?.photoURL || '/user-placeholder',
             joined: profileData?.joined || '',
             latestPost: profileData?.latestPost || '',
