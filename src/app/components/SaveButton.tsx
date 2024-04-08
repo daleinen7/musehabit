@@ -55,7 +55,7 @@ const SaveButton = ({ postUid }: { postUid: string }) => {
   }, [user, postUid]);
 
   return (
-    <div className="">
+    <div className="flex items-center justify-center">
       <button onClick={handleSave} className="hover:text-medium-gray-h">
         {saved ? icons.bookmarked : icons.bookmark}
       </button>

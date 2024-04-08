@@ -130,7 +130,7 @@ const Post = ({ post }: { post: PostType }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex">
+    <div className="max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex">
       <div className="flex flex-col w-full gap-9">
         <div className="flex w-full gap-4 items-center -pt-2">
           <Link
