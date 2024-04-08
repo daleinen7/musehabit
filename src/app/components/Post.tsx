@@ -135,7 +135,7 @@ const Post = ({ post }: { post: PostType }) => {
         <div className="flex w-full gap-4 items-center -pt-2">
           <Link
             href={`/artist/${username}`}
-            className="w-16 h-16 rounded-full relative bg-slate-300"
+            className="w-16 h-16 rounded-full relative transition-all ease-in-out bg-slate-300 overflow-hidden hover:shadow-none hover:ring-2 hover:ring-medium-gray"
           >
             <Image
               src={photoURL ?? '/user-placeholder.png'}
@@ -148,7 +148,7 @@ const Post = ({ post }: { post: PostType }) => {
           <div className="font-satoshi">
             <Link
               href={`/artist/${username}`}
-              className=" text-2xl hover:text-slate-700"
+              className=" text-2xl hover:text-light-purple transition-all ease-in-out"
             >
               {displayName ?? username}
             </Link>
@@ -162,7 +162,7 @@ const Post = ({ post }: { post: PostType }) => {
             </div>
           )}
         </div>
-        <div className="flex items-start">
+        <div className="flex items-center">
           <div className="font-satoshi text-2xl font-medium">{title}</div>
           {user && user.uid !== posterData.uid && (
             <div className="ml-auto flex gap-5">

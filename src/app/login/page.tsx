@@ -112,7 +112,7 @@ const Login = () => {
               Forgot Password
             </Link>
             <button type="submit" className="mt-6 btn btn-primary">
-              Log In
+              Log In <span className="text-lg ml-2">{icons.arrowRight}</span>
             </button>
           </form>
 

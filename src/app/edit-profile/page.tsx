@@ -15,6 +15,8 @@ interface ProfileFormState {
   photoUrl: string;
   displayName: string;
   location: string;
+  website: string;
+  pronouns: string;
   medium: string;
   bio: string;
 }
@@ -44,6 +46,18 @@ const profileFormData = [
     type: 'text',
     label: 'What name would you like to be displayed on your profile?',
     placeholder: 'display name',
+  },
+  {
+    id: 'pronouns',
+    type: 'text',
+    label: 'What are your pronouns?',
+    placeholder: 'he/him, she/her, they/them ...',
+  },
+  {
+    id: 'website',
+    type: 'text',
+    label: 'Link to your website',
+    placeholder: 'www.yourwebsite.com',
   },
   {
     id: 'medium',
@@ -136,6 +150,8 @@ const EditProfile = () => {
   const [profileForm, setProfileForm] = useState<ProfileFormState>({
     profileImage: null,
     profileImageUrl: '',
+    website: '',
+    pronouns: '',
     photoUrl: '/user-placeholder.png',
     displayName: '',
     location: '',
@@ -175,6 +191,8 @@ const EditProfile = () => {
         profileImage: user.profile.photoURL || '/user-placeholder.png',
         displayName: user.profile.displayName || '',
         location: user.profile.location || '',
+        pronouns: user.profile.pronouns || '',
+        website: user.profile.website || '',
         bio: user.profile.bio || '',
         medium: user.profile.medium || '',
       }));
@@ -257,6 +275,8 @@ const EditProfile = () => {
       await updateUserProfile(user.uid, {
         displayName: profileForm.displayName,
         location: profileForm.location,
+        website: profileForm.website,
+        pronouns: profileForm.pronouns,
         medium: profileForm.medium,
         bio: profileForm.bio,
         photoURL: profileForm.photoUrl,
@@ -266,6 +286,8 @@ const EditProfile = () => {
         ...user.profile,
         displayName: profileForm.displayName,
         location: profileForm.location,
+        website: profileForm.website,
+        pronouns: profileForm.pronouns,
         medium: profileForm.medium,
         bio: profileForm.bio,
         photoURL: profileForm.photoUrl,

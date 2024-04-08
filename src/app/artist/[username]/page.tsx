@@ -16,6 +16,7 @@ import Post from '@/app/components/Post';
 import { useAuth } from '@/app/context/AuthContext';
 import { PostType, ArtistType } from '@/app/lib/types';
 import FollowButton from '@/app/components/FollowButton';
+import icons from '@/app/lib/icons';
 
 const Profile = ({ params }: { params: any }) => {
   const { user } = useAuth();
@@ -113,20 +114,41 @@ const Profile = ({ params }: { params: any }) => {
           {artist?.displayName}
         </h2>
         {artist && user && user.uid === artist.uid ? (
-          <Link href={`/edit-profile`} className="btn btn-primary">
-            Edit Profile
+          <Link href={`/edit-profile`} className="btn btn-secondary">
+            <span className="text-lg mr-2">{icons.edit}</span> Edit Profile
           </Link>
         ) : (
           artist && <FollowButton artistUid={artist.uid} />
         )}
       </div>
       {artist && (
-        <div>
-          <div className="flex gap-8">
-            <p>{artist.location}</p>
-            <p>{artist.medium}</p>
+        <div className="max-w-3xl flex flex-col items-center gap-6 mb-8">
+          <div className="flex flex-wrap gap-x-6 gap-y-4 justify-center max-w-[37.5rem]">
+            {[
+              [icons.user, artist.username],
+              [icons.pin, artist.location],
+              [
+                icons.link,
+                <a
+                  key="website-link"
+                  className="hover:text-light-purple"
+                  href={artist.website}
+                >
+                  {artist.website}
+                </a>,
+              ],
+              [icons.design, artist.medium],
+              [icons.countingworkspro, artist.pronouns],
+            ].map(
+              ([icon, text], idx) =>
+                text && (
+                  <div className="flex items-center text-lg gap-3" key={idx}>
+                    <span className="text-xl">{icon}</span> {text}
+                  </div>
+                )
+            )}
           </div>
-          <p>{artist.bio}</p>
+          <p className="text-center">{artist.bio}</p>
         </div>
       )}
       {artist && user && user.uid === artist.uid && (

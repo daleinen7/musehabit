@@ -38,6 +38,8 @@ export type UserType = {
     username: string;
     url: string;
     bio?: string;
+    website?: string;
+    pronouns?: string;
     medium?: string;
     location?: string;
     photoURL?: string;
@@ -69,6 +71,8 @@ export type ArtistType = {
   bio: string;
   latestPost: number | false;
   email: string;
+  website: string;
+  pronouns: string;
   posts: { [postId: string]: boolean };
 };
 

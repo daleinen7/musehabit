@@ -98,9 +98,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       <div className="comments-section py-8 border-t-[1px] border-b-[1px] border-medium-gray-h">
         <button
           onClick={toggleShowComments}
-          className="flex justify-between items-center w-full hover:text-medium-gray-h group"
+          className="flex justify-between items-center w-full hover:text-light-purple transition-colors ease-in-out group"
         >
-          <h4 className="border-b-2 border-white group-hover:border-b-medium-gray-h">
+          <h4 className="border-b-2 border-white group-hover:border-b-light-purple transition-colors ease-in-out">
             Comments ({comments.length})
           </h4>
           <div className="text-2xl">
