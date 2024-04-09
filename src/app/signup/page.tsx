@@ -74,7 +74,7 @@ const SignUp = () => {
 
   return (
     <div className="flex w-full">
-      <div className="w-1/2 object-cover h-[calc(100vh-3rem)] ">
+      <div className="hidden sm:block sm:w-1/2 object-cover h-[calc(100vh-3rem)] ">
         <Image
           src="https://fakeimg.pl/756x900/c1c1c1/909090"
           alt="login page"
@@ -83,7 +83,7 @@ const SignUp = () => {
           width={756}
         />
       </div>
-      <div className="w-1/2 flex items-center justify-center">
+      <div className="w-full sm:w-1/2 mt-12 sm:mt-0 flex items-center justify-center">
         <div className="max-w-47rem flex flex-col justify-center items-center w-full max-w-[20.8125rem]">
           <h2 className="font-satoshi text-[2.25rem] font-bold mb-[1.125rem]">
             Sign up
