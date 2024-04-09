@@ -72,7 +72,7 @@ const Login = () => {
 
   return (
     <div className="flex w-full">
-      <div className="w-1/2 object-cover h-[calc(100vh-3rem)] ">
+      <div className="hidden sm:block sm:w-1/2 object-cover h-[calc(100vh-3rem)] ">
         <Image
           src="https://fakeimg.pl/756x900/c1c1c1/909090"
           alt="login page"
@@ -81,14 +81,14 @@ const Login = () => {
           width={756}
         />
       </div>
-      <div className="w-1/2 flex items-center justify-center">
+      <div className="w-full mt-12 sm:mt-0 sm:w-1/2 flex items-center justify-center">
         <div className="max-w-47rem flex flex-col justify-center items-center w-full max-w-[20.8125rem]">
           <h2 className="font-satoshi text-[2.25rem] font-bold mb-[1.125rem">
             Log In
           </h2>
           <p className="font-satoshi mb-10">
             Need an account?{' '}
-            <Link href="/signup" className="underline">
+            <Link href="/signup" className="underline hover:text-light-purple">
               Sign Up.
             </Link>
           </p>

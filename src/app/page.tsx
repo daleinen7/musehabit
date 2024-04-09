@@ -118,7 +118,7 @@ export default function Home() {
               className={`w-full border-b border-b-light-gray rounded-t-[6px] py-4 ${
                 selectedFeed === 'global'
                   ? 'bg-light-gray text-dark'
-                  : 'text-white'
+                  : 'text-white hover:text-light-purple'
               }`}
               onClick={() => setSelectedFeed('global')}
             >
@@ -128,7 +128,7 @@ export default function Home() {
               className={`w-full border-b border-b-light-gray rounded-t-[6px] py-4 ${
                 selectedFeed === 'following'
                   ? 'bg-light-gray text-dark'
-                  : 'text-white'
+                  : 'text-white hover:text-light-purple'
               }`}
               onClick={() => setSelectedFeed('following')}
             >

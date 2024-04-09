@@ -132,19 +132,26 @@ const Post = ({ post }: { post: PostType }) => {
   return (
     <div className="max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex">
       <div className="flex flex-col w-full gap-9">
-        <div className="flex w-full gap-4 items-center -pt-2">
-          <Link
-            href={`/artist/${username}`}
-            className="w-16 h-16 rounded-full relative transition-all ease-in-out bg-slate-300 overflow-hidden hover:shadow-none hover:ring-2 hover:ring-medium-gray"
-          >
-            <Image
-              src={photoURL ?? '/user-placeholder.png'}
-              alt={displayName ?? username}
-              width={64}
-              height={64}
-              className="rounded-full h-16 w-16 object-cover"
-            />
-          </Link>
+        <div className="flex flex-col sm:flex-row w-full gap-4 items-start sm:items-center -pt-2">
+          <div className="flex w-full items-center sm:w-auto">
+            <Link
+              href={`/artist/${username}`}
+              className="w-16 h-16 rounded-full relative transition-all ease-in-out bg-slate-300 overflow-hidden hover:shadow-none hover:ring-2 hover:ring-medium-gray"
+            >
+              <Image
+                src={photoURL ?? '/user-placeholder.png'}
+                alt={displayName ?? username}
+                width={64}
+                height={64}
+                className="rounded-full h-16 w-16 object-cover"
+              />
+            </Link>
+            {user && user.uid !== posterData.uid && (
+              <div className="sm:hidden items-end ml-auto">
+                <FollowButton artistUid={posterData.uid} />
+              </div>
+            )}
+          </div>
           <div className="font-satoshi">
             <Link
               href={`/artist/${username}`}
@@ -157,7 +164,7 @@ const Post = ({ post }: { post: PostType }) => {
             </div>
           </div>
           {user && user.uid !== posterData.uid && (
-            <div className="items-end ml-auto">
+            <div className="hidden sm:flex items-end ml-auto">
               <FollowButton artistUid={posterData.uid} />
             </div>
           )}
