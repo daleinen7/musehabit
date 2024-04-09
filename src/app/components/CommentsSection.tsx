@@ -37,23 +37,22 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       const queryComments = query(commentsRef, orderBy('timestamp', 'asc'));
       const commentsSnapshot = await getDocs(queryComments);
 
-      const commentsData: CommentType[] = commentsSnapshot.docs.map(
-        (doc) => doc.data() as CommentType
-      );
+      const commentsData: CommentType[] = [];
 
-      // Fetch the commenter's profile data
-      for (const commentData of commentsData) {
+      for (const docSnapshot of commentsSnapshot.docs) {
+        const commentData = docSnapshot.data() as CommentType;
         const commenterProfileRef = doc(
           firestore,
           'users',
           commentData.posterId
         );
         const commenterProfileSnapshot = await getDoc(commenterProfileRef);
+
         if (commenterProfileSnapshot.exists()) {
           const commenterProfile = commenterProfileSnapshot.data();
-          // Update the comment data with the profile picture URL
           commentData.commenterProfile = commenterProfile;
         }
+        commentsData.push(commentData);
       }
 
       setComments(commentsData);
@@ -75,7 +74,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       posterId: user.uid,
       timestamp: Date.now(),
       username: user.profile.username,
-      photoURL: user.profile?.photoURL || undefined,
+      photoURL: user.profile.photoURL || undefined,
     };
 
     try {
@@ -84,6 +83,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
       // Add the new comment to the comments collection
       await addDoc(commentsRef, commentData);
+
+      commentData.commenterProfile = user.profile;
 
       setComments([...comments, commentData]);
       // Clear the input field after posting the comment
