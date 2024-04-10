@@ -132,21 +132,22 @@ const Share: React.FC = () => {
     }
   }, [user, router]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event?.target?.files?.[0];
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    input: any
+  ) => {
+    const files = e.target.files; // Access files synchronously
 
-    setValue('draft', event?.target?.files ?? new DataTransfer().files);
-    // Check if the dropped file is an image
-    if (file?.type && file.type.startsWith('image')) {
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+
+    if (file.type && file.type.startsWith('image')) {
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl);
     } else {
-      setImagePreview(null); // Clear previous image preview
+      setImagePreview(null);
     }
-  };
-
-  const handleDragOver = (e: any) => {
-    e.preventDefault();
   };
 
   const handleDrop = (e: any, input: any) => {
@@ -154,13 +155,20 @@ const Share: React.FC = () => {
 
     const file = e.dataTransfer.files[0];
 
+    console.log('THIS WORKS: ', e.dataTransfer.files);
+
     setValue('draft', e.dataTransfer.files);
+
     if (file.type && file.type.startsWith('image')) {
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl);
     } else {
       setImagePreview(null);
     }
+  };
+
+  const handleDragOver = (e: any) => {
+    e.preventDefault();
   };
 
   const onSubmit = async (data: any) => {
@@ -174,8 +182,6 @@ const Share: React.FC = () => {
 
     // check if draft is allowed file format
     const draftFileFormat = draft && draft[0]?.name.split('.').pop();
-
-    console.log('draftFileFormat', draftFileFormat);
 
     if (!allowedFileFormats.includes(draftFileFormat) && postType !== 'text') {
       console.error('Draft file format not allowed');
