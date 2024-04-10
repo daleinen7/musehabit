@@ -136,7 +136,7 @@ const Share: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     input: any
   ) => {
-    const files = e.target.files; // Access files synchronously
+    const files = e.target.files;
 
     if (!files || files.length === 0) return;
 
@@ -154,8 +154,6 @@ const Share: React.FC = () => {
     e.preventDefault();
 
     const file = e.dataTransfer.files[0];
-
-    console.log('THIS WORKS: ', e.dataTransfer.files);
 
     setValue('draft', e.dataTransfer.files);
 
