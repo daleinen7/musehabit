@@ -112,7 +112,7 @@ const Post = ({ post }: { post: PostType }) => {
             className="fixed inset-0 z-50 bg-black bg-opacity-50  flex whitespace-pre-wrap justify-center items-center"
             onClick={() => setShowLightbox(false)}
           >
-            <div className="bg-white p-8 rounded-lg max-w-[40rem]  overflow-y-scroll h-[90%] flex flex-col gap-2">
+            <div className="bg-white p-8 rounded-lg max-w-[40rem] text-black overflow-y-scroll h-[90%] flex flex-col gap-2">
               <button
                 className="ml-auto font-satoshi text-xsm font-bold text-slate-600 hover:text-slate-950"
                 aria-label="close lightbox"
@@ -120,8 +120,12 @@ const Post = ({ post }: { post: PostType }) => {
               >
                 close
               </button>
-              <h4 className="font-Satoshi text-5xl font-bold">{post.title}</h4>
-              <ReactMarkdown>{post.post}</ReactMarkdown>
+              <h4 className="font-Satoshi text-5xl font-bold mb-6">
+                {post.title}
+              </h4>
+              <ReactMarkdown className={'whitespace-pre-wrap'}>
+                {post.post}
+              </ReactMarkdown>
             </div>
           </div>
         )}
