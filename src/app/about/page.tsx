@@ -28,7 +28,7 @@ const About = () => {
           alt="placeholder"
           width={300}
           height={263}
-          className="rounded"
+          className="rounded-3xl"
         />
       </div>
       <section className="width-wrapper flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
@@ -167,7 +167,7 @@ const TeamMember = ({ name, role }: { name: string; role: string }) => {
         alt={'whatever'}
         width={337}
         height={333}
-        className="w-[31.5rem] h-[21.875rem] rounded"
+        className="w-[31.5rem] h-[21.875rem] rounded-3xl"
       />
       <div className="flex flex-col items-center">
         <h2 className="text-2xl mb-2">{name}</h2>

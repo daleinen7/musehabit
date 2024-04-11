@@ -170,6 +170,8 @@ const EditProfile = () => {
     defaultFeed: 'global',
   });
 
+  const [hasVisited, setHasVisited] = useState(false);
+
   const [selectedFeed, setSelectedFeed] = useState('profile');
 
   const { user, setUser, updateUserProfile } = useAuth();
@@ -217,6 +219,23 @@ const EditProfile = () => {
       }
     }
   }, [user, selectedFeed, router]);
+
+  useEffect(() => {
+    if (
+      user &&
+      user.profile.photoURL &&
+      (user?.profile?.photoURL.includes('googleusercontent') ||
+        user.profile.photoURL === '/user-placeholder.png') &&
+      !user.profile.bio &&
+      !user.profile.location &&
+      !user.profile.medium &&
+      !user.profile.pronouns &&
+      !user.profile.website &&
+      !user.profile.latestPost
+    )
+      setHasVisited(false);
+    else setHasVisited(true);
+  }, [user]);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -315,29 +334,31 @@ const EditProfile = () => {
   return (
     user && (
       <div className="w-full flex min-h-screen">
-        <div className="w-full max-w-[20rem] min-h-screen sticky bg-medium-gray flex flex-col text-xl align-center gap-3">
-          <h2 className="font-bold text-2xl my-6 px-6">Account</h2>
-          <button
-            className={`hover:bg-dark-gray w-[14rem] mx-auto rounded py-4 flex items-center justify-start gap-2 ${
-              selectedFeed === 'profile' ? 'bg-dark-gray-h' : ''
-            }`}
-            onClick={() => setSelectedFeed('profile')}
-          >
-            <div className="text-xl ml-4">{icons.user}</div>Profile
-          </button>
-          <button
-            className={`hover:bg-dark-gray w-[14rem] mx-auto rounded py-4 flex items-center justify-start gap-2 ${
-              selectedFeed === 'account' ? 'bg-dark-gray-h' : ''
-            }`}
-            onClick={() => setSelectedFeed('account')}
-          >
-            <div className="text-xl ml-4">{icons.settings}</div>Account
-          </button>
-        </div>
+        {hasVisited && (
+          <div className="w-full max-w-[20rem] min-h-screen sticky bg-medium-gray flex flex-col text-xl align-center gap-3">
+            <h2 className="font-bold text-2xl my-6 px-6">Account</h2>
+            <button
+              className={`hover:bg-dark-gray w-[14rem] mx-auto rounded py-4 flex items-center justify-start gap-2 ${
+                selectedFeed === 'profile' ? 'bg-dark-gray-h' : ''
+              }`}
+              onClick={() => setSelectedFeed('profile')}
+            >
+              <div className="text-xl ml-4">{icons.user}</div>Profile
+            </button>
+            <button
+              className={`hover:bg-dark-gray w-[14rem] mx-auto rounded py-4 flex items-center justify-start gap-2 ${
+                selectedFeed === 'account' ? 'bg-dark-gray-h' : ''
+              }`}
+              onClick={() => setSelectedFeed('account')}
+            >
+              <div className="text-xl ml-4">{icons.settings}</div>Account
+            </button>
+          </div>
+        )}
 
         {selectedFeed === 'profile' ? (
-          <div className="width-wrapper flex items-center flex-col max-w-[40rem] pt-6 pb-12">
-            {!user.profile.photoURL && (
+          <div className="width-wrapper flex items-center flex-col gap-9 max-w-[40rem] pt-6 pb-12">
+            {!hasVisited && (
               <Link
                 href={`/artist/${user.profile.username}`}
                 className="underline self-end my-6"
@@ -381,7 +402,7 @@ const EditProfile = () => {
                     <>
                       <label
                         htmlFor={item.id}
-                        className="rounded border-[1px] border-medium-gray px-[1rem] py-[0.625rem] my-6 text-[1.125rem] hover:bg-dark-gray cursor-pointer border-dashed flex items-center justify-center gap-2"
+                        className="rounded border-[1px] border-light-gray px-[1rem] py-[0.625rem] -mt-3  text-[1.125rem] hover:bg-dark-gray cursor-pointer border-dashed flex items-center justify-center gap-2"
                       >
                         <span className="text-xl">{icons.plus}</span>{' '}
                         {item.label}

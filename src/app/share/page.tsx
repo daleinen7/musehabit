@@ -294,7 +294,7 @@ const Share: React.FC = () => {
     );
 
   return (
-    <>
+    <div className="max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="font-satoshi text-4xl font-bold mt-12">
         {user.profile.latestPost ? 'New Post' : 'First Post'}
       </h2>
@@ -351,6 +351,7 @@ const Share: React.FC = () => {
                   handleFileChange={handleFileChange}
                   handleDragOver={handleDragOver}
                   handleDrop={handleDrop}
+                  setValue={setValue}
                 />
               </React.Fragment>
             );
@@ -366,7 +367,7 @@ const Share: React.FC = () => {
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-8 w-full width-wrapper mb-12 items-end"
+          className="flex flex-col gap-8 w-full mb-12 items-end"
         >
           {fileForm.map((formInput) => {
             return (
@@ -380,6 +381,7 @@ const Share: React.FC = () => {
                   handleDrop={handleDrop}
                   imagePreview={imagePreview}
                   watchDraft={watchDraft}
+                  setValue={setValue}
                 />
               </React.Fragment>
             );
@@ -396,7 +398,7 @@ const Share: React.FC = () => {
           )}
         </form>
       )}
-    </>
+    </div>
   );
 };
 export default Share;
@@ -409,6 +411,7 @@ const ShareInput = ({
   handleDrop,
   imagePreview,
   watchDraft,
+  setValue,
 }: {
   formInput: any;
   register: any;
@@ -420,6 +423,7 @@ const ShareInput = ({
   ) => void;
   imagePreview?: string | null;
   watchDraft?: any;
+  setValue?: any;
 }) => {
   const { label, input, type, required, options } = formInput;
 
@@ -432,11 +436,11 @@ const ShareInput = ({
       {label !== 'Draft' && label}
       {type === 'textarea' ? (
         <textarea
-          className="p-2 m-2 text-light-gray bg-dark-gray rounded-md min-h-[22rem]"
+          className="p-2 my-2 shadow border border-input-gray text-light-gray bg-dark-gray rounded-md min-h-[22rem]"
           {...register(input)}
         />
       ) : type === 'select' ? (
-        <select className="p-2 m-2 text-black rounded-md" {...register(input)}>
+        <select className="p-2 my-2 text-black rounded-md" {...register(input)}>
           {options.map((option: string) => (
             <option key={option} value={option}>
               {option}
@@ -445,64 +449,70 @@ const ShareInput = ({
         </select>
       ) : type === 'file' ? (
         <>
-          <div
-            className="flex flex-col items-center justify-center w-full border-2 p-4 border-dashed rounded-lg cursor-pointer hover:bg-bray-800 bg-dark  border-medium-gray hover:border-medium-gray hover:bg-dark-gray"
-            onDragOver={(e) => handleDragOver(e)}
-            onDrop={(e) => handleDrop(e, input)}
-          >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
-                className="w-8 h-8 mb-4 text-light-gray"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 16"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+          {watchDraft && watchDraft[0]?.name ? (
+            <div className="flex items-center gap-6 p-6 bg-dark-gray rounded">
+              {imagePreview && (
+                <img
+                  src={imagePreview}
+                  alt="Image Preview"
+                  className="max-w-[50%] max-h-[50%] rounded-md object-cover"
                 />
-              </svg>
-              <p className="mb-2 text-xl text-light-gray">
-                <span className="font-semibold">Click to upload</span> or drag
-                and drop
-              </p>
-              <p className="text-xs text-light-gray">File types allowed:</p>
-              <ul>
-                <li>image: jpg, jpeg, png, gif, svg, webp</li>
-                <li>video: mp4, avi, mkv, mov</li>
-                <li>audio: mp3, ogg, aac</li>
-              </ul>
+              )}
+              <div className="flex flex-col gap-4">
+                <p className="text-light-gray text-lg font-hepta">
+                  File: {watchDraft[0]?.name}
+                </p>
+                <p className="text-light-gray font-hepta">
+                  Size: {watchDraft[0]?.size} bytes
+                </p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setValue(input, null);
+                }}
+                className="text-3xl text-coral ml-auto"
+              >
+                {icons.trash}
+              </button>
             </div>
-            {watchDraft && watchDraft[0]?.name && (
-              <p className="text-light-gray font-hepta">
-                File: {watchDraft[0]?.name}
-              </p>
-            )}
-            {imagePreview && (
-              <img
-                src={imagePreview}
-                alt="Image Preview"
-                className="max-w-[50%] max-h-[50%] rounded-md object-cover"
+          ) : (
+            <>
+              <div
+                className="flex flex-col items-center justify-center w-full border-2 p-4 border-dashed rounded-lg cursor-pointer hover:bg-bray-800 bg-dark  border-medium-gray hover:border-medium-gray hover:bg-dark-gray"
+                onDragOver={(e) => handleDragOver(e)}
+                onDrop={(e) => handleDrop(e, input)}
+              >
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  <div className="text-3xl">{icons.upload}</div>
+                  <p className="mb-2 text-xl text-light-gray">
+                    <span className="font-semibold">Click to upload</span> or
+                    drag and drop
+                  </p>
+                  <p className="text-xs text-light-gray">File types allowed:</p>
+                  <ul>
+                    <li>image: jpg, jpeg, png, gif, svg, webp</li>
+                    <li>video: mp4, avi, mkv, mov</li>
+                    <li>audio: mp3, ogg, aac</li>
+                  </ul>
+                </div>
+              </div>
+              <input
+                type="file"
+                id={label}
+                className="hidden"
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleFileChange(e, input)
+                }
+                {...register(input)}
               />
-            )}
-          </div>
-          <input
-            type="file"
-            id={label}
-            className="hidden"
-            onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleFileChange(e, input)
-            }
-            {...register(input)}
-          />
+            </>
+          )}
         </>
       ) : (
         <input
-          className="p-2 m-2 text-light-gray rounded-md bg-dark-gray"
+          className="p-2 my-2 shadow border border-input-gray text-light-gray rounded-md bg-dark-gray"
           type={type}
           {...register(input)}
         />
