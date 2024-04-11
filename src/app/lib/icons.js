@@ -4,7 +4,7 @@ import { FaBookmark } from 'react-icons/fa';
 import { FiPlus } from 'react-icons/fi';
 import { MdComment } from 'react-icons/md';
 import { MdOutlineInsertComment } from 'react-icons/md';
-import { MdFileUpload } from 'react-icons/md';
+import { BsFillCloudUploadFill } from 'react-icons/bs';
 import { TfiWrite } from 'react-icons/tfi';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { PiDotsThreeOutlineVerticalFill } from 'react-icons/pi';
@@ -15,6 +15,7 @@ import { MdOutlineArrowForward } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { IoIosPin } from 'react-icons/io';
 import { MdOutlineDesignServices } from 'react-icons/md';
+import { IoMdTrash } from 'react-icons/io';
 import { IoMdLink } from 'react-icons/io';
 import { SiCountingworkspro } from 'react-icons/si';
 
@@ -27,7 +28,7 @@ const icons = {
   comment: <MdComment />,
   google: <AiFillGoogleCircle />,
   closedComment: <MdOutlineInsertComment />,
-  upload: <MdFileUpload />,
+  upload: <BsFillCloudUploadFill />,
   write: <TfiWrite />,
   design: <MdOutlineDesignServices />,
   arrow: <RiArrowDropDownLine />,
@@ -35,6 +36,7 @@ const icons = {
   dots: <PiDotsThreeOutlineVerticalFill className=" text-xl" />,
   settings: <IoSettingsSharp />,
   edit: <MdEdit />,
+  trash: <IoMdTrash />,
   pin: <IoIosPin />,
   user: <FaUser />,
   countingworkspro: <SiCountingworkspro />,

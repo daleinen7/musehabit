@@ -22,6 +22,7 @@ const config: Config = {
         'medium-gray-h': '#8c8c8c',
         'dark-gray': '#333333',
         'dark-gray-h': '#4f4f4f',
+        'input-gray': '#6C6C6C',
         coral: '#F24236',
         purple: '#7161ef',
         'light-purple': '#D4D0FA',

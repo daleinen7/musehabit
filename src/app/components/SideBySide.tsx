@@ -16,24 +16,22 @@ export const SideBySide = ({
   reverse,
 }: SideBySideProps) => {
   return (
-    <div>
-      <div
-        className={`flex items-center gap-[3rem] ${
-          reverse ? 'flex-row-reverse' : ''
-        }`}
-      >
-        <div className="flex flex-col">
-          <h2 className="text-2xl mb-2">{headline}</h2>
-          {children}
-        </div>
-        <Image
-          src={image}
-          alt={alt}
-          width={504}
-          height={350}
-          className="w-[31.5rem] h-[21.875rem] rounded"
-        />
+    <div
+      className={`flex flex-col mb-12 md:mb-0 items-center gap-[3rem] ${
+        reverse ? 'md:flex-row-reverse' : 'md:flex-row'
+      }`}
+    >
+      <div className="flex flex-col">
+        <h2 className="text-2xl mb-2">{headline}</h2>
+        {children}
       </div>
+      <Image
+        src={image}
+        alt={alt}
+        width={504}
+        height={350}
+        className="w-[31.5rem] h-[21.875rem] rounded-3xl"
+      />
     </div>
   );
 };

@@ -28,6 +28,13 @@ const formData = [
     placeholder: 'password',
     required: true,
   },
+  {
+    id: 'confirmPassword',
+    type: 'password',
+    label: 'Confirm Password',
+    placeholder: 'confirm password',
+    required: true,
+  },
 ];
 
 const SignUp = () => {
@@ -35,6 +42,7 @@ const SignUp = () => {
     email: '',
     username: '',
     password: '',
+    confirmPassword: '',
   });
 
   const { user, emailSignUp, signInWithGoogle } = useAuth();
@@ -43,6 +51,11 @@ const SignUp = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (form.password !== form.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
 
     await emailSignUp(form.email, form.password, form.username);
   };
