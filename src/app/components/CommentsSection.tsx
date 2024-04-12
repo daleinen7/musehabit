@@ -115,11 +115,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
               <div key={index} className="flex gap-4">
                 <Image
                   src={
-                    comment.commenterProfile.photoURL || '/user-placeholder.png'
+                    comment.commenterProfile?.photoURL ||
+                    '/user-placeholder.png'
                   }
                   alt={
-                    comment.commenterProfile.displayName ||
-                    comment.commenterProfile.username
+                    comment.commenterProfile?.displayName ||
+                    comment.commenterProfile?.username
                   }
                   width={48}
                   height={48}
@@ -127,8 +128,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 />
                 <div className="flex flex-col">
                   <h5>
-                    {comment.commenterProfile.displayName ||
-                      comment.commenterProfile.username}
+                    {comment.commenterProfile?.displayName ||
+                      comment.commenterProfile?.username}
                   </h5>
                   <p>{comment.text}</p>
                 </div>
