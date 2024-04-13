@@ -25,7 +25,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
   }, [postId]);
 
   return (
-    <div className="flex justify-center items-center min-h-[screen] py-12">
+    <div className="flex justify-center items-center min-h-[screen] py-12 w-full">
       {post ? <Post post={post} /> : <BeatLoader color="#F24236" />}
     </div>
   );
