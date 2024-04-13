@@ -10,6 +10,7 @@ import { daysUntilNextPost } from '../lib/daysUntilNextPost';
 import icons from '../lib/icons';
 import { doc } from 'firebase/firestore';
 import { BeatLoader } from 'react-spinners';
+import { MdWysiwyg } from 'react-icons/md';
 
 const fileForm = [
   { label: 'Draft', input: 'draft', type: 'file', required: true },
@@ -58,6 +59,7 @@ const writeForm = [
     input: 'post',
     type: 'textarea',
     required: true,
+    wysiwyg: true,
   },
   {
     label: "Description - tell us about what you've been working on!",
@@ -352,6 +354,7 @@ const Share: React.FC = () => {
                   handleDragOver={handleDragOver}
                   handleDrop={handleDrop}
                   setValue={setValue}
+                  wysiwyg={formInput.wysiwyg}
                 />
               </React.Fragment>
             );
@@ -436,7 +439,7 @@ const ShareInput = ({
       {label !== 'Draft' && label}
       {type === 'textarea' ? (
         <textarea
-          className="p-2 my-2 shadow border border-input-gray text-light-gray bg-dark-gray rounded-md min-h-[22rem]"
+          className="p-2 my-2 input-shadow border border-input-gray text-light-gray bg-medium-gray rounded-md min-h-[22rem]"
           {...register(input)}
         />
       ) : type === 'select' ? (
@@ -512,7 +515,7 @@ const ShareInput = ({
         </>
       ) : (
         <input
-          className="p-2 my-2 shadow border border-input-gray text-light-gray rounded-md bg-dark-gray"
+          className="p-2 my-2 input-shadow border border-input-gray text-light-gray rounded-md bg-medium-gray"
           type={type}
           {...register(input)}
         />

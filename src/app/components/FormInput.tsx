@@ -33,7 +33,7 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={handleFormChange}
           required={required}
-          className="text-white bg-medium-gray shadow p-[0.625rem] border border-input-gray rounded-md w-full"
+          className="text-white input-shadow bg-light-gray p-[0.625rem] border border-input-gray rounded-md w-full"
         />
         {error && <p className="text-coral">{error}</p>}
       </label>
@@ -64,7 +64,7 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={handleFormChange as (e: React.ChangeEvent<unknown>) => void}
           required={required}
-          className="text-white shadow p-[0.625rem] border border-input-gray bg-medium-gray rounded-md w-full"
+          className="text-white  input-shadow p-[0.625rem] border border-input-gray bg-light-gray rounded-md w-full"
         />
         {error && <p className="text-coral">{error}</p>}
       </label>
@@ -111,7 +111,7 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={handleFormChange}
           required={required}
-          className="text-white p-[0.625rem] border border-light-gray bg-medium-gray rounded-md w-full"
+          className="text-white input-shadow p-[0.625rem] border border-input-gray bg-light-gray rounded-md w-full"
         />
       </label>
     );
