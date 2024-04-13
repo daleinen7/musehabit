@@ -10,7 +10,6 @@ import { daysUntilNextPost } from '../lib/daysUntilNextPost';
 import icons from '../lib/icons';
 import { doc } from 'firebase/firestore';
 import { BeatLoader } from 'react-spinners';
-import { MdWysiwyg } from 'react-icons/md';
 
 const fileForm = [
   { label: 'Draft', input: 'draft', type: 'file', required: true },
@@ -59,7 +58,6 @@ const writeForm = [
     input: 'post',
     type: 'textarea',
     required: true,
-    wysiwyg: true,
   },
   {
     label: "Description - tell us about what you've been working on!",
@@ -354,7 +352,6 @@ const Share: React.FC = () => {
                   handleDragOver={handleDragOver}
                   handleDrop={handleDrop}
                   setValue={setValue}
-                  wysiwyg={formInput.wysiwyg}
                 />
               </React.Fragment>
             );
