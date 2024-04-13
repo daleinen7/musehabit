@@ -208,26 +208,32 @@ const Post = ({ post }: { post: PostType }) => {
           )}
           {showDeleteModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-dark-gray text-light-gray p-4 rounded-lg shadow-lg max-w-[40rem] flex flex-col gap-4">
-                <p className="text-xl font-bold">
+              <div className="bg-light-gray text-dark p-4 rounded-lg shadow-lg max-w-[40rem] flex flex-col gap-4">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="ml-auto -mb-4 text-dark hover:text-dark-gray"
+                >
+                  {icon.close}
+                </button>
+                <p className="text-2xl font-bold text-center">
                   Are you sure you want to delete this post?
                 </p>
-                <p>
+                <p className="text-center">
                   This action is irreversible. If this post was uploaded within
                   the last 30 days before your next scheduled post, deleting it
                   will prevent you from posting again until your next scheduled
                   window for sharing.
                 </p>
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-center mt-4">
                   <button
-                    className="mr-2"
+                    className="mr-2 border border-dark rounded-md px-12 py-2 text-dark hover:bg-dark hover:text-white hover:transition-all hover:duration-400 hover:ease-in-out"
                     onClick={() => setShowDeleteModal(false)}
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleDeletePost}
-                    className="bg-coral text-white px-4 py-2 rounded-lg"
+                    className="bg-coral text-white px-12 py-2 rounded-lg hover:bg-colral-h hover:transition-all hover:duration-400 hover:text-dark hover:ease-in-out"
                   >
                     Delete
                   </button>
