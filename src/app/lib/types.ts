@@ -13,6 +13,7 @@ export type PostType = {
     username: string;
     displayName: string;
     location: string;
+    pronouns: string;
     photoURL: string;
     medium: string;
     joined: number;

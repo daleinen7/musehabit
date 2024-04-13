@@ -101,13 +101,13 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
     <>
       <h2 className="font-satoshi text-4xl font-bold mt-12">Edit Post</h2>
       <form
-        className="flex flex-col gap-8 w-full width-wrapper mb-12 items-center"
+        className="flex flex-col gap-8 w-full mb-12 items-center max-w-[40rem] mx-auto mt-8"
         onSubmit={handleSubmit}
       >
         <label className="flex flex-col gap-2 w-full">
           Title:
           <input
-            className="text-black p-[0.625rem] border border-black rounded-md w-full"
+            className="text-white input-shadow bg-medium-gray p-[0.625rem] border border-input-gray rounded-md w-full"
             type="text"
             name="title"
             value={formData.title}
@@ -117,7 +117,7 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
         <label className="flex flex-col gap-2 w-full">
           Description:
           <textarea
-            className="text-black p-[0.625rem] border border-black rounded-md w-full"
+            className="text-white input-shadow bg-medium-gray p-[0.625rem] border border-input-gray rounded-md w-full"
             name="description"
             value={formData.description}
             onChange={handleFormChange}
@@ -148,7 +148,7 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
         <label className="flex flex-col gap-2 w-full">
           Tools Used:
           <input
-            className="text-black p-[0.625rem] border border-black rounded-md w-full"
+            className="text-white input-shadow bg-medium-gray p-[0.625rem] border border-input-gray rounded-md w-full"
             type="text"
             name="toolsUsed"
             value={formData.toolsUsed}
@@ -158,7 +158,7 @@ const EditPost = ({ params }: { params: { postId: string } }) => {
         <label className="flex flex-col gap-2 w-full">
           Tags:
           <input
-            className="text-black p-[0.625rem] border border-black rounded-md w-full"
+            className="text-white input-shadow bg-medium-gray p-[0.625rem] border border-input-gray rounded-md w-full"
             type="text"
             name="tags"
             value={formData.tags ? formData.tags.join(',') : ''}

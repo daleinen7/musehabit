@@ -54,7 +54,8 @@ const writeForm = [
     required: true,
   },
   {
-    label: 'Share a short writing example!',
+    label:
+      'Share a short writing example! (hint: the input allows for markdown! https://www.markdownguide.org/cheat-sheet/)',
     input: 'post',
     type: 'textarea',
     required: true,
@@ -175,8 +176,6 @@ const Share: React.FC = () => {
 
     setUploading(true);
     const { title, description, image, draft, toolsUsed, tags } = data;
-
-    console.log('Draft: ', draft);
 
     // check if draft is allowed file format
     const draftFileFormat = draft && draft[0]?.name.split('.').pop();

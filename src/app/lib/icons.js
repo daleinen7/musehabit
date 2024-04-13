@@ -22,8 +22,8 @@ import { MdOpenInFull } from 'react-icons/md';
 
 const icons = {
   close: <IoClose />,
-  bookmark: <FaRegBookmark className=" text-xl" />,
-  bookmarked: <FaBookmark className=" text-xl" />,
+  bookmark: <FaRegBookmark className=" text-2xl" />,
+  bookmarked: <FaBookmark className=" text-2xl" />,
   link: <IoMdLink />,
   plus: <FiPlus className="" />,
   comment: <MdComment />,

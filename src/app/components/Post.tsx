@@ -25,7 +25,7 @@ const Post = ({ post }: { post: PostType }) => {
     toolsUsed,
     tags,
   } = post;
-  const { username, displayName, location, photoURL, medium } = posterData;
+  const { username, displayName, pronouns, photoURL, medium } = posterData;
   const [showLightbox, setShowLightbox] = useState<boolean>(false);
   const [showComments, setShowComments] = useState(false);
   const [showEditDropdown, setShowEditDropdown] = useState(false);
@@ -161,15 +161,32 @@ const Post = ({ post }: { post: PostType }) => {
               </div>
             )}
           </div>
-          <div className="font-satoshi">
+          <div className="font-satoshi flex flex-col gap-2">
             <Link
               href={`/artist/${username}`}
               className=" text-2xl hover:text-light-purple transition-all ease-in-out"
             >
               {displayName ?? username}
             </Link>
-            <div className="text-sm">
-              {[medium, location, postedAt].filter(Boolean).join(' | ')}
+            <div className="flex gap-2 text-sm items-center">
+              {medium && (
+                <span className="flex gap-2 items-center text-light-gray">
+                  <span className="text-xl">{icon.design}</span> {medium}
+                </span>
+              )}
+              {medium && pronouns && <span className="text-xl"> | </span>}
+              {pronouns && (
+                <span className="flex gap-2 items-center text-light-gray">
+                  <Image
+                    src="/pronouns.svg"
+                    alt="pronouns"
+                    height={22}
+                    width={22}
+                    key="pronouns"
+                  />
+                  {pronouns}
+                </span>
+              )}
             </div>
           </div>
           {user && user.uid !== posterData.uid && (
@@ -179,55 +196,72 @@ const Post = ({ post }: { post: PostType }) => {
           )}
         </div>
         <div className="flex items-center">
-          <div className="font-satoshi text-2xl font-medium">{title}</div>
+          <div className="flex flex-col gap-2">
+            <Link
+              href={`/post/${id}`}
+              className="font-satoshi text-2xl font-medium hover:text-light-purple transition-all ease-in-out"
+            >
+              {title}
+            </Link>
+            <div className="text-light-gray text-sm">{postedAt}</div>
+          </div>
           {user && user.uid !== posterData.uid && (
             <div className="ml-auto flex gap-5">
               <SaveButton postUid={id} />
             </div>
           )}
           {user && user.uid === posterData.uid && (
-            <div className="ml-auto flex gap-5 relative">
-              <button onClick={toggleEditDropdown}>{icon.dots}</button>
-              {showEditDropdown && (
-                <div className="absolute right-10 -top-6 bg-light-gray text-dark hover:text-black rounded-lg shadow-lg p-4">
-                  <Link
-                    href={`/edit-post/${id}`}
-                    className="hover:text-dark-gray"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={toggleDeleteModal}
-                    className="hover:text-dark-gray"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
+            <>
+              <div className="ml-auto flex gap-5 relative">
+                <button onClick={toggleEditDropdown}>{icon.dots}</button>
+                {showEditDropdown && (
+                  <div className="absolute right-10 -top-6 bg-light-gray text-dark hover:text-black rounded-lg shadow-lg p-4">
+                    <Link
+                      href={`/edit-post/${id}`}
+                      className="hover:text-dark-gray"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={toggleDeleteModal}
+                      className="hover:text-dark-gray"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
           )}
+
           {showDeleteModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-dark-gray text-light-gray p-4 rounded-lg shadow-lg max-w-[40rem] flex flex-col gap-4">
-                <p className="text-xl font-bold">
+              <div className="bg-light-gray text-dark p-4 rounded-lg shadow-lg max-w-[40rem] flex flex-col gap-4">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="ml-auto -mb-4 text-dark hover:text-dark-gray"
+                >
+                  {icon.close}
+                </button>
+                <p className="text-2xl font-bold text-center">
                   Are you sure you want to delete this post?
                 </p>
-                <p>
+                <p className="text-center">
                   This action is irreversible. If this post was uploaded within
                   the last 30 days before your next scheduled post, deleting it
                   will prevent you from posting again until your next scheduled
                   window for sharing.
                 </p>
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-center mt-4">
                   <button
-                    className="mr-2"
+                    className="mr-2 border border-dark rounded-md px-12 py-2 text-dark hover:bg-dark hover:text-white hover:transition-all hover:duration-400 hover:ease-in-out"
                     onClick={() => setShowDeleteModal(false)}
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleDeletePost}
-                    className="bg-coral text-white px-4 py-2 rounded-lg"
+                    className="bg-coral text-white px-12 py-2 rounded-lg hover:bg-colral-h hover:transition-all hover:duration-400 hover:text-dark hover:ease-in-out"
                   >
                     Delete
                   </button>
