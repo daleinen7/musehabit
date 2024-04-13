@@ -129,16 +129,29 @@ const Profile = ({ params }: { params: any }) => {
               [icons.pin, artist.location],
               [
                 icons.link,
-                <a
-                  key="website-link"
-                  className="hover:text-light-purple"
-                  href={artist.website}
-                >
-                  {artist.website}
-                </a>,
+                artist.website && (
+                  <a
+                    key="website-link"
+                    className="hover:text-light-purple"
+                    href={artist.website}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {artist.website}
+                  </a>
+                ),
               ],
               [icons.design, artist.medium],
-              [icons.countingworkspro, artist.pronouns],
+              [
+                <Image
+                  src="/pronouns.svg"
+                  alt="pronouns"
+                  height={22}
+                  width={22}
+                  key="pronouns"
+                />,
+                artist.pronouns,
+              ],
             ].map(
               ([icon, text], idx) =>
                 text && (
