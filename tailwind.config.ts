@@ -13,6 +13,11 @@ const config: Config = {
       hepta: ['var(--font-hepta)'],
     },
     extend: {
+      boxShadow: {
+        'input-shadow':
+          '0 1px 3px 0 rgb(120 30 30 / 0.9), 0 1px 2px -1px rgb(0 0 0 / 0.9)',
+      },
+
       colors: {
         dark: '#222222',
         light: '#f5f5f5',

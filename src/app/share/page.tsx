@@ -436,7 +436,7 @@ const ShareInput = ({
       {label !== 'Draft' && label}
       {type === 'textarea' ? (
         <textarea
-          className="p-2 my-2 shadow border border-input-gray text-light-gray bg-dark-gray rounded-md min-h-[22rem]"
+          className="p-2 my-2 input-shadow border border-input-gray text-light-gray bg-medium-gray rounded-md min-h-[22rem]"
           {...register(input)}
         />
       ) : type === 'select' ? (
@@ -512,7 +512,7 @@ const ShareInput = ({
         </>
       ) : (
         <input
-          className="p-2 my-2 shadow border border-input-gray text-light-gray rounded-md bg-dark-gray"
+          className="p-2 my-2 input-shadow border border-input-gray text-light-gray rounded-md bg-medium-gray"
           type={type}
           {...register(input)}
         />

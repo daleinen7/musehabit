@@ -99,14 +99,19 @@ const Post = ({ post }: { post: PostType }) => {
     ),
     writing: (
       <>
-        <div
+        <button
           onClick={() => setShowLightbox(true)}
           tabIndex={0}
           aria-label="expand writing post"
-          className="px-12 my-8 line-clamp-5 font-hepta whitespace-pre-wrap text-2xl font-medium hover:cursor-pointer rounded hover:bg-slate-300 hover:transition-all hover:duration-400 hover:ease-in-out"
+          className="hover:bg-medium-gray hover:transition-all hover:duration-400 hover:ease-in-out rounded-xl"
         >
-          {post.post}
-        </div>
+          <div className="px-12 mt-8 mb-4 line-clamp-5 font-hepta text-left text-2xl font-medium hover:cursor-pointer rounded hover:bg-medium-gray hover:transition-all hover:duration-400 hover:ease-in-out">
+            {post.post}
+          </div>
+          <div className="text-xl px-4 pb-4 w-full flex justify-end">
+            {icon.expand}
+          </div>
+        </button>
         {showLightbox && (
           <div
             className="fixed inset-0 z-50 bg-black bg-opacity-50  flex whitespace-pre-wrap justify-center items-center"
