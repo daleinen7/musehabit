@@ -54,7 +54,8 @@ const writeForm = [
     required: true,
   },
   {
-    label: 'Share a short writing example!',
+    label:
+      'Share a short writing example! (hint: the input allows for markdown! https://www.markdownguide.org/cheat-sheet/)',
     input: 'post',
     type: 'textarea',
     required: true,
