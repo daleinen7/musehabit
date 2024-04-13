@@ -18,6 +18,7 @@ import { MdOutlineDesignServices } from 'react-icons/md';
 import { IoMdTrash } from 'react-icons/io';
 import { IoMdLink } from 'react-icons/io';
 import { SiCountingworkspro } from 'react-icons/si';
+import { MdOpenInFull } from 'react-icons/md';
 
 const icons = {
   close: <IoClose />,
@@ -40,6 +41,7 @@ const icons = {
   pin: <IoIosPin />,
   user: <FaUser />,
   countingworkspro: <SiCountingworkspro />,
+  expand: <MdOpenInFull />,
 };
 
 export default icons;
