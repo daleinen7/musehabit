@@ -161,7 +161,7 @@ const Post = ({ post }: { post: PostType }) => {
               </div>
             )}
           </div>
-          <div className="font-satoshi">
+          <div className="font-satoshi flex flex-col gap-2">
             <Link
               href={`/artist/${username}`}
               className=" text-2xl hover:text-light-purple transition-all ease-in-out"

@@ -113,7 +113,7 @@ export default function Home() {
         )}
 
         {user ? (
-          <div className="w-full width-wrapper flex text-xl font-hepta text-center font-bold mt-8">
+          <div className="w-full max-w-3xl mx-auto flex text-xl font-hepta text-center font-bold mt-8">
             <button
               className={`w-full border-b border-b-light-gray rounded-t-[6px] py-4 ${
                 selectedFeed === 'global'

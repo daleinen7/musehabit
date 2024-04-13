@@ -165,7 +165,7 @@ const Profile = ({ params }: { params: any }) => {
         </div>
       )}
       {artist && user && user.uid === artist.uid && (
-        <div className="w-full width-wrapper flex text-xl font-hepta text-center font-bold my-8">
+        <div className="w-full max-w-3xl flex text-xl font-hepta text-center font-bold my-8">
           <button
             className={`w-full border-b rounded-t-[6px] border-b-light-gray py-4 ${
               selectedFeed === 'myPosts'

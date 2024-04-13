@@ -18,6 +18,10 @@
   @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white border-light-gray hover:border-medium-gray hover:bg-medium-gray;
 }
 
+.btn-post {
+  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-purple hover:bg-light-purple;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

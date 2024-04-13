@@ -117,7 +117,7 @@ const Nav = () => {
               </NavItem>
               {canPost ? (
                 <li className="relative">
-                  <Link href="/share" className="btn btn-secondary">
+                  <Link href="/share" className="btn btn-post">
                     Make Your Post
                   </Link>
                   <div className="absolute -top-3 right-0 bg-red-600 text-white rounded-[10px] px-[3px] -py-1">
