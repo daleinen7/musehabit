@@ -19,12 +19,14 @@ import {
   where,
   doc,
   setDoc,
+  orderBy,
 } from 'firebase/firestore';
 import slugify from '@/app/lib/slugify';
 import { useRouter } from 'next/navigation';
-import { UserType } from '@/app/lib/types';
+import { UserType, ArtistType, NotificationType } from '@/app/lib/types';
 import { canUserPost } from '../lib/canUserPost';
 import { daysUntilNextPost as daysUntilPost } from '../lib/daysUntilNextPost';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 type AuthContextType = {
   user: UserType | null;
@@ -228,6 +230,7 @@ export const AuthContextProvider = ({
                   defaultFeed: 'global',
                 },
               },
+              notifications: [],
             });
             // User has never posted so allow them to
             setCanPost(true);
@@ -375,6 +378,38 @@ export const AuthContextProvider = ({
         await setDaysUntilNextPost(daysUntilNextPostCheck.daysUntilNextPost);
 
         const profileData = userDoc.data();
+
+        const notificationsRef = collection(
+          firestore,
+          `users/${user.uid}/notifications`
+        );
+        const notificationsQuery = query(
+          notificationsRef,
+          orderBy('timestamp', 'desc')
+        );
+
+        const notificationsSnapshot = await getDocs(notificationsQuery);
+
+        const notificationsData: NotificationType[] = [];
+
+        for (const docSnapshot of notificationsSnapshot.docs) {
+          const notificationData = docSnapshot.data() as NotificationType;
+          const followerProfileRef = doc(
+            firestore,
+            'users',
+            notificationData.followerId || ''
+          );
+
+          const followerProfileSnapshot = await getDoc(followerProfileRef);
+
+          if (followerProfileSnapshot.exists()) {
+            const followerProfile =
+              followerProfileSnapshot.data() as ArtistType;
+            notificationData.followerProfile = followerProfile;
+          }
+          notificationsData.push(notificationData);
+        }
+
         setUser({
           uid: user.uid,
           email: user.email || '',
@@ -406,6 +441,7 @@ export const AuthContextProvider = ({
               defaultFeed: profileData?.settings?.defaultFeed || 'global',
             },
           },
+          notifications: notificationsData,
         });
       } else {
         setUser(null);

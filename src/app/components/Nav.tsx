@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/app/context/AuthContext';
 import useClickOutside from '@/app/lib/useClickOutside';
+import { NotificationType } from '@/app/lib/types';
 import icons from '@/app/lib/icons';
 
 type NavItem = {
@@ -38,6 +39,7 @@ const Nav = () => {
   const { user, signOut, canPost, daysUntilNextPost } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const handleLogOut = async () => {
     try {
@@ -59,7 +61,13 @@ const Nav = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleShowNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
   useClickOutside(wrapperRef, () => setIsMobileMenuOpen(false));
+
+  console.log('Notifications: ', user && user.notifications);
 
   return (
     <nav className="bg-black py-3" ref={wrapperRef}>
@@ -70,7 +78,7 @@ const Nav = () => {
           </Link>
         </li>
         {/* DESKTOP NAV */}
-        <div className="hidden  sm:flex gap-6 items-center ">
+        <div className="hidden relative sm:flex gap-6 items-center ">
           <NavItem url="/about" text="About" />
           {!user && (
             <>
@@ -115,6 +123,73 @@ const Nav = () => {
                   </ul>
                 )}
               </NavItem>
+
+              <button
+                onClick={handleShowNotifications}
+                className="text-xl text-light-gray hover:text-white"
+              >
+                {icons.bell}
+              </button>
+
+              {showNotifications && (
+                <div className="absolute w-[30rem] top-12 right-24 mt-2 bg-white shadow-lg text-dark p-4 z-50 rounded-md">
+                  <h2 className="text-xl">Notifications</h2>
+                  {user.notifications && user.notifications.length === 0 && (
+                    <li className="text-dark-gray">No new notifications</li>
+                  )}
+                  {user.notifications &&
+                    user.notifications.map((notification: NotificationType) => {
+                      const notificationDate = new Date(notification.timestamp);
+                      const now = new Date().getTime();
+                      const diffInMilliseconds =
+                        now - notificationDate.getTime();
+                      const hoursSinceNotification = Math.floor(
+                        diffInMilliseconds / (1000 * 60 * 60)
+                      );
+
+                      const displayString =
+                        hoursSinceNotification < 24
+                          ? `${hoursSinceNotification} hrs`
+                          : `${Math.floor(hoursSinceNotification / 24)} days`;
+
+                      return notification.type === 'follow' ? (
+                        <li key={notification.timestamp}>
+                          <Link
+                            href={`/artist/${notification.followerProfile.username}`}
+                            className="text-dark hover:bg-light-purple transition-colors flex justify-between py-3 px-1"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{icons.user}</span>
+                              <span className="font-bold">
+                                {notification.followerProfile.username}
+                              </span>{' '}
+                              has followed you.
+                            </div>
+                            <span className="text-sm">
+                              {displayString} ago
+                              {notification.read && (
+                                <span className="text-xs text-light-gray">
+                                  {' '}
+                                  (read)
+                                </span>
+                              )}
+                            </span>
+                          </Link>
+                        </li>
+                      ) : (
+                        <li key={notification.timestamp}>
+                          <Link
+                            href={`/artist/${notification.followerId}`}
+                            className="text-dark-gray hover:text-light-purple"
+                          >
+                            New comment on your post
+                          </Link>
+                        </li>
+                      );
+                    })}
+                </div>
+              )}
+
               {canPost ? (
                 <li className="relative">
                   <Link href="/share" className="btn btn-post">
