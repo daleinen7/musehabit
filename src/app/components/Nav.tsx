@@ -5,6 +5,8 @@ import { useAuth } from '@/app/context/AuthContext';
 import useClickOutside from '@/app/lib/useClickOutside';
 import { NotificationType } from '@/app/lib/types';
 import icons from '@/app/lib/icons';
+import { firestore } from '@/app/lib/firebase';
+import { collection, doc, deleteDoc } from 'firebase/firestore';
 
 type NavItem = {
   url?: string;
@@ -67,6 +69,23 @@ const Nav = () => {
 
   useClickOutside(wrapperRef, () => setIsMobileMenuOpen(false));
 
+  const removeNotification = async (notificationId: string) => {
+    if (!user || !notificationId) return;
+
+    const notificationsRef = collection(
+      firestore,
+      `users/${user.uid}/notifications`
+    );
+
+    const notificationDocRef = doc(notificationsRef, notificationId);
+
+    try {
+      // Remove the notification from the database
+      await deleteDoc(notificationDocRef);
+    } catch (error) {
+      console.error('Error removing notification:', error);
+    }
+  };
   console.log('Notifications: ', user && user.notifications);
 
   return (
@@ -157,6 +176,7 @@ const Nav = () => {
                           <Link
                             href={`/artist/${notification.followerProfile.username}`}
                             className="text-dark hover:bg-light-purple transition-colors flex justify-between py-3 px-1"
+                            onClick={() => removeNotification(notification.uid)}
                           >
                             <div className="flex items-center gap-2">
                               <span className="text-lg">{icons.user}</span>
@@ -165,15 +185,7 @@ const Nav = () => {
                               </span>{' '}
                               has followed you.
                             </div>
-                            <span className="text-sm">
-                              {displayString} ago
-                              {notification.read && (
-                                <span className="text-xs text-light-gray">
-                                  {' '}
-                                  (read)
-                                </span>
-                              )}
-                            </span>
+                            <span className="text-sm">{displayString}</span>
                           </Link>
                         </li>
                       ) : (

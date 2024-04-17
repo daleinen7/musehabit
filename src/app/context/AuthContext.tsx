@@ -402,6 +402,9 @@ export const AuthContextProvider = ({
 
           const followerProfileSnapshot = await getDoc(followerProfileRef);
 
+          //add uid to notificationData
+          notificationData.uid = docSnapshot.id;
+
           if (followerProfileSnapshot.exists()) {
             const followerProfile =
               followerProfileSnapshot.data() as ArtistType;

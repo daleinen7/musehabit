@@ -87,6 +87,7 @@ export type NotificationType = {
   timestamp: number;
   read: boolean;
   followerProfile: ArtistType;
+  uid: string;
 };
 
 export type CommentType = {
