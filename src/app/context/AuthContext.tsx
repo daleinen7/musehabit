@@ -379,6 +379,8 @@ export const AuthContextProvider = ({
 
         const profileData = userDoc.data();
 
+        console.log('user: ', user.uid);
+
         const notificationsRef = collection(
           firestore,
           `users/${user.uid}/notifications`
@@ -394,23 +396,52 @@ export const AuthContextProvider = ({
 
         for (const docSnapshot of notificationsSnapshot.docs) {
           const notificationData = docSnapshot.data() as NotificationType;
-          const followerProfileRef = doc(
-            firestore,
-            'users',
-            notificationData.followerId || ''
-          );
 
-          const followerProfileSnapshot = await getDoc(followerProfileRef);
+          if (notificationData.type === 'comment') {
+            console.log('What the fuck ever man');
 
-          //add uid to notificationData
-          notificationData.uid = docSnapshot.id;
+            // const postRef = doc(
+            //   firestore,
+            //   'posts',
+            //   notificationData.postId || ''
+            // );
+            // const postSnapshot = await getDoc(postRef);
 
-          if (followerProfileSnapshot.exists()) {
-            const followerProfile =
-              followerProfileSnapshot.data() as ArtistType;
-            notificationData.followerProfile = followerProfile;
+            // if (postSnapshot.exists()) {
+            //   const postData = postSnapshot.data();
+            //   notificationData.postData = postData;
+            // }
+
+            // const commentRef = doc(
+            //   firestore,
+            //   `posts/${notificationData.postId}/comments`,
+            //   notificationData.commentId || ''
+            // );
+            // const commentSnapshot = await getDoc(commentRef);
+
+            // if (commentSnapshot.exists()) {
+            //   const commentData = commentSnapshot.data();
+            //   notificationData.commentData = commentData;
+            // }
+          } else if (notificationData.type === 'follow') {
+            const followerProfileRef = doc(
+              firestore,
+              'users',
+              notificationData.followerId || ''
+            );
+
+            const followerProfileSnapshot = await getDoc(followerProfileRef);
+
+            //add uid to notificationData
+            notificationData.uid = docSnapshot.id;
+
+            if (followerProfileSnapshot.exists()) {
+              const followerProfile =
+                followerProfileSnapshot.data() as ArtistType;
+              notificationData.followerProfile = followerProfile;
+            }
+            notificationsData.push(notificationData);
           }
-          notificationsData.push(notificationData);
         }
 
         setUser({
@@ -444,7 +475,8 @@ export const AuthContextProvider = ({
               defaultFeed: profileData?.settings?.defaultFeed || 'global',
             },
           },
-          notifications: notificationsData,
+          // notifications: notificationsData,
+          notifications: [],
         });
       } else {
         setUser(null);

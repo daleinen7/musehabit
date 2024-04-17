@@ -86,7 +86,6 @@ const Nav = () => {
       console.error('Error removing notification:', error);
     }
   };
-  console.log('Notifications: ', user && user.notifications);
 
   return (
     <nav className="bg-black py-3" ref={wrapperRef}>

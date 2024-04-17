@@ -107,8 +107,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     }
   };
 
-  console.log('post: ', post);
-
   return (
     (user || comments.length > 0) && (
       <div className="comments-section py-8 border-t-[1px] border-b-[1px] border-medium-gray-h">
