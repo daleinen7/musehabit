@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
 import { firestore } from '@/app/lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
@@ -29,8 +29,22 @@ const FollowButton = ({ artistUid }: { artistUid: string }) => {
       if (!followingData.following) {
         followingData.following = {};
       }
+
       followingData.following[artistUid] = true;
       setIsFollowing(true);
+
+      // Add notification to artist's notifications
+      const notificationRef = collection(
+        firestore,
+        `users/${artistUid}/notifications`
+      );
+      const notificationData = {
+        type: 'follow',
+        followerId: user.uid,
+        timestamp: Date.now(),
+      };
+
+      await addDoc(notificationRef, notificationData);
     }
 
     await updateDoc(followingRef, followingData);

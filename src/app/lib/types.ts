@@ -59,6 +59,8 @@ export type UserType = {
       defaultFeed?: 'global' | 'following';
     };
   };
+  // notifications?: NotificationType[];
+  notifications: any;
 };
 
 export type ArtistType = {
@@ -75,6 +77,18 @@ export type ArtistType = {
   website: string;
   pronouns: string;
   posts: { [postId: string]: boolean };
+};
+
+export type NotificationType = {
+  type: 'comment' | 'follow';
+  postId?: string;
+  commentId?: string;
+  followerId?: string;
+  timestamp: number;
+  read: boolean;
+  followerProfile?: ArtistType;
+  post?: PostType;
+  uid: string;
 };
 
 export type CommentType = {

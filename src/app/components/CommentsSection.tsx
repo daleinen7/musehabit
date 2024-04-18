@@ -86,6 +86,19 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
       commentData.commenterProfile = user.profile;
 
+      // Add notification to artist's notifications
+      const notificationRef = collection(
+        firestore,
+        `users/${post.posterData.uid}/notifications`
+      );
+      const notificationData = {
+        type: 'comment',
+        postId: post.id,
+        timestamp: Date.now(),
+      };
+
+      await addDoc(notificationRef, notificationData);
+
       setComments([...comments, commentData]);
       // Clear the input field after posting the comment
       setNewComment('');

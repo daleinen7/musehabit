@@ -19,12 +19,19 @@ import {
   where,
   doc,
   setDoc,
+  orderBy,
 } from 'firebase/firestore';
 import slugify from '@/app/lib/slugify';
 import { useRouter } from 'next/navigation';
-import { UserType } from '@/app/lib/types';
+import {
+  UserType,
+  ArtistType,
+  NotificationType,
+  PostType,
+} from '@/app/lib/types';
 import { canUserPost } from '../lib/canUserPost';
 import { daysUntilNextPost as daysUntilPost } from '../lib/daysUntilNextPost';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 type AuthContextType = {
   user: UserType | null;
@@ -228,6 +235,7 @@ export const AuthContextProvider = ({
                   defaultFeed: 'global',
                 },
               },
+              notifications: [],
             });
             // User has never posted so allow them to
             setCanPost(true);
@@ -375,6 +383,61 @@ export const AuthContextProvider = ({
         await setDaysUntilNextPost(daysUntilNextPostCheck.daysUntilNextPost);
 
         const profileData = userDoc.data();
+
+        const notificationsRef = collection(
+          firestore,
+          `users/${user.uid}/notifications`
+        );
+        const notificationsQuery = query(
+          notificationsRef,
+          orderBy('timestamp', 'desc')
+        );
+
+        const notificationsSnapshot = await getDocs(notificationsQuery);
+
+        const notificationsData: NotificationType[] = [];
+
+        for (const docSnapshot of notificationsSnapshot.docs) {
+          const notificationData = docSnapshot.data() as NotificationType;
+
+          if (notificationData.type === 'comment') {
+            const postRef = doc(
+              firestore,
+              'posts',
+              notificationData.postId || ''
+            );
+
+            const postSnapshot = await getDoc(postRef);
+
+            //add uid to notificationData
+            notificationData.uid = docSnapshot.id;
+
+            if (postSnapshot.exists()) {
+              const post = postSnapshot.data();
+              notificationData.post = post as PostType;
+            }
+            notificationsData.push(notificationData);
+          } else if (notificationData.type === 'follow') {
+            const followerProfileRef = doc(
+              firestore,
+              'users',
+              notificationData.followerId || ''
+            );
+
+            const followerProfileSnapshot = await getDoc(followerProfileRef);
+
+            //add uid to notificationData
+            notificationData.uid = docSnapshot.id;
+
+            if (followerProfileSnapshot.exists()) {
+              const followerProfile =
+                followerProfileSnapshot.data() as ArtistType;
+              notificationData.followerProfile = followerProfile;
+            }
+            notificationsData.push(notificationData);
+          }
+        }
+
         setUser({
           uid: user.uid,
           email: user.email || '',
@@ -406,6 +469,7 @@ export const AuthContextProvider = ({
               defaultFeed: profileData?.settings?.defaultFeed || 'global',
             },
           },
+          notifications: notificationsData,
         });
       } else {
         setUser(null);

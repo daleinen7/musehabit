@@ -3,7 +3,10 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/app/context/AuthContext';
 import useClickOutside from '@/app/lib/useClickOutside';
+import { NotificationType } from '@/app/lib/types';
 import icons from '@/app/lib/icons';
+import { firestore } from '@/app/lib/firebase';
+import { collection, doc, deleteDoc } from 'firebase/firestore';
 
 type NavItem = {
   url?: string;
@@ -38,6 +41,7 @@ const Nav = () => {
   const { user, signOut, canPost, daysUntilNextPost } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const handleLogOut = async () => {
     try {
@@ -50,6 +54,7 @@ const Nav = () => {
 
   const wrapperRef = useRef(null);
   useClickOutside(wrapperRef, () => setShowProfile(false));
+  useClickOutside(wrapperRef, () => setShowNotifications(false));
 
   const handleDropdown = () => {
     setShowProfile(!showProfile);
@@ -59,7 +64,29 @@ const Nav = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleShowNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
   useClickOutside(wrapperRef, () => setIsMobileMenuOpen(false));
+
+  const removeNotification = async (notificationId: string) => {
+    if (!user || !notificationId) return;
+
+    const notificationsRef = collection(
+      firestore,
+      `users/${user.uid}/notifications`
+    );
+
+    const notificationDocRef = doc(notificationsRef, notificationId);
+
+    try {
+      // Remove the notification from the database
+      await deleteDoc(notificationDocRef);
+    } catch (error) {
+      console.error('Error removing notification:', error);
+    }
+  };
 
   return (
     <nav className="bg-black py-3" ref={wrapperRef}>
@@ -70,7 +97,7 @@ const Nav = () => {
           </Link>
         </li>
         {/* DESKTOP NAV */}
-        <div className="hidden  sm:flex gap-6 items-center ">
+        <div className="hidden relative sm:flex gap-6 items-center ">
           <NavItem url="/about" text="About" />
           {!user && (
             <>
@@ -115,6 +142,77 @@ const Nav = () => {
                   </ul>
                 )}
               </NavItem>
+
+              <button
+                onClick={handleShowNotifications}
+                className="text-xl text-light-gray hover:text-white"
+              >
+                {icons.bell}
+              </button>
+
+              {showNotifications && (
+                <div
+                  className="absolute w-[30rem] top-12 right-24 mt-2 bg-white shadow-lg text-dark p-4 z-50 rounded-md"
+                  ref={wrapperRef}
+                >
+                  <h2 className="text-xl">Notifications</h2>
+                  {user.notifications && user.notifications.length === 0 && (
+                    <li className="text-dark-gray">No new notifications</li>
+                  )}
+                  {user.notifications &&
+                    user.notifications.map((notification: NotificationType) => {
+                      const notificationDate = new Date(notification.timestamp);
+                      const now = new Date().getTime();
+                      const diffInMilliseconds =
+                        now - notificationDate.getTime();
+                      const hoursSinceNotification = Math.floor(
+                        diffInMilliseconds / (1000 * 60 * 60)
+                      );
+
+                      const displayString =
+                        hoursSinceNotification < 24
+                          ? `${hoursSinceNotification} hrs`
+                          : `${Math.floor(hoursSinceNotification / 24)} days`;
+
+                      return notification.type === 'follow' ? (
+                        <li key={notification.timestamp}>
+                          <Link
+                            href={`/artist/${notification.followerProfile?.username}`}
+                            className="text-dark hover:bg-light-purple transition-colors flex justify-between py-3 px-1 rounded"
+                            onClick={() => removeNotification(notification.uid)}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{icons.user}</span>
+                              <span className="font-bold">
+                                {notification.followerProfile?.username}
+                              </span>{' '}
+                              has followed you
+                            </div>
+                            <span className="text-sm">{displayString}</span>
+                          </Link>
+                        </li>
+                      ) : (
+                        <li key={notification.timestamp}>
+                          <Link
+                            href={`/post/${notification.postId}`}
+                            className="text-dark-gray hover:bg-light-purple transition-colors flex justify-between py-3 px-1 rounded"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{icons.comment}</span>
+                              New comment on your post &quot;
+                              <span className="font-bold">
+                                {notification.post?.title}
+                              </span>
+                              &quot;
+                            </div>
+                            <span className="text-sm">{displayString}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                </div>
+              )}
+
               {canPost ? (
                 <li className="relative">
                   <Link href="/share" className="btn btn-post">
