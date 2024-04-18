@@ -23,7 +23,12 @@ import {
 } from 'firebase/firestore';
 import slugify from '@/app/lib/slugify';
 import { useRouter } from 'next/navigation';
-import { UserType, ArtistType, NotificationType } from '@/app/lib/types';
+import {
+  UserType,
+  ArtistType,
+  NotificationType,
+  PostType,
+} from '@/app/lib/types';
 import { canUserPost } from '../lib/canUserPost';
 import { daysUntilNextPost as daysUntilPost } from '../lib/daysUntilNextPost';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
@@ -379,8 +384,6 @@ export const AuthContextProvider = ({
 
         const profileData = userDoc.data();
 
-        console.log('user: ', user.uid);
-
         const notificationsRef = collection(
           firestore,
           `users/${user.uid}/notifications`
@@ -398,31 +401,22 @@ export const AuthContextProvider = ({
           const notificationData = docSnapshot.data() as NotificationType;
 
           if (notificationData.type === 'comment') {
-            console.log('What the fuck ever man');
+            const postRef = doc(
+              firestore,
+              'posts',
+              notificationData.postId || ''
+            );
 
-            // const postRef = doc(
-            //   firestore,
-            //   'posts',
-            //   notificationData.postId || ''
-            // );
-            // const postSnapshot = await getDoc(postRef);
+            const postSnapshot = await getDoc(postRef);
 
-            // if (postSnapshot.exists()) {
-            //   const postData = postSnapshot.data();
-            //   notificationData.postData = postData;
-            // }
+            //add uid to notificationData
+            notificationData.uid = docSnapshot.id;
 
-            // const commentRef = doc(
-            //   firestore,
-            //   `posts/${notificationData.postId}/comments`,
-            //   notificationData.commentId || ''
-            // );
-            // const commentSnapshot = await getDoc(commentRef);
-
-            // if (commentSnapshot.exists()) {
-            //   const commentData = commentSnapshot.data();
-            //   notificationData.commentData = commentData;
-            // }
+            if (postSnapshot.exists()) {
+              const post = postSnapshot.data();
+              notificationData.post = post as PostType;
+            }
+            notificationsData.push(notificationData);
           } else if (notificationData.type === 'follow') {
             const followerProfileRef = doc(
               firestore,
@@ -475,8 +469,7 @@ export const AuthContextProvider = ({
               defaultFeed: profileData?.settings?.defaultFeed || 'global',
             },
           },
-          // notifications: notificationsData,
-          notifications: [],
+          notifications: notificationsData,
         });
       } else {
         setUser(null);

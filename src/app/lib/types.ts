@@ -86,7 +86,8 @@ export type NotificationType = {
   followerId?: string;
   timestamp: number;
   read: boolean;
-  followerProfile: ArtistType;
+  followerProfile?: ArtistType;
+  post?: PostType;
   uid: string;
 };
 

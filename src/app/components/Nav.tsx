@@ -54,6 +54,7 @@ const Nav = () => {
 
   const wrapperRef = useRef(null);
   useClickOutside(wrapperRef, () => setShowProfile(false));
+  useClickOutside(wrapperRef, () => setShowNotifications(false));
 
   const handleDropdown = () => {
     setShowProfile(!showProfile);
@@ -150,7 +151,10 @@ const Nav = () => {
               </button>
 
               {showNotifications && (
-                <div className="absolute w-[30rem] top-12 right-24 mt-2 bg-white shadow-lg text-dark p-4 z-50 rounded-md">
+                <div
+                  className="absolute w-[30rem] top-12 right-24 mt-2 bg-white shadow-lg text-dark p-4 z-50 rounded-md"
+                  ref={wrapperRef}
+                >
                   <h2 className="text-xl">Notifications</h2>
                   {user.notifications && user.notifications.length === 0 && (
                     <li className="text-dark-gray">No new notifications</li>
@@ -173,16 +177,16 @@ const Nav = () => {
                       return notification.type === 'follow' ? (
                         <li key={notification.timestamp}>
                           <Link
-                            href={`/artist/${notification.followerProfile.username}`}
-                            className="text-dark hover:bg-light-purple transition-colors flex justify-between py-3 px-1"
+                            href={`/artist/${notification.followerProfile?.username}`}
+                            className="text-dark hover:bg-light-purple transition-colors flex justify-between py-3 px-1 rounded"
                             onClick={() => removeNotification(notification.uid)}
                           >
                             <div className="flex items-center gap-2">
                               <span className="text-lg">{icons.user}</span>
                               <span className="font-bold">
-                                {notification.followerProfile.username}
+                                {notification.followerProfile?.username}
                               </span>{' '}
-                              has followed you.
+                              has followed you
                             </div>
                             <span className="text-sm">{displayString}</span>
                           </Link>
@@ -190,10 +194,18 @@ const Nav = () => {
                       ) : (
                         <li key={notification.timestamp}>
                           <Link
-                            href={`/artist/${notification.followerId}`}
-                            className="text-dark-gray hover:text-light-purple"
+                            href={`/post/${notification.postId}`}
+                            className="text-dark-gray hover:bg-light-purple transition-colors flex justify-between py-3 px-1 rounded"
                           >
-                            New comment on your post
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{icons.comment}</span>
+                              New comment on your post &quot;
+                              <span className="font-bold">
+                                {notification.post?.title}
+                              </span>
+                              &quot;
+                            </div>
+                            <span className="text-sm">{displayString}</span>
                           </Link>
                         </li>
                       );
