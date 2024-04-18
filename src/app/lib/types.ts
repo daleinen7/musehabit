@@ -83,6 +83,8 @@ export type NotificationType = {
   type: 'comment' | 'follow';
   postId?: string;
   commentId?: string;
+  commenterId?: string;
+  commenterUsername?: string;
   followerId?: string;
   timestamp: number;
   read: boolean;

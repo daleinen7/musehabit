@@ -401,21 +401,23 @@ export const AuthContextProvider = ({
           const notificationData = docSnapshot.data() as NotificationType;
 
           if (notificationData.type === 'comment') {
-            const postRef = doc(
-              firestore,
-              'posts',
-              notificationData.postId || ''
-            );
-
-            const postSnapshot = await getDoc(postRef);
-
-            //add uid to notificationData
+            // Add uid to notificationData
             notificationData.uid = docSnapshot.id;
 
-            if (postSnapshot.exists()) {
-              const post = postSnapshot.data();
-              notificationData.post = post as PostType;
+            // Fetch commenter's username
+            const commenterId = notificationData.commenterId;
+            if (commenterId) {
+              const commenterProfileRef = doc(firestore, 'users', commenterId);
+              const commenterProfileSnapshot = await getDoc(
+                commenterProfileRef
+              );
+              if (commenterProfileSnapshot.exists()) {
+                const commenterProfileData = commenterProfileSnapshot.data();
+                notificationData.commenterUsername =
+                  commenterProfileData.username;
+              }
             }
+
             notificationsData.push(notificationData);
           } else if (notificationData.type === 'follow') {
             const followerProfileRef = doc(
@@ -426,7 +428,7 @@ export const AuthContextProvider = ({
 
             const followerProfileSnapshot = await getDoc(followerProfileRef);
 
-            //add uid to notificationData
+            // Add uid to notificationData
             notificationData.uid = docSnapshot.id;
 
             if (followerProfileSnapshot.exists()) {
