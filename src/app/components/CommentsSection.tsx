@@ -94,6 +94,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       const notificationData = {
         type: 'comment',
         postId: post.id,
+        commenterId: user.uid,
         timestamp: Date.now(),
       };
 

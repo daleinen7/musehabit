@@ -71,6 +71,7 @@ const Nav = () => {
   useClickOutside(wrapperRef, () => setIsMobileMenuOpen(false));
 
   const removeNotification = async (notificationId: string) => {
+    setShowNotifications(false);
     if (!user || !notificationId) return;
 
     const notificationsRef = collection(
@@ -196,14 +197,14 @@ const Nav = () => {
                           <Link
                             href={`/post/${notification.postId}`}
                             className="text-dark-gray hover:bg-light-purple transition-colors flex justify-between py-3 px-1 rounded"
+                            onClick={() => removeNotification(notification.uid)}
                           >
                             <div className="flex items-center gap-2">
                               <span className="text-lg">{icons.comment}</span>
-                              New comment on your post &quot;
                               <span className="font-bold">
-                                {notification.post?.title}
+                                {notification.commenterUsername}
                               </span>
-                              &quot;
+                              has commented on your post
                             </div>
                             <span className="text-sm">{displayString}</span>
                           </Link>
