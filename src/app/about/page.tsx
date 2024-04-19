@@ -15,7 +15,7 @@ const About = () => {
       </div>
       <div className="width-wrapper flex justify-start items-center gap-12 text-balance py-[4.375rem]">
         <div className="flex flex-col gap-4">
-          <h2 className="font-hepta font-bold text-5xl">about musehabit</h2>
+          <h2 className="font-hepta font-bold text-5xl">about the project</h2>
           <p>
             Musehabit is an online open-mic platform for artists of multiple
             disciplines to share their work and connect with other creatives. We
@@ -23,13 +23,10 @@ const About = () => {
             while utilizing the advantages and accessibility of the internet.
           </p>
         </div>
-        <Image
-          src={'https://picsum.photos/300/263'}
-          alt="placeholder"
-          width={300}
-          height={263}
-          className="rounded-3xl"
-        />
+        <video autoPlay loop muted className="rounded-3xl">
+          <source src="/CRTV_1.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
       <section className="width-wrapper flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12">
         <h3 className="font-satoshi text-4xl font-bold">how it works</h3>
@@ -143,7 +140,7 @@ const About = () => {
       </section>
       <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12 py-12">
         <h3 className="font-satoshi text-4xl font-bold">the team</h3>
-        <ul className="grid grid-cols-3 gap-2">
+        <ul className="grid grid-cols-4 gap-2">
           <li>
             <TeamMember name={'Doug'} role={'Developer/Founder'} />
           </li>
@@ -152,6 +149,9 @@ const About = () => {
           </li>
           <li>
             <TeamMember name={'Mark'} role={'Product Manager'} />
+          </li>
+          <li>
+            <TeamMember name={'Arthur'} role={'Logo Design'} />
           </li>
         </ul>
       </section>

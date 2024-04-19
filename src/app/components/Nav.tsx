@@ -38,7 +38,7 @@ const NavItem = ({ url, func, text, children, arrow }: NavItem) => (
 );
 
 const Nav = () => {
-  const { user, signOut, canPost, daysUntilNextPost } = useAuth();
+  const { user, setUser, signOut, canPost, daysUntilNextPost } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -84,8 +84,40 @@ const Nav = () => {
     try {
       // Remove the notification from the database
       await deleteDoc(notificationDocRef);
+
+      // Update the user object to remove the deleted notification
+      const updatedNotifications = user.notifications.filter(
+        (notification: NotificationType) => notification.uid !== notificationId
+      );
+      const updatedUser = { ...user, notifications: updatedNotifications };
+      setUser(updatedUser);
     } catch (error) {
       console.error('Error removing notification:', error);
+    }
+  };
+
+  const clearNotifications = async () => {
+    setShowNotifications(false);
+    if (!user) return;
+
+    const notificationsRef = collection(
+      firestore,
+      `users/${user.uid}/notifications`
+    );
+
+    try {
+      // Remove all notifications from the database
+      await Promise.all(
+        user.notifications.map(async (notification: any) => {
+          const notificationDocRef = doc(notificationsRef, notification.uid);
+          await deleteDoc(notificationDocRef);
+        })
+      );
+
+      const updatedUser = { ...user, notifications: [] };
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Error removing notifications:', error);
     }
   };
 
@@ -146,9 +178,14 @@ const Nav = () => {
 
               <button
                 onClick={handleShowNotifications}
-                className="text-xl text-light-gray hover:text-white"
+                className="text-xl text-light-gray hover:text-white relative"
               >
                 {icons.bell}
+                {user.notifications.length > 0 && (
+                  <div className="h-2 w-2 absolute -top-1 left-3 rounded-full bg-coral">
+                    <span className="sr-only">new notification</span>
+                  </div>
+                )}
               </button>
 
               {showNotifications && (
@@ -156,7 +193,17 @@ const Nav = () => {
                   className="absolute w-[30rem] top-12 right-24 mt-2 bg-white shadow-lg text-dark p-4 z-50 rounded-md"
                   ref={wrapperRef}
                 >
-                  <h2 className="text-xl">Notifications</h2>
+                  <div className="flex justify-between">
+                    <h2 className="text-xl">Notifications</h2>
+                    {user.notifications.length > 0 && (
+                      <button
+                        className="underline"
+                        onClick={clearNotifications}
+                      >
+                        Clear All
+                      </button>
+                    )}
+                  </div>
                   {user.notifications && user.notifications.length === 0 && (
                     <li className="text-dark-gray">No new notifications</li>
                   )}
