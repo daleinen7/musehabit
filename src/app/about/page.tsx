@@ -24,7 +24,7 @@ const About = () => {
           </p>
         </div>
         <video autoPlay loop muted className="rounded-3xl">
-          <source src="/CRTV_1.mp4" type="video/mp4" />
+          <source src="/CRTV.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
