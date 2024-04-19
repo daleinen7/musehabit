@@ -170,7 +170,7 @@ const Profile = ({ params }: { params: any }) => {
             className={`w-full border-b rounded-t-[6px] border-b-light-gray py-4 ${
               selectedFeed === 'myPosts'
                 ? 'bg-light-gray text-dark'
-                : 'text-white'
+                : 'text-white font-normal'
             }`}
             onClick={() => setSelectedFeed('myPosts')}
           >
@@ -180,7 +180,7 @@ const Profile = ({ params }: { params: any }) => {
             className={`w-full border-b rounded-t-[6px] border-b-light-gray py-4 ${
               selectedFeed === 'savedPosts'
                 ? 'bg-light-gray text-dark'
-                : 'text-white'
+                : 'text-white font-normal'
             }`}
             onClick={() => setSelectedFeed('savedPosts')}
           >
