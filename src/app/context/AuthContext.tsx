@@ -29,7 +29,6 @@ import {
   NotificationType,
   PostType,
 } from '@/app/lib/types';
-import { canUserPost } from '../lib/canUserPost';
 import { daysUntilNextPost as daysUntilPost } from '../lib/daysUntilNextPost';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 
@@ -376,8 +375,8 @@ export const AuthContextProvider = ({
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userDoc = await getDoc(doc(firestore, 'users', user.uid));
-        const canPostCheck = await canUserPost(user.uid);
-        await setCanPost(canPostCheck);
+        const canPostCheck = await daysUntilPost(user.uid);
+        await setCanPost(canPostCheck.canPost);
         const daysUntilNextPostCheck = await daysUntilPost(user.uid);
 
         await setDaysUntilNextPost(daysUntilNextPostCheck.daysUntilNextPost);
