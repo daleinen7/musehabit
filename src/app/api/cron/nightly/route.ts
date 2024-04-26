@@ -24,9 +24,6 @@ export async function GET(request: NextRequest) {
     const latestPost = userDoc.data().latestPost;
     const settings = userDoc.data().settings;
 
-    const postedInLast30Days =
-      latestPost > Date.now() - 30 * 24 * 60 * 60 * 1000;
-
     // Call daysUntilNextPost and log results
     const { canPost, daysUntilNextPost } = await daysUntilPost(userId);
     console.log(
@@ -35,13 +32,11 @@ export async function GET(request: NextRequest) {
 
     // if days until next post is zero, send email
     if (daysUntilNextPost === 0) {
-      console.log(`User ${userName}'s day to post!`);
+      console.log(`User ${userName}'s last day to post!`);
+    }
 
-      if (!postedInLast30Days && settings.accountabilityNotice) {
-        console.log(`User ${userName} has not posted in the last 30 days`);
-      }
-
-      if (settings.thirtyDay) {
+    if (daysUntilNextPost === 30) {
+      if (settings?.thirtyDay) {
         console.log(`User ${userName} has accountability set to 30 days`);
 
         const email = await sendEmail(
