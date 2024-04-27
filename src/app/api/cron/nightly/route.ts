@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
   for (const userDoc of usersSnapshot.docs) {
     const userId = userDoc.id;
     const userName = userDoc.data().username;
-    const latestPost = userDoc.data().latestPost;
     const settings = userDoc.data().settings;
 
     // Call daysUntilNextPost and log results
@@ -31,11 +30,69 @@ export async function GET(request: NextRequest) {
     );
 
     // if days until next post is zero, send email
-    if (daysUntilNextPost === 0) {
+    if (daysUntilNextPost === 0 && settings.oneDay && canPost) {
       console.log(`User ${userName}'s last day to post!`);
+
+      const email = await sendEmail(
+        userDoc.data().email,
+        process.env.ADMIN_EMAIL ?? '',
+        'Musehabit - Last day to post!',
+        `Hi ${userName},\n\nThis is a friendly reminder that today is your last day to post on Musehabit. We can't wait to see what you create!`,
+        `Hi ${userName},\n\nThis is a friendly reminder that today is your last day to post on Musehabit. We can't wait to see what you create!`,
+        'outbound'
+      );
     }
 
-    if (daysUntilNextPost === 30) {
+    // if days until next post is 3, send email
+    if (daysUntilNextPost === 3 && settings.threeDay && canPost) {
+      console.log(`User ${userName} has accountability set to 3 days`);
+
+      const email = await sendEmail(
+        userDoc.data().email,
+        process.env.ADMIN_EMAIL ?? '',
+        'Musehabit - 3 days left to post!',
+        `Hi ${userName},\n\nThis is a friendly reminder that you have 3 days left to post on Musehabit. We can't wait to see what you create!`,
+        `Hi ${userName},\n\nThis is a friendly reminder that you have 3 days left to post on Musehabit. We can't wait to see what you create!`,
+        'outbound'
+      );
+
+      console.log('EMAIL: ', email);
+    }
+
+    // if days until next post is 5, send email
+    if (daysUntilNextPost === 5 && settings.fiveDay && canPost) {
+      console.log(`User ${userName} has accountability set to 5 days`);
+
+      const email = await sendEmail(
+        userDoc.data().email,
+        process.env.ADMIN_EMAIL ?? '',
+        'Musehabit - 5 days left to post!',
+        `Hi ${userName},\n\nThis is a friendly reminder that you have 5 days left to post on Musehabit. We can't wait to see what you create!`,
+        `Hi ${userName},\n\nThis is a friendly reminder that you have 5 days left to post on Musehabit. We can't wait to see what you create!`,
+        'outbound'
+      );
+
+      console.log('EMAIL: ', email);
+    }
+
+    // if days until next post is 10, send email
+    if (daysUntilNextPost === 10 && settings.tenDay && canPost) {
+      console.log(`User ${userName} has accountability set to 10 days`);
+
+      const email = await sendEmail(
+        userDoc.data().email,
+        process.env.ADMIN_EMAIL ?? '',
+        'Musehabit - 10 days left to post!',
+        `Hi ${userName},\n\nThis is a friendly reminder that you have 10 days left to post on Musehabit. We can't wait to see what you create!`,
+        `Hi ${userName},\n\nThis is a friendly reminder that you have 10 days left to post on Musehabit. We can't wait to see what you create!`,
+        'outbound'
+      );
+
+      console.log('EMAIL: ', email);
+    }
+
+    // if days until next post is 30, send email
+    if (daysUntilNextPost === 30 && settings.thirtyDay) {
       if (settings?.thirtyDay) {
         console.log(`User ${userName} has accountability set to 30 days`);
 
@@ -51,14 +108,6 @@ export async function GET(request: NextRequest) {
         console.log('EMAIL: ', email);
       }
     }
-
-    // if days until next post is zero and they have not posted in the last 30 days, add post based on their accountability settings
-
-    // if user has not posted and days until next post is 10, and user has reminder to true send reminder email
-
-    // if user has not posted and days until next post is 5, and user has reminder to true send reminder email
-
-    // if user has not posted and days until next post is 1, and user has reminder to true send reminder email
   }
   return Response.json({ success: true });
 }

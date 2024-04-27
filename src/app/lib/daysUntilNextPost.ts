@@ -41,7 +41,7 @@ export async function daysUntilNextPost(userId: string) {
 
     console.log('latest post date: ', latestPostDate);
     console.log('days since last post: ', daysSinceLastPost);
-    console.log('days until next post: ', daysIntoCycle);
+    console.log('days into cycle: ', daysIntoCycle);
 
     console.log('days: since timeframe started: ', daysSinceJoin % 30);
 
