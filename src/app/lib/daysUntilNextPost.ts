@@ -20,49 +20,45 @@ export async function daysUntilNextPost(userId: string) {
 
   const currentDate = new Date();
   const userJoinedDate = new Date(userJoinedTimestamp);
-  const latestPostDate = latestPostTimestamp
-    ? new Date(latestPostTimestamp)
-    : null;
 
-  const userJoinedDayOfMonth = userJoinedDate.getDate();
-  const currentDayOfMonth = currentDate.getDate();
+  const daysSinceJoin = Math.floor(
+    (currentDate.getTime() - userJoinedDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
-  // Calculate the number of days until the user can post or has to post
   let daysUntilNextPost = null;
   let canPost = false;
 
-  if (!latestPostTimestamp) {
-    // User has no posts, calculate days until they have to post
-    if (currentDayOfMonth >= userJoinedDayOfMonth) {
-      // If current day is after the join day, set days until next post to the difference between current day and join day
-      daysUntilNextPost = currentDayOfMonth - userJoinedDayOfMonth;
-    } else {
-      // If current day is before the join day, set days until next post to the remaining days in the month plus join day
-      const daysInMonth = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 1,
-        0
-      ).getDate();
-      daysUntilNextPost =
-        daysInMonth - userJoinedDayOfMonth + currentDayOfMonth;
-    }
-    canPost = daysUntilNextPost <= 0;
-  } else {
-    if (!latestPostDate) {
-      // Handle the case where the latest post date is missing
-      console.log('Latest post date is missing');
-      return {
-        canPost: false,
-        daysUntilNextPost: NaN,
-      };
-    }
+  // Calculate days until next post based on user's join date
+  const daysIntoCycle = daysSinceJoin % 30;
+  daysUntilNextPost = 30 - daysIntoCycle;
 
-    // User has posted before, calculate days until they can post again
+  if (latestPostTimestamp) {
+    // Check if the latest post falls within the current or previous 30-day period
+    const latestPostDate = new Date(latestPostTimestamp);
     const daysSinceLastPost = Math.floor(
       (currentDate.getTime() - latestPostDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-    daysUntilNextPost = 30 - daysSinceLastPost;
-    canPost = daysUntilNextPost <= 0;
+
+    console.log('latest post date: ', latestPostDate);
+    console.log('days since last post: ', daysSinceLastPost);
+    console.log('days into cycle: ', daysIntoCycle);
+
+    console.log('days: since timeframe started: ', daysSinceJoin % 30);
+
+    console.log('can post: ', canPost);
+
+    // Check if the latest post falls within the current or previous 30-day period
+    // if days since last post is less than the difference between the days until next post + 30
+
+    // take the date you started, and then divide that into 30 and then get the remainder, and that’s how many days into the month your at. Then you minus 30 and that’s how many days you have left to post.
+    if (daysSinceLastPost <= daysSinceJoin % 30) {
+      canPost = false; // User has already posted within the current or previous 30-day period
+    } else {
+      canPost = true; // User can post as they haven't posted in the current or previous 30-day period
+    }
+  } else {
+    // User has never posted
+    canPost = true;
   }
 
   return {

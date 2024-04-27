@@ -14,6 +14,7 @@ import { BeatLoader } from 'react-spinners';
 import { firestore } from './lib/firebase';
 import Post from './components/Post';
 import { PostType } from './lib/types';
+import { daysUntilNextPost } from './lib/daysUntilNextPost';
 
 export default function Home() {
   const [posts, setPosts] = useState<PostType[] | null>([]);
