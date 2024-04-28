@@ -270,8 +270,6 @@ const EditProfile = () => {
     }
   };
 
-  console.log('account form: ', accountForm);
-
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -324,9 +322,6 @@ const EditProfile = () => {
 
       router.push(`/artist/${user.profile.username}`);
     } else {
-      console.log('ACCOUNT UPDATE');
-      console.log(accountForm);
-
       await updateUserProfile(user.uid, {
         settings: {
           tenDay: accountForm.tenDay,
