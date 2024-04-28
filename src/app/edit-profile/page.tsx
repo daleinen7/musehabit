@@ -80,39 +80,45 @@ const profileFormData = [
 ];
 
 const accountFormData = [
-  // {
-  //   id: 'heading',
-  //   value: 'Accountability Settings',
-  // },
-  // {
-  //   id: 'heading',
-  //   label:
-  //     'When would you like to receive an email reminder about your post date?',
-  // },
-  // {
-  //   id: 'tenDay',
-  //   type: 'checkbox',
-  //   condition: 'profileImage',
-  //   label: '10 Days Before',
-  // },
-  // {
-  //   id: 'fiveDay',
-  //   type: 'checkbox',
-  //   condition: 'profileImage',
-  //   label: '5 Days Before',
-  // },
-  // {
-  //   id: 'threeDay',
-  //   type: 'checkbox',
-  //   condition: 'profileImage',
-  //   label: '3 Days Before',
-  // },
-  // {
-  //   id: 'oneDay',
-  //   type: 'checkbox',
-  //   condition: 'profileImage',
-  //   label: '1 Day Before',
-  // },
+  {
+    id: 'heading',
+    value: 'Accountability Settings',
+  },
+  {
+    id: 'heading',
+    label:
+      'When would you like to receive an email reminder about your post date?',
+  },
+  {
+    id: 'thirtyDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: 'New Month! Get notified when you can post again',
+  },
+  {
+    id: 'tenDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '10 Days Before',
+  },
+  {
+    id: 'fiveDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '5 Days Before',
+  },
+  {
+    id: 'threeDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '3 Days Before',
+  },
+  {
+    id: 'oneDay',
+    type: 'checkbox',
+    condition: 'profileImage',
+    label: '1 Day Before',
+  },
   // {
   //   id: 'lateImage',
   //   type: 'file',
@@ -259,10 +265,12 @@ const EditProfile = () => {
     } else {
       setAccountForm((prevAccountForm) => ({
         ...prevAccountForm,
-        [name || id]: type === 'checkbox' || type === 'radio' ? value : value,
+        [name || id]: type === 'checkbox' ? checked : value,
       }));
     }
   };
+
+  console.log('account form: ', accountForm);
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -316,6 +324,9 @@ const EditProfile = () => {
 
       router.push(`/artist/${user.profile.username}`);
     } else {
+      console.log('ACCOUNT UPDATE');
+      console.log(accountForm);
+
       await updateUserProfile(user.uid, {
         settings: {
           tenDay: accountForm.tenDay,
