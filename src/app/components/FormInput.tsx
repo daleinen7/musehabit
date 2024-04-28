@@ -6,7 +6,7 @@ type FormInputProps = {
   type: string;
   handleFormChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  value: string;
+  value: string | undefined;
   profile?: boolean;
   name?: string;
   error?: undefined | string;
@@ -75,7 +75,7 @@ const FormInput: React.FC<FormInputProps> = ({
         <input
           type={type}
           id={id}
-          value={value}
+          checked={value === 'true'}
           onChange={handleFormChange}
           required={required}
           className="text-white p-[0.625rem] border border-light-gray rounded-md"

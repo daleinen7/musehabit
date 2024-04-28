@@ -266,11 +266,11 @@ const Nav = () => {
                   <Link href="/share" className="btn btn-post">
                     Make Your Post
                   </Link>
-                  <div className="absolute -top-3 right-0 bg-red-600 text-white rounded-[10px] px-[3px] -py-1">
+                  <div className="absolute -top-3 right-0 text-sm bg-red-600 text-white rounded-[10px] px-[3px] -py-1">
                     {user.profile.latestPost &&
-                      (daysUntilNextPost + daysUntilNextPost === 1
-                        ? 'Day'
-                        : 'Days')}
+                      daysUntilNextPost +
+                        ' ' +
+                        (daysUntilNextPost === 1 ? 'Day' : 'Days')}
                   </div>
                 </li>
               ) : (
