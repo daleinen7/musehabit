@@ -9,22 +9,27 @@ import {
   doc,
   getDoc,
   getDocs,
+  startAfter,
+  limit,
+  QueryDocumentSnapshot,
+  DocumentData,
 } from 'firebase/firestore';
 import { BeatLoader } from 'react-spinners';
 import { firestore } from './lib/firebase';
 import Post from './components/Post';
 import { PostType } from './lib/types';
-import { daysUntilNextPost } from './lib/daysUntilNextPost';
 
 export default function Home() {
   const [posts, setPosts] = useState<PostType[] | null>([]);
   const [selectedFeed, setSelectedFeed] = useState<
     null | 'global' | 'following'
   >(null);
+  const [lastDoc, setLastDoc] =
+    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
   const { user } = useAuth();
-  // if (user) {
-  //   console.log('if user', user);
-  // }
+  const postsPerPage = 5;
 
   useEffect(() => {
     if (user) {
@@ -33,68 +38,63 @@ export default function Home() {
   }, [user]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      let postsRef;
-
-      if (selectedFeed === 'global' || !user) {
-        const postsRef = collection(firestore, 'posts');
-        const postsSnapshot = await getDocs(
-          query(postsRef, orderBy('postedAt', 'desc'))
-        );
-        const postsData = postsSnapshot.docs.map((doc) => doc.data());
-        const postsWithUserData = await Promise.all(
-          postsData.map(async (post) => {
-            const posterRef = doc(firestore, 'users', post.poster);
-            const posterSnapshot = await getDoc(posterRef);
-            const posterData = posterSnapshot.data() as PostType['posterData'];
-            return { ...post, posterData } as PostType;
-          })
-        );
-
-        setPosts(postsWithUserData);
-      } else {
-        if (
-          Object.keys(user.profile.following).length &&
-          Object.keys(user.profile.following)
-        ) {
-          const followingList = Object.keys(user.profile.following);
-
-          postsRef = collection(firestore, 'posts');
-          const postsSnapshot = await getDocs(
-            query(
-              postsRef,
-              where('poster', 'in', followingList),
-              orderBy('postedAt', 'desc')
-            )
-          );
-
-          const postsData = postsSnapshot.docs.map((doc) => doc.data());
-
-          const postsWithUserData = await Promise.all(
-            postsData.map(async (post) => {
-              const posterRef = doc(firestore, 'users', post.poster);
-              const posterSnapshot = await getDoc(posterRef);
-              const posterData =
-                posterSnapshot.data() as PostType['posterData'];
-              return { ...post, posterData } as PostType;
-            })
-          );
-
-          if (postsWithUserData.length === 0) {
-            setPosts(null);
-            return;
-          }
-
-          setPosts(postsWithUserData);
-        } else {
-          setPosts(null);
-          return;
-        }
-      }
-    };
-
-    fetchPosts();
+    if (selectedFeed !== null) {
+      setPosts([]);
+      setLastDoc(null);
+      setHasMorePosts(true);
+      fetchPosts();
+    }
   }, [selectedFeed, user]);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    let postsRef;
+    let q;
+
+    if (selectedFeed === 'global' || !user) {
+      postsRef = collection(firestore, 'posts');
+      q = query(postsRef, orderBy('postedAt', 'desc'), limit(postsPerPage));
+    } else {
+      if (
+        Object.keys(user.profile.following).length &&
+        Object.keys(user.profile.following)
+      ) {
+        const followingList = Object.keys(user.profile.following);
+        postsRef = collection(firestore, 'posts');
+        q = query(
+          postsRef,
+          where('poster', 'in', followingList),
+          orderBy('postedAt', 'desc'),
+          limit(postsPerPage)
+        );
+      } else {
+        setPosts(null);
+        setLoading(false);
+        return;
+      }
+    }
+
+    if (lastDoc) {
+      q = query(q, startAfter(lastDoc));
+    }
+
+    const postsSnapshot = await getDocs(q);
+    const postsData = postsSnapshot.docs.map((doc) => doc.data());
+
+    const postsWithUserData = await Promise.all(
+      postsData.map(async (post) => {
+        const posterRef = doc(firestore, 'users', post.poster);
+        const posterSnapshot = await getDoc(posterRef);
+        const posterData = posterSnapshot.data() as PostType['posterData'];
+        return { ...post, posterData } as PostType;
+      })
+    );
+
+    setPosts((prevPosts) => [...(prevPosts || []), ...postsWithUserData]);
+    setLastDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
+    setHasMorePosts(postsSnapshot.docs.length === postsPerPage);
+    setLoading(false);
+  };
 
   return (
     <>
@@ -115,6 +115,7 @@ export default function Home() {
 
         {user ? (
           <div className="w-full max-w-3xl mx-auto flex text-xl font-hepta text-center font-bold mt-8">
+            <h2 className="sr-only">Home - Global or Following Feed</h2>
             <button
               className={`w-full border-b border-b-light-gray rounded-t-[6px] py-4 ${
                 selectedFeed === 'global'
@@ -150,22 +151,20 @@ export default function Home() {
             </li>
           ))}
         </ul>
-      ) : selectedFeed === 'global' ? (
-        <div className="flex flex-col items-center justify-center mt-24 gap-4">
-          {<BeatLoader color="#F24236" />}
-        </div>
-      ) : selectedFeed === 'following' ? (
-        <div className="flex flex-col items-center justify-center gap-4">
-          <h3 className="text-4xl font-hepta text-center font-bold mt-16">
-            No posts from following
-          </h3>
-          <p className="text-center">
-            Follow some users to see their posts here!
-          </p>
-        </div>
       ) : (
         <div className="flex flex-col items-center justify-center mt-24 gap-4">
-          {<BeatLoader color="#F24236" />}
+          {loading ? (
+            <BeatLoader color="#F24236" />
+          ) : (
+            <p>No posts available.</p>
+          )}
+        </div>
+      )}
+      {posts && posts.length > 0 && !loading && hasMorePosts && (
+        <div className="flex justify-center my-8">
+          <button onClick={fetchPosts} className="btn btn-secondary">
+            Load More
+          </button>
         </div>
       )}
     </>

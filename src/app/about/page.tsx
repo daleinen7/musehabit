@@ -79,17 +79,9 @@ const About = () => {
               once per month.
             </p>
             <p>
-              Upon signing up, you&apos;ll have until the same date next month
-              to post. If you miss the deadline, Musehabit will automatically
-              post for you. Your feed will replace what would have been your
-              post with a customizable automated message, gently reminding you
-              that you missed your deadline. It&apos;s a playful way to keep
-              yourself accountable.
-            </p>
-            <p>
-              This feature is entirely optional and can be turned off at any
-              time. Its purpose is not to shame or guilt anyone but to assist
-              users who wish to stay on track with their creative goals.
+              Your post is due every 30 days. With a helpful reminder at the top
+              right to show how many days you have left (or how many days until
+              you can post again).
             </p>
           </div>
         </SideBySide>
@@ -99,18 +91,26 @@ const About = () => {
           <h3 className="font-satoshi text-4xl font-bold">the roadmap</h3>
           <ul className="max-w-[40rem] py-4 flex flex-col gap-2">
             <li>
-              <span className="font-bold">April:</span> MVP
+              <span className="font-bold">May:</span> Email Reminders of your
+              due date to post
             </li>
             <li>
-              <span className="font-bold">May:</span> Email Notifications |
-              Audience account (commenting, saving posts to a list, no
-              posting/sharing)
+              <span className="font-bold">June:</span> Updated UI for audio
+              player | Notification when a user you follow posts
             </li>
             <li>
-              <span className="font-bold">June:</span> Optional artwork with
-              audio posts (like an album cover)
+              <span className="font-bold">July:</span> Playfull accountability
+              functionality (optionally share a public automated post pointing
+              out you neglected to post this month)
             </li>
           </ul>
+
+          <p>
+            We are a small team and are working hard to make Musehabit the best
+            platform it can be. We are always open to feedback and suggestions.
+            Please feel free to reach out to us at{' '}
+            <a href="mailto:doug@musehabit.com">doug at musehabit dot com</a>.
+          </p>
         </div>
       </section>
       <section className="width-wrapper flex flex-col py-8 gap-6 [&>p]:text-balance ">
@@ -133,7 +133,7 @@ const About = () => {
           Ten years later, I have more knowledge of creating on the web, and I
           think even more we need a place to express ourselves that embraces
           distortion, noise, tangents, and all manner of things that do not fit
-          in a neat package.
+          in a nice neat package.
         </p>
         <p>I hope you enjoy your time here.</p>
         <p>- Doug Leinen</p>
