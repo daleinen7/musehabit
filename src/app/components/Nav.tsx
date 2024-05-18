@@ -1,11 +1,13 @@
 'use client';
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/app/context/AuthContext';
 import useClickOutside from '@/app/lib/useClickOutside';
 import { NotificationType } from '@/app/lib/types';
 import icons from '@/app/lib/icons';
 import { firestore } from '@/app/lib/firebase';
+import logo from '@/app/images/logo.svg';
 import { collection, doc, deleteDoc } from 'firebase/firestore';
 
 type NavItem = {
@@ -125,8 +127,9 @@ const Nav = () => {
     <nav className="bg-black py-3" ref={wrapperRef}>
       <ul className="width-wrapper relative w-full flex justify-between items-center">
         <li>
-          <Link href="/">
-            <h1 className="font-satoshi text-4xl font-bold">Musehabit</h1>
+          <Link href="/" className="flex items-center gap-6">
+            <Image src={logo} alt="Octopus" />
+            <h1 className="font-hepta text-5xl">musehabit</h1>
           </Link>
         </li>
         {/* DESKTOP NAV */}
