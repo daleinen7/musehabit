@@ -1,18 +1,13 @@
 import Image from 'next/image';
 import { SideBySide } from '../components/SideBySide';
+import dal from '../images/dal.jpg';
+import cassidy from '../images/cassidy.jpg';
+import mark from '../images/mark.jpg';
+import arthur from '../images/arthur.png';
 
 const About = () => {
   return (
     <>
-      <div className="w-full">
-        <Image
-          src={'https://picsum.photos/1512/355'}
-          width={1512}
-          height={355}
-          alt={'about image'}
-          className="w-full h-[20.625rem] object-cover"
-        />
-      </div>
       <div className="width-wrapper flex justify-start items-center gap-12 text-balance py-[4.375rem]">
         <div className="flex flex-col gap-4">
           <h2 className="font-hepta font-bold text-5xl">about the project</h2>
@@ -33,8 +28,8 @@ const About = () => {
         <SideBySide
           reverse
           headline={'share your art'}
-          image={'https://picsum.photos/504/350'}
-          alt={'placeholder'}
+          image={'/Share_your_Art.jpg'}
+          alt={'Octopus with a paintbrush and art supplies'}
         >
           <p>
             As an artist, you sign up and share one post per month. Musehabit
@@ -47,7 +42,7 @@ const About = () => {
         </SideBySide>
         <SideBySide
           headline={'community and connection'}
-          image={'https://picsum.photos/504/350'}
+          video={'/community_conection.mp4'}
           alt={'placeholder'}
         >
           <div className="flex flex-col gap-4">
@@ -68,7 +63,7 @@ const About = () => {
         <SideBySide
           reverse
           headline={'accountability'}
-          image={'https://picsum.photos/504/350'}
+          video={'/Accountability.mp4'}
           alt={'placeholder'}
         >
           <div className="flex flex-col gap-4">
@@ -140,18 +135,18 @@ const About = () => {
       </section>
       <section className="width-wrapper font-hepta flex flex-col gap-[2.25rem] max-w-[65.9375rem] mb-12 py-12">
         <h3 className="font-satoshi text-4xl font-bold">the team</h3>
-        <ul className="grid grid-cols-4 gap-2">
+        <ul className="grid grid-cols-1 md:grid-cols-4 gap-2 sm:grid-cols-2">
           <li>
-            <TeamMember name={'Doug'} role={'Developer/Founder'} />
+            <TeamMember name={'Doug'} role={'Developer/Founder'} pic={dal} />
           </li>
           <li>
-            <TeamMember name={'Cassidy'} role={'Designer'} />
+            <TeamMember name={'Cassidy'} role={'Designer'} pic={cassidy} />
           </li>
           <li>
-            <TeamMember name={'Mark'} role={'Product Manager'} />
+            <TeamMember name={'Mark'} role={'Product Manager'} pic={mark} />
           </li>
           <li>
-            <TeamMember name={'Arthur'} role={'Logo Design'} />
+            <TeamMember name={'Arthur'} role={'Logo Design'} pic={arthur} />
           </li>
         </ul>
       </section>
@@ -159,17 +154,25 @@ const About = () => {
   );
 };
 
-const TeamMember = ({ name, role }: { name: string; role: string }) => {
+const TeamMember = ({
+  name,
+  role,
+  pic,
+}: {
+  name: string;
+  role: string;
+  pic: any;
+}) => {
   return (
-    <div className="flex flex-col items-center gap-[3rem]">
+    <div className="flex flex-col items-center gap-[1.25rem]">
       <Image
-        src={'https://picsum.photos/337/333'}
-        alt={'whatever'}
+        src={pic}
+        alt={`${name} | ${role}`}
         width={337}
         height={333}
-        className="w-[31.5rem] h-[21.875rem] rounded-3xl"
+        className="w-[31.5rem] h-[21.875rem] rounded-3xl object-cover"
       />
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mb-5">
         <h2 className="text-2xl mb-2">{name}</h2>
         <p className="text-xl font-normal font-satoshi">{role}</p>
       </div>

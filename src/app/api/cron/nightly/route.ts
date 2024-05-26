@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
       const email = await sendEmail(
         userDoc.data().email,
-        process.env.ADMIN_EMAIL ?? '',
+        'robot@musehabit.com' ?? '',
         'Musehabit - Last day to post!',
         `Hi ${userName},\n\nThis is a friendly reminder that today is your last day to post on Musehabit. We can't wait to see what you create!`,
         `Hi ${userName},\n\nThis is a friendly reminder that today is your last day to post on Musehabit. We can't wait to see what you create!`,
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 
       const email = await sendEmail(
         userDoc.data().email,
-        process.env.ADMIN_EMAIL ?? '',
+        'robot@musehabit.com' ?? '',
         'Musehabit - 3 days left to post!',
         `Hi ${userName},\n\nThis is a friendly reminder that you have 3 days left to post on Musehabit. We can't wait to see what you create!`,
         `Hi ${userName},\n\nThis is a friendly reminder that you have 3 days left to post on Musehabit. We can't wait to see what you create!`,
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 
       const email = await sendEmail(
         userDoc.data().email,
-        process.env.ADMIN_EMAIL ?? '',
+        'robot@musehabit.com' ?? '',
         'Musehabit - 5 days left to post!',
         `Hi ${userName},\n\nThis is a friendly reminder that you have 5 days left to post on Musehabit. We can't wait to see what you create!`,
         `Hi ${userName},\n\nThis is a friendly reminder that you have 5 days left to post on Musehabit. We can't wait to see what you create!`,
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
 
       const email = await sendEmail(
         userDoc.data().email,
-        process.env.ADMIN_EMAIL ?? '',
+        'robot@musehabit.com' ?? '',
         'Musehabit - 10 days left to post!',
         `Hi ${userName},\n\nThis is a friendly reminder that you have 10 days left to post on Musehabit. We can't wait to see what you create!`,
         `Hi ${userName},\n\nThis is a friendly reminder that you have 10 days left to post on Musehabit. We can't wait to see what you create!`,
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
 
         const email = await sendEmail(
           userDoc.data().email,
-          process.env.ADMIN_EMAIL ?? '',
+          'robot@musehabit.com' ?? '',
           'Musehabit - You can post again!',
           `Hi ${userName},\n\nThis is a friendly reminder that today your window to post on Musehabit in the next 30 days has reset. We can't wait to see what you create!`,
           `Hi ${userName},\n\nThis is a friendly reminder that today your window to post on Musehabit in the next 30 days has reset. We can't wait to see what you create!`,
