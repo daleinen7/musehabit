@@ -23,7 +23,7 @@ export default function Home() {
   const [posts, setPosts] = useState<PostType[] | null>([]);
   const [selectedFeed, setSelectedFeed] = useState<
     null | 'global' | 'following'
-  >(null);
+  >('global');
   const [lastDoc, setLastDoc] =
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loading, setLoading] = useState(false);
