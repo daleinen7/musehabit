@@ -9,6 +9,7 @@ export type PostType = {
   medium: string;
   location: string;
   postedAt: string;
+  poster: string;
   posterData: {
     username: string;
     displayName: string;
