@@ -39,13 +39,13 @@ export async function daysUntilNextPost(userId: string) {
       (currentDate.getTime() - latestPostDate.getTime()) / (1000 * 60 * 60 * 24)
     );
 
-    console.log('latest post date: ', latestPostDate);
-    console.log('days since last post: ', daysSinceLastPost);
-    console.log('days into cycle: ', daysIntoCycle);
+    // console.log('latest post date: ', latestPostDate);
+    // console.log('days since last post: ', daysSinceLastPost);
+    // console.log('days into cycle: ', daysIntoCycle);
 
-    console.log('days: since timeframe started: ', daysSinceJoin % 30);
+    // console.log('days: since timeframe started: ', daysSinceJoin % 30);
 
-    console.log('can post: ', canPost);
+    // console.log('can post: ', canPost);
 
     // Check if the latest post falls within the current or previous 30-day period
     // if days since last post is less than the difference between the days until next post + 30

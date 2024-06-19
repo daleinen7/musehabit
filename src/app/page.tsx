@@ -20,16 +20,73 @@ import Post from './components/Post';
 import { PostType } from './lib/types';
 
 export default function Home() {
-  const [posts, setPosts] = useState<PostType[] | null>([]);
-  const [selectedFeed, setSelectedFeed] = useState<
-    null | 'global' | 'following'
-  >('global');
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [selectedFeed, setSelectedFeed] = useState<'global' | 'following'>(
+    'global'
+  );
   const [lastDoc, setLastDoc] =
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMorePosts, setHasMorePosts] = useState(true);
   const { user } = useAuth();
   const postsPerPage = 5;
+
+  const fetchPosts = async (isNewFeed = false) => {
+    if (loading) return;
+    setLoading(true);
+
+    let postsRef;
+    let q;
+
+    if (selectedFeed === 'global' || !user) {
+      postsRef = collection(firestore, 'posts');
+      q = query(postsRef, orderBy('postedAt', 'desc'), limit(postsPerPage));
+    } else {
+      const followingList = Object.keys(user.profile.following);
+      if (followingList.length) {
+        postsRef = collection(firestore, 'posts');
+        q = query(
+          postsRef,
+          where('poster', 'in', followingList),
+          orderBy('postedAt', 'desc'),
+          limit(postsPerPage)
+        );
+      } else {
+        setPosts([]);
+        setLoading(false);
+        return;
+      }
+    }
+
+    if (!isNewFeed && lastDoc) {
+      q = query(q, startAfter(lastDoc));
+    }
+
+    const postsSnapshot = await getDocs(q);
+    const postsData = postsSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const postsWithUserData = await Promise.all(
+      postsData.map(async (post) => {
+        const posterRef = doc(firestore, 'users', post.poster);
+        const posterSnapshot = await getDoc(posterRef);
+        const posterData = posterSnapshot.data() as PostType['posterData'];
+        return { ...post, posterData } as PostType;
+      })
+    );
+
+    if (isNewFeed) {
+      setPosts(postsWithUserData);
+    } else {
+      setPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+    }
+
+    setLastDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1] || null);
+    setHasMorePosts(postsSnapshot.docs.length === postsPerPage);
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (user) {
@@ -42,58 +99,12 @@ export default function Home() {
       setPosts([]);
       setLastDoc(null);
       setHasMorePosts(true);
-      fetchPosts();
+      fetchPosts(true);
     }
-  }, [selectedFeed, user]);
+  }, [selectedFeed]);
 
-  const fetchPosts = async () => {
-    setLoading(true);
-    let postsRef;
-    let q;
-
-    if (selectedFeed === 'global' || !user) {
-      postsRef = collection(firestore, 'posts');
-      q = query(postsRef, orderBy('postedAt', 'desc'), limit(postsPerPage));
-    } else {
-      if (
-        Object.keys(user.profile.following).length &&
-        Object.keys(user.profile.following)
-      ) {
-        const followingList = Object.keys(user.profile.following);
-        postsRef = collection(firestore, 'posts');
-        q = query(
-          postsRef,
-          where('poster', 'in', followingList),
-          orderBy('postedAt', 'desc'),
-          limit(postsPerPage)
-        );
-      } else {
-        setPosts(null);
-        setLoading(false);
-        return;
-      }
-    }
-
-    if (lastDoc) {
-      q = query(q, startAfter(lastDoc));
-    }
-
-    const postsSnapshot = await getDocs(q);
-    const postsData = postsSnapshot.docs.map((doc) => doc.data());
-
-    const postsWithUserData = await Promise.all(
-      postsData.map(async (post) => {
-        const posterRef = doc(firestore, 'users', post.poster);
-        const posterSnapshot = await getDoc(posterRef);
-        const posterData = posterSnapshot.data() as PostType['posterData'];
-        return { ...post, posterData } as PostType;
-      })
-    );
-
-    setPosts((prevPosts) => [...(prevPosts || []), ...postsWithUserData]);
-    setLastDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
-    setHasMorePosts(postsSnapshot.docs.length === postsPerPage);
-    setLoading(false);
+  const loadMorePosts = () => {
+    fetchPosts(false);
   };
 
   return (
@@ -162,7 +173,7 @@ export default function Home() {
       )}
       {posts && posts.length > 0 && !loading && hasMorePosts && (
         <div className="flex justify-center my-8">
-          <button onClick={fetchPosts} className="btn btn-secondary">
+          <button onClick={loadMorePosts} className="btn btn-secondary">
             Load More
           </button>
         </div>
