@@ -1,7 +1,7 @@
 'use client';
 import { useContext, createContext, useState, useEffect } from 'react';
 import {
-  signInWithRedirect,
+  signInWithPopup,
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
@@ -138,7 +138,7 @@ export const AuthContextProvider = ({
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithRedirect(auth, new GoogleAuthProvider());
+      await signInWithPopup(auth, new GoogleAuthProvider());
     } catch (error) {
       console.error('Error signing in with Google: ', error);
     }
