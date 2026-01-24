@@ -9,46 +9,9 @@ import getFileType from '../lib/getFileType';
 import FormInput from '../components/FormInput';
 import icons from '../lib/icons';
 import logo from '../images/logo.svg';
-const formData = [
-  {
-    id: 'email',
-    type: 'email',
-    label: 'Email',
-    placeholder: 'email',
-    required: true,
-  },
-  {
-    id: 'username',
-    type: 'text',
-    label: 'Username',
-    placeholder: 'username',
-    required: true,
-  },
-  {
-    id: 'password',
-    type: 'password',
-    label: 'Password',
-    placeholder: 'password',
-    required: true,
-  },
-  {
-    id: 'confirmPassword',
-    type: 'password',
-    label: 'Confirm Password',
-    placeholder: 'confirm password',
-    required: true,
-  },
-];
 
 const SignUp = () => {
-  const [form, setForm] = useState({
-    email: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const { user, emailSignUp, signInWithGoogle } = useAuth();
+  const { user, signInWithGoogle } = useAuth();
   const [randomPost, setRandomPost] = useState<any>(null);
   const router = useRouter();
 
@@ -77,33 +40,12 @@ const SignUp = () => {
     fetchRandomPostAndArtist();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-
-    await emailSignUp(form.email, form.password, form.username);
-  };
-
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
       // router.push('/');
     } catch (error) {
       console.log('ERROR: ', error);
-    }
-  };
-
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.id === 'username') {
-      const username = e.target.value.replace(/\s/g, '');
-      setForm({ ...form, [e.target.id]: username });
-      return;
-    } else {
-      setForm({ ...form, [e.target.id]: e.target.value });
     }
   };
 
@@ -162,26 +104,6 @@ const SignUp = () => {
           <h2 className="font-satoshi text-[2.25rem] font-bold mb-[1.125rem]">
             Sign up
           </h2>
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col justify-center gap-6 w-full"
-          >
-            {formData.map((item) => (
-              <FormInput
-                key={item.id}
-                label={item.label}
-                type={item.type}
-                id={item.id}
-                value={form[item.id as keyof typeof form]}
-                handleFormChange={handleFormChange}
-                required={item.required}
-              />
-            ))}
-            <button type="submit" className="mt-6 btn btn-primary w-full">
-              Sign up
-            </button>
-          </form>
-          <div className="py-10 text-[1.125rem] font-medium">Or</div>
           <button
             type="button"
             className="btn btn-secondary w-full flex items-center justify-center gap-2"
