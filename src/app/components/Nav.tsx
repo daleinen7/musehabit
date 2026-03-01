@@ -50,7 +50,7 @@ const Nav = () => {
       await signOut();
       setShowProfile(false);
     } catch (error) {
-      console.log('ERROR: ', error);
+      console.error('Logout error:', error);
     }
   };
 

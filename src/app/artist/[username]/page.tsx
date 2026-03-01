@@ -57,7 +57,7 @@ const Profile = ({ params }: { params: any }) => {
               setArtist(userData);
               setPosts(postsData);
             } else {
-              console.log('User not found');
+              console.error('User not found');
             }
           } catch (error) {
             console.error('Error fetching user and posts:', error);
