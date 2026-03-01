@@ -70,8 +70,6 @@ export default function Home() {
 
     const postsWithUserData = await Promise.all(
       postsData.map(async (post) => {
-        console.log('post', post);
-
         const posterRef = doc(firestore, 'users', post.poster);
         const posterSnapshot = await getDoc(posterRef);
         const posterData = posterSnapshot.data() as PostType['posterData'];

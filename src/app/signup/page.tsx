@@ -45,7 +45,7 @@ const SignUp = () => {
       await signInWithGoogle();
       // router.push('/');
     } catch (error) {
-      console.log('ERROR: ', error);
+      console.error('Signup error:', error);
     }
   };
 
