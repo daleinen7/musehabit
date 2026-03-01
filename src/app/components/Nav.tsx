@@ -294,7 +294,7 @@ const Nav = () => {
           <div className="block w-5 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <span
               aria-hidden="true"
-              className={`block 
+              className={`block
                  bg-white
               absolute -top-2 h-0.5 w-5 bg-current transform transition duration-500 ease-in-out ${
                 isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''
@@ -318,7 +318,7 @@ const Nav = () => {
           </div>
         </button>
         <ul
-          className={`width-wrapper absolute bg-black border-t-2 border-opacity-[0.05] transition-all duration-300 sm:hidden px-6 pb-8 bg-opacity-95 z-10 flex flex-col items-start text-xl left-0 right-0 top-[3.25rem]
+          className={`width-wrapper absolute bg-black border-t-2 border-opacity-[0.05] transition-all duration-300 sm:hidden px-6 pb-8 bg-opacity-95 z-10 flex flex-col items-start text-xl left-0 right-0 top-[4.25rem]
         ${isMobileMenuOpen ? 'translate-x-0 safari-hack' : 'translate-x-full'}`}
           onClick={() => setIsMobileMenuOpen(false)}
         >
@@ -387,9 +387,9 @@ const Nav = () => {
               </Link>
               <div className="absolute -top-3 right-0 bg-red-600 text-white rounded-[10px] px-[3px] -py-1">
                 {user.profile.latestPost &&
-                  (daysUntilNextPost + daysUntilNextPost === 1
-                    ? 'Day'
-                    : 'Days')}
+                  daysUntilNextPost +
+                    ' ' +
+                    (daysUntilNextPost === 1 ? 'Day' : 'Days')}
               </div>
             </li>
           ) : user ? (
